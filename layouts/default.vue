@@ -1,0 +1,9 @@
+<template>
+  <div>
+    <LayoutHeader></LayoutHeader>
+    <div>
+      <slot></slot>
+    </div>
+    <LayoutFooter></LayoutFooter>
+  </div>
+</template>
