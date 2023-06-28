@@ -1,15 +1,15 @@
 <script setup lang="ts">
 useHead({
-  title: "Nuxt starter",
+    title: "Nuxt starter",
 });
 </script>
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+    <NuxtLayout>
+        <NuxtPage />
+    </NuxtLayout>
 </template>
 <style lang="pcss">
 body {
-  @apply text-gray-800 bg-gray-100;
+  @apply text-gray-800;
 }
 </style>

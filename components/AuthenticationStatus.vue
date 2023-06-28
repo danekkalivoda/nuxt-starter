@@ -3,34 +3,28 @@ const { status, data, signOut, signIn } = useAuth();
 </script>
 
 <template>
-  <div class="w-full max-w-5xl mx-auto px-5 py-4 border-b text-sm">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center space-x-2">
-        <img
-          v-if="status === 'authenticated' && data?.user?.image"
-          class="w-8 h-8 rounded-full"
-          :src="data.user.image"
-          alt="User Avatar"
-        />
-        <div v-if="status === 'authenticated'">
-          Přihlášený: {{ data?.user?.name }}
+    <div class="bg-gray-100">
+        <div class="mx-auto w-full max-w-7xl px-6 py-1 text-sm lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div v-if="status === 'authenticated'">Přihlášený: {{ data?.user?.name }}</div>
+                    <div v-else>Nepřihlášený</div>
+                </div>
+                <button
+                    v-if="status === 'authenticated'"
+                    class="flex items-center justify-center space-x-2 rounded-lg bg-red-500 px-3 py-2 text-sm text-white"
+                    @click="signOut({ callbackUrl: '/' })"
+                >
+                    <span>Odhlásit</span>
+                </button>
+                <button
+                    v-else
+                    class="bg-brand-500 flex items-center justify-center space-x-2 rounded-lg px-3 py-2 text-sm text-white"
+                    @click="signIn()"
+                >
+                    <span>Přihlásit</span>
+                </button>
+            </div>
         </div>
-        <div v-else>Nepřihlášený</div>
-      </div>
-      <button
-        v-if="status === 'authenticated'"
-        class="flex items-center justify-center space-x-2 bg-red-500 text-white rounded-lg py-2 px-3 text-sm"
-        @click="signOut({ callbackUrl: '/' })"
-      >
-        <span>Odhlásit</span>
-      </button>
-      <button
-        v-else
-        class="flex items-center justify-center space-x-2 bg-brand-500 text-white rounded-lg py-2 px-3 text-sm"
-        @click="signIn()"
-      >
-        <span>Přihlásit</span>
-      </button>
     </div>
-  </div>
 </template>

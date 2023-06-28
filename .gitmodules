@@ -1,0 +1,3 @@
+[submodule "recruitis-shared"]
+	path = recruitis-shared
+	url = git@gitlab.recruitis.io:recruitis/recruitis-components.git

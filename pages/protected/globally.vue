@@ -1,3 +1,3 @@
 <template>
-  <div>globally protected</div>
+    <div>globally protected</div>
 </template>
