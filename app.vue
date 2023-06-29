@@ -10,6 +10,6 @@ useHead({
 </template>
 <style lang="pcss">
 body {
-  @apply text-gray-800;
+  @apply text-gray-800 font-sans;
 }
 </style>

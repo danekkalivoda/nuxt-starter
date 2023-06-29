@@ -37,7 +37,7 @@ module.exports = {
             },
         },
     },
-    ignorePatterns: [".eslintrc.js","assets/js/**/*.*", "assets/css/tailwind.config.js","recruitis-shared/**/*.*", "js/utils/**/*.*"],
+    ignorePatterns: [".eslintrc.js","assets/js/**/*.*", "tailwind.config.js", "shared.tailwind.config.js", "recruitis-shared/**/*.*", "js/utils/**/*.*"],
     rules: {
         indent: [
             "error",

@@ -1,31 +1,14 @@
-/** @type {import('tailwindcss').Config} */
 import forms from "@tailwindcss/forms";
 import typography from "@tailwindcss/typography";
 import containerQueries from "@tailwindcss/container-queries";
-import colors from "tailwindcss/colors";
 import svgToDataUri from "mini-svg-data-uri";
-/* const colors = require("tailwindcss/colors.js");
-const svgToDataUri = require("mini-svg-data-uri"); */
-export default {
+export const sharedConfig = {
     content: [
-        "./components/**/*.{js,vue,ts}",
         "./recruitis-shared/**/*.{js,vue,ts}",
         "./layouts/**/*.vue",
         "./pages/**/*.vue",
         "./nuxt.config.{js,ts}",
         "./app.vue",
-    ],
-    safelist: [
-        {
-            pattern: /w-(px|16|24|28|32|36|40|48|52|56|64)/,
-        },
-        {
-            pattern: /min-w-(16|24|28|32|36|40|48|52|56|64)/,
-        },
-        {
-            pattern: /max-w-(px|16|24|28|32|36|40|48|52|56|64)/,
-        },
-        "-mx-8",
     ],
     theme: {
         screens: {
@@ -41,10 +24,6 @@ export default {
             touch: { raw: "(hover: none)" },
         },
         extend: {
-            colors: {
-                gray: colors.gray,
-                brand: colors.green,
-            },
             spacing: {
                 0: "0px",
                 px: "1px",
@@ -101,40 +80,6 @@ export default {
                 ...theme("spacing"),
                 ...theme("width"),
             }),
-            fontSize: {
-                "2xs": "8px",
-                xs: "10px",
-                sm: "12px",
-                base: "14px",
-                md: "16px",
-                lg: "18px",
-                xl: "20px",
-                "2xl": "24px",
-                "3xl": "28px",
-                "4xl": "36px",
-                "5xl": "48px",
-                "6xl": "64px",
-                "7xl": "86px",
-            },
-            fontFamily: {
-                urbanist: [
-                    '"Urbanist"',
-                    "ui-sans-serif",
-                    "system-ui",
-                    "-apple-system",
-                    "BlinkMacSystemFont",
-                    '"Segoe UI"',
-                    "Roboto",
-                    '"Helvetica Neue"',
-                    "Arial",
-                    '"Noto Sans"',
-                    "sans-serif",
-                    '"Apple Color Emoji"',
-                    '"Segoe UI Emoji"',
-                    '"Segoe UI Symbol"',
-                    '"Noto Color Emoji"',
-                ],
-            },
             borderRadius: {
                 none: "0",
                 sm: "2px",
@@ -184,15 +129,15 @@ export default {
                     },
                 },
                 /*         xs: {
-          css: {
-            fontSize: "0.625rem", // 10px
-          },
-        },
-        sm: {
-          css: {
-            fontSize: "0.75rem", // 12px
-          },
-        }, */
+      css: {
+        fontSize: "0.625rem", // 10px
+      },
+    },
+    sm: {
+      css: {
+        fontSize: "0.75rem", // 12px
+      },
+    }, */
             }),
         },
     },
@@ -202,5 +147,17 @@ export default {
             cursor: ["disabled"],
         },
     },
+    safelist: [
+        {
+            pattern: /w-(px|16|24|28|32|36|40|48|52|56|64)/,
+        },
+        {
+            pattern: /min-w-(16|24|28|32|36|40|48|52|56|64)/,
+        },
+        {
+            pattern: /max-w-(px|16|24|28|32|36|40|48|52|56|64)/,
+        },
+        "-mx-8",
+    ],
     plugins: [forms({ strategy: "class" }), typography, containerQueries],
 };

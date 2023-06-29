@@ -1,7 +1,4 @@
 <script lang="ts" setup>
-import Input from "~/recruitis-shared/components/forms/input.vue";
-import Button from "~/recruitis-shared/components/forms/button.vue";
-import Dialog from "~/recruitis-shared/components/dialog.vue";
 import FormFields from "~/recruitis-shared/components/forms/formFields.vue";
 import Dropdown from "~/recruitis-shared/components/dropdown.vue";
 definePageMeta({ auth: false });
@@ -124,7 +121,6 @@ const fields = ref([
         <div class="p-2">
             <Input :controlled="false" />
             <Button theme="primary">Button</Button>
-            <Dialog :open="false">tady</Dialog>
             <FormFields :fields="fields" :controlled="false" />
             <Dropdown :is-open="dropdown" @update:is-open="(value) => (dropdown = value)">
                 <div>tady</div>

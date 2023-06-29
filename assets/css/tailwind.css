@@ -6,7 +6,7 @@
 
 body,
 html {
-    @apply !bg-none;
+    font-size: 16px;
 }
 html.iosModalOpened {
     @apply !overflow-visible lg:!overflow-y-hidden;
@@ -207,4 +207,8 @@ html.iosModalOpened body div[id^="popper_"] {
           @apply overflow-visible transition-all;
       }
   }
+}
+
+.dp__main{
+  @apply font-sans
 }

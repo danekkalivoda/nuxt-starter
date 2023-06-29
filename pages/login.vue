@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import FormFields from "~/recruitis-shared/components/forms/formFields.vue";
-import Button from "~/recruitis-shared/components/forms/button.vue";
 definePageMeta({
     auth: {
         unauthenticatedOnly: true,
