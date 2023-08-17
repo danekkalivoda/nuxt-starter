@@ -112,11 +112,14 @@ const fields = ref([
 </script>
 <template>
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="text-red">homepage</div>
-        <div class="prose">
+        <div class="text-red">
+            <p>{{ $t("welcome") }}</p>
+        </div>
+        <div class="prose prose-headings:font-display">
             <h1>Prose heading</h1>
             <p>prose text</p>
         </div>
+        <h2 class="font-display font-normal">header h2</h2>
         <nuxt-link to="/protected/globally">To protected</nuxt-link>
         <div class="p-2">
             <Input :controlled="false" />

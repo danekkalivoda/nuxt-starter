@@ -28,22 +28,13 @@ export const config = {
           },
         },
         fontFamily: {
-          urbanist: [
-            '"Roboto"',
-            "ui-sans-serif",
-            "system-ui",
-            "-apple-system",
-            "BlinkMacSystemFont",
-            '"Segoe UI"',
-            "Roboto",
-            '"Helvetica Neue"',
-            "Arial",
-            '"Noto Sans"',
+          sans: [
+            '"Inter"',
             "sans-serif",
-            '"Apple Color Emoji"',
-            '"Segoe UI Emoji"',
-            '"Segoe UI Symbol"',
-            '"Noto Color Emoji"',
+          ],
+          urbanist: [
+            '"Inter"',
+            "sans-serif",
           ],
         },
       },

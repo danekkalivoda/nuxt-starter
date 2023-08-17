@@ -37,6 +37,11 @@ export const config = {
               900: "#003C1A", //
           },
         },
+        fontWeight: {
+          medium: '600',
+          semibold: '700',
+          bold: '800'
+        },
         fontFamily: {
           sans: [
               '"Nunito sans"',
@@ -55,6 +60,11 @@ export const config = {
               '"Segoe UI Symbol"',
               '"Noto Color Emoji"',
           ],
+          'display': [
+            '"DM Serif Display"',
+            "ui-serif",
+            "serif"
+          ]
         },
       },
     },

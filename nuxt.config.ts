@@ -11,7 +11,14 @@ if (process.env.NUXT_PROJECT_NAME) {
 }
 
 export default defineNuxtConfig({
-    modules: ["@sidebase/nuxt-auth", "@nuxtjs/eslint-module", "@nuxtjs/google-fonts"],
+    modules: [
+        "@sidebase/nuxt-auth",
+        "@nuxtjs/eslint-module",
+        "@nuxtjs/google-fonts",
+        "@nuxtjs/i18n",
+        "nuxt-icon",
+        "@nuxtjs/strapi",
+    ],
     devtools: { enabled: false },
     css: ["~/assets/css/tailwind.css"],
     postcss: {
@@ -28,6 +35,7 @@ export default defineNuxtConfig({
     googleFonts: {
         ...projectConfig.googleFonts,
     },
+    i18n: projectConfig.i18n,
     auth: {
         origin: process.env.ORIGIN,
         enableGlobalAppMiddleware: true,
@@ -38,13 +46,15 @@ export default defineNuxtConfig({
         "@src/assets/js/utils": "/recruitis-shared/utils",
         "@utils": "/recruitis-shared/utils",
         "@/js/UI/components/": "/recruitis-shared/components",
+        "@/js/utils": "/recruitis-shared/utils",
         "tailwind-config": "/" + tailwindConfigUrl,
     },
-    runtimeConfig: {
-        apiSecret: "123",
-        public: {
-            strapiBase: process.env.STRAPI_URL || "default_api_url",
-        },
+    strapi: {
+        url: process.env.STRAPI_URL || "http://localhost:1337",
+        prefix: "/api",
+        version: "v4",
+        cookie: {},
+        cookieName: "strapi_jwt",
     },
     build: {
         transpile:

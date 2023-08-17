@@ -1,8 +1,33 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
-@import "../../recruitis-shared/css/components/datepicker.css";
+@import "@ui/css/components/datepicker.css";
 @import "floating-vue/dist/style.css";
+
+:root {
+  --tw-black: theme(colors.black);
+  --tw-white: theme(colors.white);
+  --tw-gray-50: theme(colors.gray.50);
+  --tw-gray-100: theme(colors.gray.100);
+  --tw-gray-200: theme(colors.gray.200);
+  --tw-gray-300: theme(colors.gray.300);
+  --tw-gray-400: theme(colors.gray.400);
+  --tw-gray-500: theme(colors.gray.500);
+  --tw-gray-600: theme(colors.gray.600);
+  --tw-gray-700: theme(colors.gray.700);
+  --tw-gray-800: theme(colors.gray.800);
+  --tw-gray-900: theme(colors.gray.900);
+  --tw-brand-50: theme(colors.brand.50);
+  --tw-brand-100: theme(colors.brand.100);
+  --tw-brand-200: theme(colors.brand.200);
+  --tw-brand-300: theme(colors.brand.300);
+  --tw-brand-400: theme(colors.brand.400);
+  --tw-brand-500: theme(colors.brand.500);
+  --tw-brand-600: theme(colors.brand.600);
+  --tw-brand-700: theme(colors.brand.700);
+  --tw-brand-800: theme(colors.brand.800);
+  --tw-brand-900: theme(colors.brand.900);
+}
 
 body,
 html {
