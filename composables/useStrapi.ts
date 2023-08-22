@@ -1,3 +1,4 @@
+import { PageInterface } from "~/pages/[slug].vue";
 import slugify from "slugify";
 interface MenuItemPageRelation {
     data: {
@@ -61,17 +62,80 @@ const getMenuLinkChildren = (item: MenuItem) => {
     }
 };
 
-export const useMenu = async (strapiMenuUrl: string) => {
-    const { find } = useStrapi();
-    const { data } = await useAsyncData(() => find<object>(strapiMenuUrl));
-    const originalData = JSON.parse(JSON.stringify(data.value));
-    /* console.log(originalData.data.attributes.items.data); */
+const getMenuByLocale = (data: any, locale: string) => {
+    const menu = data.find((item: any) => item.attributes.slug === locale);
 
-    const finalData = originalData.data.attributes.items.data
+    const getOnlyVisible = menu.attributes.items.data
         .filter((item: MenuItem) => !item.attributes.link_hidden)
         .map((item: MenuItem) => ({
             ...getMenuLinkBase(item),
             children: getMenuLinkChildren(item),
         }));
+    return getOnlyVisible;
+};
+
+export const useMenu = async ({ url = "", locale }: { url: string; locale: string }) => {
+    /* console.log("menu locale", locale); */
+
+    const { find } = useStrapi();
+    const { data: menus } = await useAsyncData("menus", () => find<object>(url + "&locale=" + locale));
+    const originalData = menus.value;
+
+    const finalData = getMenuByLocale(originalData?.data, locale);
     return finalData;
+};
+
+interface StrapiPageInterface {
+    attributes: {
+        Homepage: boolean;
+        Description: string;
+        Title: string;
+    };
+}
+
+const getHomepage = (pageData: StrapiPageInterface[]) => {
+    const result = pageData.filter((item: StrapiPageInterface) => item.attributes && item.attributes.Homepage).pop();
+    return result !== undefined ? result : undefined;
+};
+
+const getPage = (pageData: StrapiPageInterface[], slug: string) => {
+    const result = pageData.find(
+        (item: StrapiPageInterface) =>
+            item.attributes && slugify(item.attributes.Title, { lower: true, strict: true }) === slug
+    );
+
+    return result !== undefined ? result : undefined;
+};
+
+const getPageBySlug = (pageData: any, slug: string, isHomepage: boolean): PageInterface | undefined => {
+    const pageRawData = isHomepage ? getHomepage(pageData) : getPage(pageData, slug);
+
+    if (pageRawData !== undefined) {
+        return {
+            title: pageRawData.attributes.Title,
+            description: pageRawData.attributes.Description,
+        };
+    } else {
+        return undefined;
+    }
+};
+
+export const usePages = async ({
+    url = "",
+    slug,
+    locale,
+    homepage = false,
+}: {
+    url: string;
+    slug: string;
+    locale: string;
+    homepage?: boolean;
+}): Promise<PageInterface | undefined> => {
+    /* console.log("pages locale", locale); */
+    const { find } = useStrapi();
+    const { data: pages } = await useAsyncData("pages", () => find<object>(url + "&locale=" + locale));
+    if (pages.value) {
+        return getPageBySlug(pages.value.data, slug, homepage);
+    }
+    return undefined;
 };

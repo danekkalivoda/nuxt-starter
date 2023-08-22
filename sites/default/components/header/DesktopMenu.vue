@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from "@headlessui/vue";
-interface MenulinkInterface {
+export interface MenulinkInterface {
     title: string;
     url: string;
     target: string;
@@ -25,7 +25,11 @@ withDefaults(defineProps<MenuInterface>(), {});
                     class="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 focus:outline-none"
                 >
                     {{ item.title }}
-                    <Icon name="ion:chevron-down" class="h-4 w-4 text-gray-400" :class="open ? 'rotate-180' : ''" />
+                    <Icon
+                        name="ion:chevron-down"
+                        class="h-4 w-4 text-gray-400 transition-transform"
+                        :class="open ? '-rotate-180' : ''"
+                    />
                 </PopoverButton>
 
                 <transition
@@ -42,7 +46,8 @@ withDefaults(defineProps<MenuInterface>(), {});
                         <NuxtLink
                             v-for="child in item.children"
                             :key="child.title"
-                            :href="child.url"
+                            :to="child.url"
+                            :custom="item.url !== null"
                             class="block rounded-lg px-3 py-2 text-sm leading-6 text-gray-900 hover:bg-gray-50"
                             >{{ child.title }}</NuxtLink
                         >
@@ -50,8 +55,7 @@ withDefaults(defineProps<MenuInterface>(), {});
                 </transition>
             </Popover>
             <NuxtLink
-                v-else
-                :href="item.url"
+                :to="item.url !== null ? item.url : undefined"
                 :target="item.target"
                 class="text-sm font-semibold leading-6 text-gray-900"
                 >{{ item.title }}</NuxtLink

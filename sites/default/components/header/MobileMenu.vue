@@ -32,11 +32,10 @@ withDefaults(defineProps<MobileMenuInterface>(), {
                 <HeaderLogo />
                 <button
                     type="button"
-                    class="-m-2.5 rounded-md p-2.5 text-gray-700"
+                    class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
                     @click="emit('on-menu-toggle', false)"
                 >
-                    <span class="sr-only">Close menu</span>
-                    <span>x</span>
+                    <Icon name="ion:close" class="h-4 w-4 text-gray-400 transition-transform" />
                 </button>
             </div>
             <div class="mt-6 flow-root">

@@ -32,10 +32,14 @@ export const config = {
             '"Inter"',
             "sans-serif",
           ],
-          urbanist: [
+          brand: [
             '"Inter"',
             "sans-serif",
           ],
+          'display':  [
+            '"Inter"',
+            "sans-serif",
+          ]
         },
       },
     },

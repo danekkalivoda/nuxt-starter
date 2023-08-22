@@ -5,11 +5,10 @@ const emit = defineEmits(["onMenuToggle"]);
     <div class="flex lg:hidden">
         <button
             type="button"
-            class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            class="-my-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
             @click="emit('onMenuToggle', true)"
         >
-            <span class="sr-only">Open main menu</span>
-            toggle
+            <Icon name="ion:menu" class="h-6 w-6 text-gray-900 transition-transform" />
         </button>
     </div>
 </template>

@@ -9,7 +9,7 @@ const router = useRouter();
 const handleLocaleChange = (newLocale: string) => {
     router.push({ path: switchLocalePath(newLocale) });
 };
-const initialValue = computed(() => locale.value);
+const initialValue = ref();
 const availableLocales = computed(() => locales.value as Locale[]);
 const options = computed(() =>
     availableLocales.value.map((l: Locale) => ({
@@ -17,6 +17,9 @@ const options = computed(() =>
         value: l.code,
     }))
 );
+onMounted(() => {
+    initialValue.value = locale.value;
+});
 </script>
 
 <template>

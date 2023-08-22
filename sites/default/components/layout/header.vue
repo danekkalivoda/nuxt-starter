@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 const { locales } = useI18n();
-
-const menu = await useMenu("menus/1?nested&populate=deep,5");
+import { MenulinkInterface } from "~/sites/default/components/header/DesktopMenu.vue";
+interface HeaderInterface {
+    menu: MenulinkInterface[];
+}
+const props = withDefaults(defineProps<HeaderInterface>(), {});
 const mobileMenuOpen = ref(false);
 </script>
 <template>
@@ -12,14 +15,14 @@ const mobileMenuOpen = ref(false);
                 <HeaderLogo />
             </div>
             <HeaderMenuToggler @on-menu-toggle="(value) => (mobileMenuOpen = value)" />
-            <HeaderDesktopMenu :menu="menu" />
+            <HeaderDesktopMenu :menu="props.menu" />
             <div v-if="locales.length !== 1" class="hidden lg:flex lg:flex-1 lg:justify-end">
                 <HeaderLanguageSwitch />
             </div>
         </nav>
         <HeaderMobileMenu
             :is-open="mobileMenuOpen"
-            :menu="menu"
+            :menu="props.menu"
             @on-menu-toggle="(value) => (mobileMenuOpen = value)"
         />
     </div>

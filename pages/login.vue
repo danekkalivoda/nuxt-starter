@@ -23,7 +23,7 @@ const fields = ref([
     },
     {
         name: "password",
-        type: "password",
+        type: "input",
         lang: {
             placeholder: "Vaše heslo",
         },

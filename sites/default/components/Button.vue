@@ -4,9 +4,9 @@ export type NButtonInterface = ButtonInterface;
 const props = withDefaults(defineProps<NButtonInterface>(), {});
 const customStyles = computed(() => {
     if (props.theme === "primary") {
-        return "";
+        return "!font-semibold";
     }
-    return "";
+    return "!font-semibold";
 });
 </script>
 <template>

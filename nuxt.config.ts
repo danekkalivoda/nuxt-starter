@@ -20,6 +20,7 @@ export default defineNuxtConfig({
         "@nuxtjs/strapi",
     ],
     devtools: { enabled: false },
+    ssr: false,
     css: ["~/assets/css/tailwind.css"],
     postcss: {
         plugins: {
