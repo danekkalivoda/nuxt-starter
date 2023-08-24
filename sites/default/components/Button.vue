@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import Button, { ButtonInterface } from "~/recruitis-shared/components/forms/button.vue";
-export type NButtonInterface = ButtonInterface;
-const props = withDefaults(defineProps<NButtonInterface>(), {});
+export interface NButtonInterface extends ButtonInterface {
+    showDefaultSlot?: boolean;
+}
+const props = withDefaults(defineProps<NButtonInterface>(), {
+    showDefaultSlot: true,
+});
 const customStyles = computed(() => {
     if (props.theme === "primary") {
         return "!font-semibold";
