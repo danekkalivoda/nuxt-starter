@@ -1,65 +1,54 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-/* import GithubProvider from 'next-auth/providers/github' */
 import { NuxtAuthHandler } from "#auth";
+const config = useRuntimeConfig();
 
 export default NuxtAuthHandler({
-    // secret needed to run nuxt-auth in production mode (used to encrypt data)
-    secret: process.env.NUXT_SECRET,
-    pages: {
-        signIn: "/login",
-    },
+    secret: config.private.NUXT_SECRET,
     providers: [
-        /* GithubProvider.default({
-            clientId: process.env.GITHUB_CLIENT_ID,
-            clientSecret: process.env.GITHUB_CLIENT_SECRET
-        }), */
         CredentialsProvider.default({
-            // The name to display on the sign in form (e.g. 'Sign in with...')
             name: "Credentials",
-            // The credentials is used to generate a suitable form on the sign in page.
-            // You can specify whatever fields you are expecting to be submitted.
-            // e.g. domain, username, password, 2FA token, etc.
-            // You can pass any HTML attribute to the <input> tag through the object.
-            credentials: {
-                username: {
-                    label: "Username",
-                    type: "text",
-                    placeholder: "(hint: jsmith)",
-                },
-                password: {
-                    label: "Password",
-                    type: "password",
-                    placeholder: "(hint: hunter2)",
-                },
-            },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            authorize(credentials: any) {
-                // You need to provide your own logic here that takes the credentials
-                // submitted and returns either a object representing a user or value
-                // that is false/null if the credentials are invalid.
-                // NOTE: THE BELOW LOGIC IS NOT SAFE OR PROPER FOR AUTHENTICATION!
+            credentials: {},
+            async authorize(credentials: any) {
+                const body = JSON.stringify({
+                    identifier: credentials.username,
+                    password: credentials.password,
+                });
+                console.log(body);
+                console.log(`${config.private.STRAPI_BASE_URL}/api/auth/local`);
 
-                const user = {
-                    id: "1",
-                    name: "Daniel Kalivoda",
-                    username: "daniel",
-                    password: "kalivoda",
-                    image: "https://avatars.githubusercontent.com/u/25911230?v=4",
-                };
+                const response: any = await fetch(`${config.private.STRAPI_BASE_URL}/api/auth/local`, {
+                    method: "POST",
+                    headers: {
+                        /* Authorization: `Bearer ${config.private.NUXT_SECRET}`, */
+                        Accept: "*/*",
+                        "Content-Type": "application/json",
+                        "Accept-Encoding": "gzip, deflate, br",
+                    },
+                    body: JSON.stringify({
+                        identifier: credentials.username,
+                        password: credentials.password,
+                    }),
+                });
 
-                if (credentials?.username === user.username && credentials?.password === user.password) {
-                    // Any object returned will be saved in `user` property of the JWT
-                    return user;
+                if (response.ok) {
+                    const data = await response.json();
+                    const u = { id: data.id, name: data.user.username, email: data.jwt };
+                    return u;
                 } else {
-                    // eslint-disable-next-line no-console
-                    console.error("Warning: Malicious login attempt registered, bad credentials provided");
+                    const data = await response.json();
+                    console.log(data);
 
-                    // If you return null then an error will be displayed advising the user to check their details.
-                    return null;
-
-                    // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+                    throw createError({ statusCode: 401, message: "Unauthorized" });
+                    /* if (response.status === 400) {
+                        throw new Error("Špatné jméno nebo heslo");
+                    }
+                    return null; */
                 }
             },
         }),
     ],
+    pages: {
+        signIn: "/auth/signin",
+        error: "/auth/signin",
+    },
 });

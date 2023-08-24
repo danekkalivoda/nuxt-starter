@@ -1,13 +1,15 @@
 <script lang="ts" setup>
-const { locale, locales } = useI18n();
-const switchLocalePath = useSwitchLocalePath();
+const { locale, locales, setLocale } = useI18n();
+/* const switchLocalePath = useSwitchLocalePath(); */
 interface Locale {
     code: string;
     name: string;
 }
 const router = useRouter();
 const handleLocaleChange = (newLocale: string) => {
-    router.push({ path: switchLocalePath(newLocale) });
+    setLocale(newLocale);
+    const localeUrl = newLocale === "cs-CZ" ? "" : newLocale;
+    router.push({ path: "/" + localeUrl });
 };
 const initialValue = ref();
 const availableLocales = computed(() => locales.value as Locale[]);

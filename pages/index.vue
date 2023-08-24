@@ -4,7 +4,7 @@ const { locale } = useI18n();
 definePageMeta({ auth: false });
 const page: PageInterface | undefined = await usePages({
     url: "pages?populate=deep",
-    locale: locale.value === "cs-CZ" ? "cs" : locale.value,
+    locale: locale.value,
     slug: "",
     homepage: true,
 });

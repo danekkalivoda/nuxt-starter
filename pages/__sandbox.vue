@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import Dropdown from "~/recruitis-shared/components/dropdown.vue";
 import FormFields from "~/recruitis-shared/components/forms/formFields.vue";
-definePageMeta({ auth: false });
 const dropdown = ref(false);
 const fields = ref([
     {

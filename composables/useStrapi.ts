@@ -62,26 +62,25 @@ const getMenuLinkChildren = (item: MenuItem) => {
     }
 };
 
-const getMenuByLocale = (data: any, locale: string) => {
-    const menu = data.find((item: any) => item.attributes.slug === locale);
-
-    const getOnlyVisible = menu.attributes.items.data
-        .filter((item: MenuItem) => !item.attributes.link_hidden)
-        .map((item: MenuItem) => ({
-            ...getMenuLinkBase(item),
-            children: getMenuLinkChildren(item),
-        }));
-    return getOnlyVisible;
+const getMenus = (data: any) => {
+    return data.reduce((acc: any, item: any) => {
+        const slug = item.attributes.slug;
+        const visibleItems = item.attributes.items.data
+            .filter((menuItem: MenuItem) => !menuItem.attributes?.link_hidden)
+            .map((menuItem: MenuItem) => ({
+                ...getMenuLinkBase(menuItem),
+                children: getMenuLinkChildren(menuItem),
+            }));
+        acc[slug] = visibleItems;
+        return acc;
+    }, {});
 };
 
-export const useMenu = async ({ url = "", locale }: { url: string; locale: string }) => {
-    /* console.log("menu locale", locale); */
-
+export const useMenu = async ({ url = "" }: { url?: string }) => {
     const { find } = useStrapi();
-    const { data: menus } = await useAsyncData("menus", () => find<object>(url + "&locale=" + locale));
+    const { data: menus } = await useAsyncData("menus", () => find<object>(url));
     const originalData = menus.value;
-
-    const finalData = getMenuByLocale(originalData?.data, locale);
+    const finalData = getMenus(originalData?.data);
     return finalData;
 };
 
@@ -131,9 +130,10 @@ export const usePages = async ({
     locale: string;
     homepage?: boolean;
 }): Promise<PageInterface | undefined> => {
-    /* console.log("pages locale", locale); */
+    const l = locale === "cs-CZ" ? "cs" : locale;
     const { find } = useStrapi();
-    const { data: pages } = await useAsyncData("pages", () => find<object>(url + "&locale=" + locale));
+    const { data: pages } = await useAsyncData("pages", () => find<object>(url + "&locale=" + l));
+
     if (pages.value) {
         return getPageBySlug(pages.value.data, slug, homepage);
     }
