@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import Button, { ButtonInterface } from "~/recruitis-shared/components/forms/button.vue";
+import Button from "~/recruitis-shared/components/forms/button.vue";
+import type { ButtonInterface } from "~/recruitis-shared/components/forms/button.vue";
 export interface NButtonInterface extends ButtonInterface {
     showDefaultSlot?: boolean;
 }

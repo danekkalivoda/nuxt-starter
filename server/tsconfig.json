@@ -1,4 +1,7 @@
 {
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+  },
   "extends": "../.nuxt/tsconfig.server.json",
   "include": [
     "../.nuxt/types/nitro.d.ts",

@@ -10,7 +10,8 @@ const { status, data, signOut, signIn } = useAuth();
                     <div v-if="status === 'authenticated'" class="flex items-center gap-2 text-gray-500">
                         <Icon name="ion:person-circle-outline" class="h-5 w-5 text-gray-400 transition-transform" />
                         <span>
-                            Přihlášený: <strong class="font-medium text-gray-900">{{ data?.user?.name }}</strong>
+                            Přihlášený:
+                            <strong class="font-medium text-gray-900">{{ data?.user?.name }}</strong>
                         </span>
                     </div>
                     <div v-else class="text-gray-400">Nepřihlášený</div>
@@ -23,7 +24,7 @@ const { status, data, signOut, signIn } = useAuth();
                 >
                     Odhlásit
                 </Button>
-                <Button v-else size="xsmall" @click="signIn()"> Přihlásit </Button>
+                <Button v-else size="xsmall" @click="signIn('credentials', { callbackUrl: '/' })"> Přihlásit </Button>
             </div>
         </div>
     </div>

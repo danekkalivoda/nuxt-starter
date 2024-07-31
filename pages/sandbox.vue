@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import Dropdown from "~/recruitis-shared/components/dropdown.vue";
 import FormFields from "~/recruitis-shared/components/forms/formFields.vue";
-const dropdown = ref(false);
 const fields = ref([
     {
         label: "Date range",
@@ -29,6 +27,9 @@ const fields = ref([
             { label: "Štěpán Bartyzal", value: "2" },
             { label: "Jiří Landovský", value: "3" },
         ],
+        props: {
+            detached: true,
+        },
         id: "3",
     },
     {
@@ -120,8 +121,5 @@ const fields = ref([
         <h2 class="font-display font-normal">header h2</h2>
         <nuxt-link to="/protected/globally">To protected</nuxt-link>
         <FormFields :fields="fields" :controlled="false" />
-        <Dropdown :is-open="dropdown" @update:is-open="(value) => (dropdown = value)">
-            <div>tady</div>
-        </Dropdown>
     </div>
 </template>

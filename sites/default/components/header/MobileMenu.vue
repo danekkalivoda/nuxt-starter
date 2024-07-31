@@ -10,7 +10,7 @@ interface MenulinkInterface {
             title: string;
             url: string;
             target: string;
-        }
+        },
     ];
 }
 export interface MobileMenuInterface {

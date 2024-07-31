@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 const { locales } = useI18n();
-import { MenulinkInterface } from "~/sites/default/components/header/DesktopMenu.vue";
+import type { MenulinkInterface } from "~/sites/default/components/header/DesktopMenu.vue";
 interface HeaderInterface {
     menu: MenulinkInterface[];
 }

@@ -7,6 +7,6 @@ const props = withDefaults(defineProps<InputInterface>(), {});
 </template>
 <style lang="pcss">
 .n-input {
-  @apply !rounded-full;
+    @apply !rounded-full;
 }
 </style>

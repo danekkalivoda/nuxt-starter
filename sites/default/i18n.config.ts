@@ -3,7 +3,6 @@ export default defineI18nConfig(() => ({
     lazy: true,
     locale: "cs-CZ",
     fallbackLocale: "cs-CZ",
-    skipSettingLocaleOnNavigate: true,
     messages: {
         "cs-CZ": {
             welcome: "Vítejte",

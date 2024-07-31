@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import Select, { SelectInterface } from "~/recruitis-shared/components/forms/select.vue";
+import Select from "~/recruitis-shared/components/forms/select.vue";
+import type { SelectInterface } from "~/recruitis-shared/components/forms/select.vue";
 const emit = defineEmits(["update:initialValue"]);
 const props = withDefaults(defineProps<SelectInterface>(), {});
 </script>

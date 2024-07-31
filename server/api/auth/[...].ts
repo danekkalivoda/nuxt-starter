@@ -7,27 +7,23 @@ export default NuxtAuthHandler({
     providers: [
         CredentialsProvider.default({
             name: "Credentials",
-            credentials: {},
-            async authorize(credentials: any) {
+            credentials: {
+                username: { label: "Username", type: "text" },
+                password: { label: "Password", type: "password" },
+            },
+            async authorize(credentials: { username: string; password: string }) {
                 const body = JSON.stringify({
                     identifier: credentials.username,
                     password: credentials.password,
                 });
-                console.log(body);
-                console.log(`${config.private.STRAPI_BASE_URL}/api/auth/local`);
-
-                const response: any = await fetch(`${config.private.STRAPI_BASE_URL}/api/auth/local`, {
+                const response: Response = await fetch(`${config.private.STRAPI_BASE_URL}/api/auth/local`, {
                     method: "POST",
                     headers: {
-                        /* Authorization: `Bearer ${config.private.NUXT_SECRET}`, */
                         Accept: "*/*",
                         "Content-Type": "application/json",
                         "Accept-Encoding": "gzip, deflate, br",
                     },
-                    body: JSON.stringify({
-                        identifier: credentials.username,
-                        password: credentials.password,
-                    }),
+                    body: body,
                 });
 
                 if (response.ok) {
@@ -39,10 +35,6 @@ export default NuxtAuthHandler({
                     console.log(data);
 
                     throw createError({ statusCode: 401, message: "Unauthorized" });
-                    /* if (response.status === 400) {
-                        throw new Error("Špatné jméno nebo heslo");
-                    }
-                    return null; */
                 }
             },
         }),

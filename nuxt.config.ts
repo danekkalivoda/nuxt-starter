@@ -20,10 +20,15 @@ export default defineNuxtConfig({
     },
     modules: [
         "@sidebase/nuxt-auth",
-        "@nuxtjs/eslint-module",
+        [
+            "@nuxtjs/eslint-module",
+            {
+                lintOnStart: false,
+            },
+        ],
         "@nuxtjs/google-fonts",
         "@nuxtjs/i18n",
-        "nuxt-icon",
+        "@nuxt/icon",
         "@nuxtjs/strapi",
     ],
     devtools: { enabled: false },
@@ -54,11 +59,14 @@ export default defineNuxtConfig({
         "tailwind-config": "/" + tailwindConfigUrl,
     },
     auth: {
-        origin: process.env.AUTH_ORIGIN,
-        enableGlobalAppMiddleware: true,
+        baseURL: process.env.AUTH_ORIGIN,
+        globalAppMiddleware: false,
+        provider: {
+            type: "authjs",
+        },
     },
     strapi: {
-        url: process.env.STRAPI_BASE_URL || "http://localhost:1337",
+        url: "http://127.0.0.1:1337",
         prefix: "/api",
         version: "v4",
         cookie: {},

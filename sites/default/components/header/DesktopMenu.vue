@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { Popover, PopoverButton, PopoverGroup, PopoverPanel } from "@headlessui/vue";
+import { Popover, PopoverButton, PopoverGroup, PopoverPanel, provideUseId } from "@headlessui/vue";
+provideUseId(() => useId());
 export interface MenulinkInterface {
     title: string;
     url: string;
@@ -9,7 +10,7 @@ export interface MenulinkInterface {
             title: string;
             url: string;
             target: string;
-        }
+        },
     ];
 }
 export interface MenuInterface {
