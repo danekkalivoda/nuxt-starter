@@ -1,16 +1,16 @@
 export const i18n = {
-    defaultLocale: "cs-CZ",
+    defaultLocale: 'cs-CZ',
     locales: [
         {
-            code: "cs-CZ",
-            name: "CZ",
+            code: 'cs-CZ',
+            name: 'CZ',
         },
         {
-            code: "en",
-            name: "EN",
+            code: 'en',
+            name: 'EN',
         },
     ],
-    vueI18n: "./sites/default/i18n.config.ts",
+    vueI18n: './sites/default/i18n.config.ts',
 };
 export const googleFonts = {
     families: {
@@ -19,4 +19,4 @@ export const googleFonts = {
         },
     },
 };
-export const componentsPaths = ["~/sites/default/components"];
+export const componentsPaths = ['~/sites/default/components'];

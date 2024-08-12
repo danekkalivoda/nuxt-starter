@@ -8,6 +8,7 @@ export const config = {
     "./sites/groupon/**/*.{js,vue,ts}",
   ],
   theme: {
+    ...sharedConfig.theme,
     screens: sharedConfig.theme.screens,
     extend: {
       ...sharedConfig.theme.extend,

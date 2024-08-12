@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import type { PageInterface } from "~/pages/[slug].vue";
+import Page from '~/sites/default/pages/page.vue';
 const { locale } = useI18n();
 const { data: pageData } = await useAsyncData(() =>
-    $fetch("/api/page", {
-        params: { locale: locale.value, slug: "", homepage: true },
-    })
+    $fetch('/api/page', {
+        params: { locale: locale.value, slug: '', homepage: true },
+    }),
 );
 
 const page = pageData.value;
@@ -13,8 +13,8 @@ useHead({
 });
 </script>
 <template>
-    <template v-if="page">
-        <h1>{{ page.title }}</h1>
-        <p>{{ page.description }}</p>
-    </template>
+  <Page
+    v-if="page"
+    v-bind="page"
+  />
 </template>

@@ -53,6 +53,7 @@
     "floating-vue": "5.2.2",
     "mini-svg-data-uri": "^1.4.4",
     "nuxt": "3.12.4",
+    "nuxtjs-naive-ui": "^1.0.2",
     "postcss": "8.4.40",
     "postcss-import": "16.1.0",
     "postcss-nesting": "12.1.5",
@@ -67,6 +68,8 @@
   },
   "dependencies": {
     "@headlessui/vue": "1.7.22",
+    "@tanstack/vue-query": "^5.51.16",
+    "@tanstack/vue-table": "^8.19.3",
     "@tiptap/core": "2.5.8",
     "@tiptap/extension-bubble-menu": "2.3.1",
     "@tiptap/extension-character-count": "2.3.1",

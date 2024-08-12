@@ -1,12 +1,12 @@
 <script setup lang="ts">
 useHead({
-    title: "Nuxt starter",
+    title: 'Nuxt starter',
 });
 </script>
 <template>
-    <NuxtLayout>
-        <NuxtPage />
-    </NuxtLayout>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 <style lang="pcss">
 body {

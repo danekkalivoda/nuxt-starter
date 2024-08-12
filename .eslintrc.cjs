@@ -12,10 +12,10 @@ module.exports = {
     "plugin:vue/vue3-recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier",
+/*     "prettier", */
     "plugin:storybook/recommended",
   ],
-  plugins: ["prettier", "import", "@typescript-eslint"],
+  plugins: ["import", "@typescript-eslint"],
   parserOptions: {
     parser: "@typescript-eslint/parser",
     ecmaVersion: 2017,
@@ -24,7 +24,7 @@ module.exports = {
     project: ["./tsconfig.json"],
   },
   settings: {
-    "prettier-vue": {
+    /* "prettier-vue": {
       // Settings for how to process Vue SFC Blocks
       SFCBlocks: {
         template: true,
@@ -35,7 +35,12 @@ module.exports = {
       fileInfoOptions: {
         withNodeModules: false,
       },
-    },
+    }, */
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx']
+      }
+    }
   },
   ignorePatterns: [
     ".eslintrc.js",
@@ -81,6 +86,7 @@ module.exports = {
     "no-continue": "off",
     "vue/multi-word-component-names": "off",
     "vue/no-reserved-component-names": "off",
+    "vue/prop-name-casing": "off",
     /*         "import/extensions": [
             "error",
             {
@@ -109,7 +115,17 @@ module.exports = {
         },
       },
     ],
-    "prettier/prettier": [
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        ts: 'never',
+        tsx: 'never',
+        js: 'never',
+        jsx: 'never',
+      }
+    ],
+    /* "prettier/prettier": [
       "error",
       {
         plugins: ["prettier-plugin-tailwindcss"],
@@ -123,6 +139,6 @@ module.exports = {
         arrowParens: "always",
         endOfLine: "auto",
       },
-    ],
+    ], */
   },
 };

@@ -1,121 +1,85 @@
-/* eslint-disable */
-import type { PageInterface } from "~/pages/[slug].vue";
-import type { MenulinkInterface } from "~/sites/default/components/header/DesktopMenu.vue";
-import slugify from "slugify";
+import type { IPage, IStrapiPage } from '~/sites/default/types/pages.types';
+import type { IMenuItem } from '~/sites/default/types/menus.types';
+import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue';
 
-interface MenuItemPageRelation {
-  data: {
-    id: number;
-    attributes: {
-      Title: string;
-    };
-  };
-}
-interface MenuItem {
-  attributes: {
-    title: string;
-    url: string;
-    target: string;
-    link_hidden: boolean;
-    children?: {
-      data: [
-        {
-          attributes: {
-            title: string;
-            url: string;
-            target: string;
-            link_hidden: boolean;
-            page_relation: MenuItemPageRelation;
-          };
-        },
-      ];
-    };
-    page_relation: MenuItemPageRelation;
-  };
-}
-
-const getMenuLinkUrl = (item: MenuItem) => {
-  if (item.attributes.url !== "") {
-    return item.attributes.url;
-  } else if (item.attributes.page_relation.data) {
-    return slugify(item.attributes.page_relation.data.attributes.Title, {
-      lower: true,
-      strict: true,
-    });
-  } else {
-    return null;
-  }
+const getMenuLinkUrl = (item: IMenuItem) => {
+    if (item.attributes.url !== '') {
+        return item.attributes.url;
+    } else if (item.attributes.page_relation.data) {
+        return item.attributes.page_relation.data.attributes.Url;
+    } else {
+        return null;
+    }
 };
 
-const getMenuLinkBase = (item: MenuItem) => {
-  return {
-    title: item.attributes.title,
-    url: getMenuLinkUrl(item),
-    target: item.attributes.target,
-  };
+const getMenuLinkBase = (item: IMenuItem) => {
+    return {
+        title: item.attributes.title,
+        url: getMenuLinkUrl(item),
+        target: item.attributes.target,
+    };
 };
 
-const getMenuLinkChildren = (item: MenuItem) => {
-  if (item.attributes.children && item.attributes.children.data.length > 0) {
-    const finalChildren = item.attributes.children?.data
-      .filter((child: MenuItem) => !child.attributes.link_hidden)
-      .map((child: MenuItem) => ({
-        ...getMenuLinkBase(child),
-      }));
-    return finalChildren;
-  } else {
-    return null;
-  }
+const getMenuLinkChildren = (item: IMenuItem) => {
+    if (item.attributes.children && item.attributes.children.data.length > 0) {
+        const finalChildren = item.attributes.children?.data
+            .filter((child: IMenuItem) => !child.attributes.link_hidden)
+            .map((child: IMenuItem) => ({
+                ...getMenuLinkBase(child),
+            }));
+        return finalChildren;
+    } else {
+        return null;
+    }
 };
 
 const getMenus = (data: any) => {
-  const visibleItemsList: any[] = [];
-  for (const item of data) {
-    const visibleItems = item.attributes.items.data
-      .filter((menuItem: MenuItem) => !menuItem.attributes?.link_hidden)
-      .map((menuItem: MenuItem) => ({
-        ...getMenuLinkBase(menuItem),
-        children: getMenuLinkChildren(menuItem),
-      }));
-    visibleItemsList.push(...visibleItems);
-  }
-  return visibleItemsList;
+    const visibleItemsList: any[] = [];
+    for (const item of data) {
+        const visibleItems = item.attributes.items.data
+            .filter((IMenuItem: IMenuItem) => !IMenuItem.attributes?.link_hidden)
+            .map((IMenuItem: IMenuItem) => ({
+                ...getMenuLinkBase(IMenuItem),
+                children: getMenuLinkChildren(IMenuItem),
+            }));
+        visibleItemsList.push(...visibleItems);
+    }
+    return visibleItemsList;
 };
 
-export const useMenu = async ({ url = "", locale = "cs-CZ", useFetchMode = false }: { url?: string, locale?: string, useFetchMode?: boolean }): Promise<MenulinkInterface[]> => {
-  const runtimeConfig = useRuntimeConfig();
-  let data: any;
+export const useMenu = async ({
+    url = '',
+    locale = 'cs-CZ',
+    useFetchMode = false,
+}: {
+    url?: string;
+    locale?: string;
+    useFetchMode?: boolean;
+}): Promise<MenulinkInterface[]> => {
+    const runtimeConfig = useRuntimeConfig();
+    const apiUrl = `${runtimeConfig.public.strapi.url}/api/${url}&filters[title][$eq]=${locale}`;
+    const fetchOptions = {
+        method: 'GET' as const,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+    const fetchData = async (): Promise<any> => {
+        if (useFetchMode) {
+            const response = await useFetch(apiUrl, fetchOptions);
+            if (response && typeof response.data === 'object' && response.data !== null) {
+                return (response.data as any).value.data;
+            }
+            throw new Error('Špatný formát format.');
+        } else {
+            const response = await fetch(apiUrl, fetchOptions);
+            const jsonData = await response.json();
+            return jsonData.data;
+        }
+    };
 
-  if (useFetchMode) {
-    const { data: fetchData }: { data: any } = await useFetch(runtimeConfig.public.strapi.url + '/api/' + url + '&filters[title][$eq]=' + locale, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      }
-    });
-    data = fetchData.value.data;
-  } else {
-    const response = await fetch(runtimeConfig.public.strapi.url + '/api/' + url + '&filters[title][$eq]=' + locale, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      }
-    });
-    const jsonData = await response.json();
-    data = jsonData.data;
-  }
-
-  const finalData = getMenus(data);
-  return finalData;
+    return getMenus(await fetchData());
 };
-
-interface StrapiPageInterface {
-  attributes: {
-    Homepage: boolean;
-    Description: string;
-    Title: string;
-  };
-}
 
 /**
  * This function fetches a page from Strapi based on the provided slug and locale.
@@ -123,44 +87,51 @@ interface StrapiPageInterface {
  * Otherwise, it uses the findOne method to fetch the page by its slug.
  */
 export const usePages = async ({
-  url = "",
-  slug,
-  locale,
-  homepage = false,
+    url = '',
+    slug,
+    locale,
+    homepage = false,
 }: {
-  url: string;
-  slug: string;
-  locale: string;
-  homepage?: boolean;
-}): Promise<PageInterface | undefined> => {
-  const l = locale === "cs-CZ" ? "cs" : locale;
-  const filter = homepage ? "Homepage" : "Url";
-  const filterValue = homepage ? "true" : slug;
-  const runtimeConfig = useRuntimeConfig();
-  const urlToFetch = runtimeConfig.public.strapi.url + '/api/' + `${url}&filters[${filter}][$eq]=${filterValue}`
-  let data: any;
-  const response = await fetch(urlToFetch, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
+    url: string;
+    slug: string;
+    locale: string;
+    homepage?: boolean;
+}): Promise<IPage | undefined> => {
+    const l = locale === 'cs-CZ' ? 'cs' : locale;
+    const filter = homepage ? 'Homepage' : 'Url';
+    const filterValue = homepage ? 'true' : slug;
+    const runtimeConfig = useRuntimeConfig();
+    const urlToFetch = runtimeConfig.public.strapi.url + '/api/' + `${url}&filters[${filter}][$eq]=${filterValue}`;
+    const response = await fetch(urlToFetch, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    const jsonData = await response.json();
+    const data = jsonData.data;
+
+    const findPageData = (pageData: IStrapiPage[]): IStrapiPage | undefined => {
+        if (l === 'cs') {
+            return pageData.find((item: IStrapiPage) => item.attributes.locale === l);
+        } else {
+            return pageData
+                .flatMap((item: IStrapiPage) => item.attributes.localizations.data)
+                .find((loc: IStrapiPage) => loc.attributes.locale === l);
+        }
+    };
+
+    const pageRawData: IStrapiPage | undefined = findPageData(data);
+
+    if (pageRawData === undefined) {
+        return undefined;
     }
-  });
-  const jsonData = await response.json();
-  data = jsonData.data;
 
-  const findPageData = (data: any) => {
-    if (l === "cs") {
-      return data.find((item: any) => item.attributes.locale === l);
-    } else {
-      return data.flatMap((item: any) => item.attributes.localizations.data).find((loc: any) => loc.attributes.locale === l);
-    }
-  };
+    const { Title: title, Description: description, Blocks: blocks } = pageRawData.attributes;
 
-  const pageRawData = findPageData(data);
-
-  return pageRawData ? {
-    title: pageRawData.attributes.Title,
-    description: pageRawData.attributes.Description,
-  } : undefined;
+    return {
+        title,
+        description: description ?? undefined,
+        blocks,
+    };
 };
-/* eslint-enable */

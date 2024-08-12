@@ -8,8 +8,8 @@ interface Locale {
 const router = useRouter();
 const handleLocaleChange = (newLocale: string) => {
     setLocale(newLocale);
-    const localeUrl = newLocale === "cs-CZ" ? "" : newLocale;
-    router.push({ path: "/" + localeUrl });
+    const localeUrl = newLocale === 'cs-CZ' ? '' : newLocale;
+    router.push({ path: '/' + localeUrl });
 };
 const initialValue = ref();
 const availableLocales = computed(() => locales.value as Locale[]);
@@ -17,7 +17,7 @@ const options = computed(() =>
     availableLocales.value.map((l: Locale) => ({
         label: l.name,
         value: l.code,
-    }))
+    })),
 );
 onMounted(() => {
     initialValue.value = locale.value;
@@ -25,11 +25,11 @@ onMounted(() => {
 </script>
 
 <template>
-    <div v-if="options.length > 0">
-        <Select
-            :options="options"
-            :initial-value="initialValue"
-            @update:initial-value="(value) => handleLocaleChange(value)"
-        />
-    </div>
+  <div v-if="options.length > 0">
+    <Select
+      :options="options"
+      :initial-value="initialValue"
+      @update:initial-value="(value) => handleLocaleChange(value)"
+    />
+  </div>
 </template>

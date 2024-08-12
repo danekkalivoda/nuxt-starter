@@ -1,14 +1,14 @@
 export default defineI18nConfig(() => ({
     legacy: false,
     lazy: true,
-    locale: "cs-CZ",
-    fallbackLocale: "cs-CZ",
+    locale: 'cs-CZ',
+    fallbackLocale: 'cs-CZ',
     messages: {
-        "cs-CZ": {
-            welcome: "Vítejte",
+        'cs-CZ': {
+            welcome: 'Vítejte',
         },
         en: {
-            welcome: "Welcome",
+            welcome: 'Welcome',
         },
     },
 }));

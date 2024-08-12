@@ -11,6 +11,22 @@ export const sharedConfig = {
     "./app.vue",
   ],
   theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '1rem',
+        sm: '2rem',
+        lg: '2rem',
+        xl: '2rem',
+        '2xl': '2rem',
+      },
+      screens: {
+        xl: "1280px",
+        '2xl': "1536px",
+        '3xl': "1536px",
+        '4xl': "1536px",
+      },
+    },
     screens: {
       xs: "414px",
       sm: "640px",

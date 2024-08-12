@@ -1,31 +1,18 @@
 <script lang="ts" setup>
-import type { MenulinkInterface } from "~/sites/default/components/header/DesktopMenu.vue";
-const { locale } = useI18n();
-const menu = ref<MenulinkInterface[]>([]);
+/* Chtěl sem to udělat async, ale v tu chvíli to rozbije SSR. */
+import DefaultLayout from '~/sites/default/layout/default.vue';
+import GrouponLayout from '~/sites/groupon/layout/default.vue';
 
-const fetchMenuSSR = async () => {
-    menu.value = await useMenu({
-        url: "menus?nested&populate=deep,5",
-        locale: locale.value,
-        useFetchMode: true,
-    });
+const config = useRuntimeConfig();
+const layoutName = config.public.NUXT_PROJECT_NAME;
+
+const layouts: { [key: string]: typeof DefaultLayout } = {
+    default: DefaultLayout,
+    groupon: GrouponLayout,
 };
 
-await fetchMenuSSR();
-
-const fetchMenuFromAPI = async () => {
-    const response = await $fetch("/api/menu", {
-        params: { locale: locale.value },
-    });
-    menu.value = response;
-};
-
-watch(locale, async () => {
-    await fetchMenuFromAPI();
-});
+const layoutComponent = layouts[layoutName] || DefaultLayout;
 </script>
 <template>
-    <LayoutHeader :menu="menu"></LayoutHeader>
-    <slot></slot>
-    <LayoutFooter></LayoutFooter>
+  <component :is="layoutComponent" />
 </template>

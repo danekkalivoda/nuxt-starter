@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import FormFields from "~/recruitis-shared/components/forms/formFields.vue";
+/* import FormFields from "~/recruitis-shared/components/forms/formFields.vue";
 const fields = ref([
     {
         label: "Date range",
@@ -108,18 +108,22 @@ const fields = ref([
         },
         id: "9",
     },
-]);
+]); */
 </script>
 <template>
-    <div class="grid-rows-auto mx-auto grid max-w-3xl gap-8 px-4">
-        <p>{{ $t("welcome") }}</p>
+  <div class="grid-rows-auto mx-auto grid max-w-3xl gap-8 px-4">
+    <p>{{ $t("welcome") }}</p>
 
-        <div class="prose prose-headings:font-display">
-            <h1>Homepage</h1>
-            <p>prose text</p>
-        </div>
-        <h2 class="font-display font-normal">header h2</h2>
-        <nuxt-link to="/protected/globally">To protected</nuxt-link>
-        <FormFields :fields="fields" :controlled="false" />
+    <div class="prose prose-headings:font-display">
+      <h1>Homepage</h1>
+      <p>prose text</p>
     </div>
+    <h2 class="font-display font-normal">
+      header h2
+    </h2>
+    <nuxt-link to="/protected/globally">
+      To protected
+    </nuxt-link>
+    <!-- <FormFields :fields="fields" :controlled="false" /> -->
+  </div>
 </template>
