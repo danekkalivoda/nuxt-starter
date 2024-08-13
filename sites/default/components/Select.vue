@@ -5,8 +5,8 @@ const emit = defineEmits(['update:initialValue']);
 const props = withDefaults(defineProps<SelectInterface>(), {});
 </script>
 <template>
-  <Select
-    v-bind="props"
-    @update:initial-value="(value) => emit('update:initialValue', value)"
-  />
+    <Select
+        v-bind="props"
+        @update:initial-value="(value) => emit('update:initialValue', value)"
+    ></Select>
 </template>

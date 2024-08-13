@@ -4,5 +4,5 @@ const slug = Array.isArray(route.params.slug) ? route.params.slug[0] : route.par
 </script>
 
 <template>
-  <div>{{ slug }}</div>
+    <div>{{ slug }}</div>
 </template>

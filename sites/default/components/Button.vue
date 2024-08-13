@@ -15,10 +15,10 @@ const customStyles = computed(() => {
 });
 </script>
 <template>
-  <Button
-    v-bind="props"
-    :class="customStyles"
-  >
-    <slot />
-  </Button>
+    <Button
+        v-bind="props"
+        :class="customStyles"
+    >
+        <slot></slot>
+    </Button>
 </template>

@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/extensions -- tohle netuším jak vyřešit jinak
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NuxtAuthHandler } from '#auth';
 const config = useRuntimeConfig();

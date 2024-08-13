@@ -2,5 +2,5 @@
 definePageMeta({ auth: true });
 </script>
 <template>
-  <div>globally protected</div>
+    <div>globally protected</div>
 </template>

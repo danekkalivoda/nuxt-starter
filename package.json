@@ -12,9 +12,9 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint:js": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
+    "lint:js": "eslint --ext \".ts,.vue\" --ignore-path .eslintignore .",
     "lint:prettier": "prettier --check --write .",
-    "lint:fix": "eslint --ext \".ts,.vue\" --ignore-path .gitignore . --fix"
+    "lint:fix": "eslint --ext \".ts,.vue\" --ignore-path .eslintignore . --fix"
   },
   "devDependencies": {
     "@css-render/vue3-ssr": "0.15.14",

@@ -25,11 +25,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="options.length > 0">
-    <Select
-      :options="options"
-      :initial-value="initialValue"
-      @update:initial-value="(value) => handleLocaleChange(value)"
-    />
-  </div>
+    <div v-if="options.length > 0">
+        <Select
+            :options="options"
+            :initial-value="initialValue"
+            @update:initial-value="(value) => handleLocaleChange(value)"
+        ></Select>
+    </div>
 </template>

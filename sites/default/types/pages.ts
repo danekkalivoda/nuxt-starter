@@ -15,6 +15,7 @@ export interface IStrapiBlock {
 
 export interface IJobsListBlock extends IStrapiBlock {
     showFilter?: boolean;
+    showSubmitButton?: boolean;
 }
 
 export interface IStrapiAnotherComponentBlock extends IStrapiBlock {

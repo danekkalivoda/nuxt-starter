@@ -1,5 +1,5 @@
-import type { IPage, IStrapiPage } from '~/sites/default/types/pages.types';
-import type { IMenuItem } from '~/sites/default/types/menus.types';
+import type { IPage, IStrapiPage } from '~/sites/default/types/pages';
+import type { IMenuItem } from '~/sites/default/types/menus';
 import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue';
 
 const getMenuLinkUrl = (item: IMenuItem) => {

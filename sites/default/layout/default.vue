@@ -22,7 +22,7 @@ watch(locale, async () => {
 });
 </script>
 <template>
-  <LayoutHeader :menu="menu" />
-  <NuxtPage />
-  <LayoutFooter />
+    <LayoutHeader :menu="menu"></LayoutHeader>
+    <NuxtPage></NuxtPage>
+    <LayoutFooter></LayoutFooter>
 </template>

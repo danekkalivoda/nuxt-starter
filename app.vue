@@ -4,9 +4,9 @@ useHead({
 });
 </script>
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+    <NuxtLayout>
+        <NuxtPage></NuxtPage>
+    </NuxtLayout>
 </template>
 <style lang="pcss">
 body {

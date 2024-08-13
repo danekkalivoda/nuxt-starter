@@ -1,3 +1,3 @@
 <template>
-  <div>footer groupon</div>
+    <div>footer groupon</div>
 </template>

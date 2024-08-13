@@ -16,16 +16,16 @@ export default defineNuxtPlugin((nuxtApp) => {
             }
             const originalMeta = typeof originalRenderMeta === 'function' ? originalRenderMeta() : originalRenderMeta;
             if (originalMeta && typeof originalMeta.then === 'function') {
-                return originalMeta.then((resolvedOriginalMeta: any) => {
+                return originalMeta.then((resolvedOriginalMeta: Record<string, unknown>) => {
                     return {
                         ...resolvedOriginalMeta,
-                        headTags: resolvedOriginalMeta.headTags + collect(),
+                        headTags: (resolvedOriginalMeta.headTags as string) + collect(),
                     };
                 });
             } else {
                 return {
                     ...originalMeta,
-                    headTags: originalMeta.headTags + collect(),
+                    headTags: (originalMeta.headTags as string) + collect(),
                 };
             }
         };

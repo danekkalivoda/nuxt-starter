@@ -14,24 +14,24 @@ const selectedValues = computed({
 });
 </script>
 <template>
-  <div class="flex flex-wrap gap-4 self-end min-h-10">
-    <div
-      v-for="option in props.options"
-      :key="option.value"
-      class="flex items-center flex-nowrap gap-2"
-    >
-      <input
-        :id="option.value"
-        v-model="selectedValues"
-        type="checkbox"
-        :name="`${props.name}[]`"
-        :value="option.value"
-        class="form-checkbox cursor-pointer rounded-md text-brand-500 border-gray-300 focus:ring-brand-500 w-5 h-5"
-      >
-      <label
-        :for="option.value"
-        class="cursor-pointer"
-      >{{ option.label }}</label>
+    <div class="flex min-h-10 flex-wrap gap-4 self-end">
+        <div
+            v-for="option in props.options"
+            :key="option.value"
+            class="flex flex-nowrap items-center gap-2"
+        >
+            <input
+                :id="option.value"
+                v-model="selectedValues"
+                type="checkbox"
+                :name="`${props.name}[]`"
+                :value="option.value"
+                class="form-checkbox text-brand-500 focus:ring-brand-500 h-5 w-5 cursor-pointer rounded-md border-gray-300"
+            >
+            <label
+                :for="option.value"
+                class="cursor-pointer"
+            >{{ option.label }}</label>
+        </div>
     </div>
-  </div>
 </template>

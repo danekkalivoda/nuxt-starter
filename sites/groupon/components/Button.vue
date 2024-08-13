@@ -11,11 +11,11 @@ const customStyles = computed(() => {
 });
 </script>
 <template>
-  <Button
-    v-bind="props"
-    :class="customStyles"
-    :show-default-slot="true"
-  >
-    <slot name="default" />
-  </Button>
+    <Button
+        v-bind="props"
+        :class="customStyles"
+        :show-default-slot="true"
+    >
+        <slot name="default"></slot>
+    </Button>
 </template>

@@ -4,7 +4,7 @@ import type { InputInterface } from '~/recruitis-shared/components/forms/input.v
 const props = withDefaults(defineProps<InputInterface>(), {});
 </script>
 <template>
-  <Input v-bind="props" />
+    <Input v-bind="props"></Input>
 </template>
 <style lang="pcss">
 .n-input {

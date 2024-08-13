@@ -111,19 +111,19 @@ const fields = ref([
 ]); */
 </script>
 <template>
-  <div class="grid-rows-auto mx-auto grid max-w-3xl gap-8 px-4">
-    <p>{{ $t("welcome") }}</p>
+    <div class="grid-rows-auto mx-auto grid max-w-3xl gap-8 px-4">
+        <p>{{ $t("welcome") }}</p>
 
-    <div class="prose prose-headings:font-display">
-      <h1>Homepage</h1>
-      <p>prose text</p>
-    </div>
-    <h2 class="font-display font-normal">
-      header h2
-    </h2>
-    <nuxt-link to="/protected/globally">
-      To protected
-    </nuxt-link>
+        <div class="prose prose-headings:font-display">
+            <h1>Homepage</h1>
+            <p>prose text</p>
+        </div>
+        <h2 class="font-display font-normal">
+            header h2
+        </h2>
+        <nuxt-link to="/protected/globally">
+            To protected
+        </nuxt-link>
     <!-- <FormFields :fields="fields" :controlled="false" /> -->
-  </div>
+    </div>
 </template>

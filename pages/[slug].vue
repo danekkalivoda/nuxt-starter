@@ -17,11 +17,11 @@ useHead({
 });
 </script>
 <template>
-  <Page
-    v-if="page"
-    v-bind="page"
-  />
-  <template v-else>
-    <div>template 404 - neexistuje</div>
-  </template>
+    <Page
+        v-if="page"
+        v-bind="page"
+    ></Page>
+    <template v-else>
+        <div>template 404 - neexistuje</div>
+    </template>
 </template>

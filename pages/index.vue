@@ -13,8 +13,8 @@ useHead({
 });
 </script>
 <template>
-  <Page
-    v-if="page"
-    v-bind="page"
-  />
+    <Page
+        v-if="page"
+        v-bind="page"
+    ></Page>
 </template>

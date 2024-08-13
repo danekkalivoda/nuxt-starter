@@ -268,3 +268,8 @@
     @apply max-h-64 absolute -left-px -right-px bottom-0 translate-y-[calc(100%+1px)] overflow-y-auto customScrollbar z-[10001] bg-white shadow-md shadow-gray-400/20 ring-1 ring-gray-500/10 font-sans;
     border-radius: theme(borderRadius.DEFAULT);
   }
+
+  .visually-hidden {
+    @apply absolute w-px h-px -m-px p-0 overflow-hidden border-none;
+    clip: rect(0, 0, 0, 0);
+  }
