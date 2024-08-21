@@ -14,5 +14,7 @@ const layouts: { [key: string]: typeof DefaultLayout } = {
 const layoutComponent = layouts[layoutName] || DefaultLayout;
 </script>
 <template>
-    <component :is="layoutComponent"></component>
+    <div>
+        <component :is="layoutComponent"></component>
+    </div>
 </template>

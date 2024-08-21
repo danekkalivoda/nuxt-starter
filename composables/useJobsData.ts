@@ -3,7 +3,7 @@ export const useJobsData = <T>(initialKey = 'jobs', initialUrl = '/api/jobs') =>
     const url = ref(initialUrl);
     const key = ref(initialKey);
 
-    const { data, refresh, status } = useAsyncData<T>(key.value, () =>
+    const { data, refresh, status  } = useAsyncData<T>(key.value, () =>
         $fetch(url.value, {
             params: route.query,
         }),

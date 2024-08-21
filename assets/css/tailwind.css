@@ -5,35 +5,35 @@
 @import "floating-vue/dist/style.css";
 
 
-  :root {
-    --tw-black: theme(colors.black);
-    --tw-white: theme(colors.white);
-    --tw-gray-50: theme(colors.gray.50);
-    --tw-gray-100: theme(colors.gray.100);
-    --tw-gray-200: theme(colors.gray.200);
-    --tw-gray-300: theme(colors.gray.300);
-    --tw-gray-400: theme(colors.gray.400);
-    --tw-gray-500: theme(colors.gray.500);
-    --tw-gray-600: theme(colors.gray.600);
-    --tw-gray-700: theme(colors.gray.700);
-    --tw-gray-800: theme(colors.gray.800);
-    --tw-gray-900: theme(colors.gray.900);
-    --tw-brand-50: theme(colors.brand.50);
-    --tw-brand-100: theme(colors.brand.100);
-    --tw-brand-200: theme(colors.brand.200);
-    --tw-brand-300: theme(colors.brand.300);
-    --tw-brand-400: theme(colors.brand.400);
-    --tw-brand-500: theme(colors.brand.500);
-    --tw-brand-600: theme(colors.brand.600);
-    --tw-brand-700: theme(colors.brand.700);
-    --tw-brand-800: theme(colors.brand.800);
-    --tw-brand-900: theme(colors.brand.900);
-    --primary-scroll: theme(colors.gray.300);
-    --secondary-scroll: theme(colors.gray.100);
-    --firefox-track-scroll: transparent;
-    --scroll-width: thin;
-  }
-  .customScrollbar {
+:root {
+  --tw-black: theme(colors.black);
+  --tw-white: theme(colors.white);
+  --tw-gray-50: theme(colors.gray.50);
+  --tw-gray-100: theme(colors.gray.100);
+  --tw-gray-200: theme(colors.gray.200);
+  --tw-gray-300: theme(colors.gray.300);
+  --tw-gray-400: theme(colors.gray.400);
+  --tw-gray-500: theme(colors.gray.500);
+  --tw-gray-600: theme(colors.gray.600);
+  --tw-gray-700: theme(colors.gray.700);
+  --tw-gray-800: theme(colors.gray.800);
+  --tw-gray-900: theme(colors.gray.900);
+  --tw-brand-50: theme(colors.brand.50);
+  --tw-brand-100: theme(colors.brand.100);
+  --tw-brand-200: theme(colors.brand.200);
+  --tw-brand-300: theme(colors.brand.300);
+  --tw-brand-400: theme(colors.brand.400);
+  --tw-brand-500: theme(colors.brand.500);
+  --tw-brand-600: theme(colors.brand.600);
+  --tw-brand-700: theme(colors.brand.700);
+  --tw-brand-800: theme(colors.brand.800);
+  --tw-brand-900: theme(colors.brand.900);
+  --primary-scroll: theme(colors.gray.300);
+  --secondary-scroll: theme(colors.gray.100);
+  --firefox-track-scroll: transparent;
+  --scroll-width: thin;
+}
+.customScrollbar {
     scrollbar-width: var(--scroll-width);
     scrollbar-color: var(--primary-scroll) var(--firefox-track-scroll);
     /* Chrome, Edge, and Safari */
@@ -54,222 +54,222 @@
     }
 }
 
-  body,
-  html {
-    font-size: 16px;
-    @apply text-gray-700;
-  }
+body,
+html {
+  font-size: 16px;
+  @apply text-gray-700;
+}
+html.iosModalOpened {
+  @apply !overflow-visible lg:!overflow-y-hidden;
+}
+html.iosModalOpened body > div {
+  @apply !hidden;
+}
+@media (max-width: 1024px) {
   html.iosModalOpened {
-    @apply !overflow-visible lg:!overflow-y-hidden;
+    padding: 0 !important;
   }
+}
+@media screen(lg) {
   html.iosModalOpened body > div {
-    @apply !hidden;
+    display: initial;
   }
-  @media (max-width: 1024px) {
-    html.iosModalOpened {
-      padding: 0 !important;
-    }
+  html.iosModalOpened body #splusBodyWrapper {
+    @apply !flex;
   }
-  @media screen(lg) {
-    html.iosModalOpened body > div {
-      display: initial;
-    }
-    html.iosModalOpened body #splusBodyWrapper {
-      @apply !flex;
-    }
-    html.iosModalOpened body #splusBodyWrapper {
-      @apply !flex;
-    }
-    html.iosModalOpened body #storybook-root {
-      @apply !block;
-    }
+  html.iosModalOpened body #splusBodyWrapper {
+    @apply !flex;
   }
-  /* TODO: mel bych upravit podle toho, jak se to bude chovat přímo v aplikaci */
-  html.iosModalOpened body div[id^="headlessui-portal-root"],
-  html.iosModalOpened body div[class^="notificationsWrapper"],
-  html.iosModalOpened body div[id^="popper_"] {
+  html.iosModalOpened body #storybook-root {
     @apply !block;
   }
-  .disable-scrollbar {
-    scrollbar-width: none;
-    &::-webkit-scrollbar {
+}
+/* TODO: mel bych upravit podle toho, jak se to bude chovat přímo v aplikaci */
+html.iosModalOpened body div[id^="headlessui-portal-root"],
+html.iosModalOpened body div[class^="notificationsWrapper"],
+html.iosModalOpened body div[id^="popper_"] {
+  @apply !block;
+}
+.disable-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.multiselect-wrapper {
+  @apply relative mx-auto my-0 flex w-full cursor-pointer items-center justify-end outline-none;
+}
+.multiselect-assistive-text {
+  clip: rect(0 0 0 0);
+  @apply absolute -m-px h-px w-px overflow-hidden;
+}
+.v-popper--theme-dropdown {
+  &[data-popper-placement="bottom"] {
+    & .v-popper__wrapper {
+      @apply origin-top;
+    }
+  }
+  &[data-popper-placement="bottom-left"] {
+    & .v-popper__wrapper {
+      @apply origin-top-right;
+    }
+  }
+  &[data-popper-placement="bottom-right"] {
+    & .v-popper__wrapper {
+      @apply origin-top-left;
+    }
+  }
+  &[data-popper-placement="bottom-end"] {
+    & .v-popper__wrapper {
+      @apply origin-top-right;
+    }
+  }
+  &[data-popper-placement="bottom-start"] {
+    & .v-popper__wrapper {
+      @apply origin-top-left;
+    }
+  }
+  &[data-popper-placement="left"] {
+    & .v-popper__wrapper {
+      @apply origin-right;
+    }
+  }
+  &[data-popper-placement="right"] {
+    & .v-popper__wrapper {
+      @apply origin-left;
+    }
+  }
+  &[data-popper-placement="right-start"] {
+    & .v-popper__wrapper {
+      @apply origin-top-left;
+    }
+  }
+  & .v-popper__wrapper {
+    @apply scale-90 opacity-0 transition duration-150 ease-in-out;
+  }
+  & .v-popper__inner {
+    @apply !z-0 !overflow-visible !rounded-none !border-0 !bg-transparent !shadow-none;
+  }
+  & .v-popper__arrow-outer {
+    @apply !border-gray-300/30;
+  }
+  &.v-popper__popper--shown {
+    @apply transition-none;
+    & .v-popper__wrapper {
+      @apply scale-100 opacity-100;
+    }
+  }
+
+  &.v-popper--theme-dark {
+    & .v-popper__arrow-inner {
+      border-color: theme(colors.gray.800);
+    }
+    & .v-popper__arrow-outer {
       display: none;
     }
   }
-
-  .multiselect-wrapper {
-    @apply relative mx-auto my-0 flex w-full cursor-pointer items-center justify-end outline-none;
-  }
-  .multiselect-assistive-text {
-    clip: rect(0 0 0 0);
-    @apply absolute -m-px h-px w-px overflow-hidden;
-  }
-  .v-popper--theme-dropdown {
-    &[data-popper-placement="bottom"] {
-      & .v-popper__wrapper {
-        @apply origin-top;
-      }
-    }
-    &[data-popper-placement="bottom-left"] {
-      & .v-popper__wrapper {
-        @apply origin-top-right;
-      }
-    }
-    &[data-popper-placement="bottom-right"] {
-      & .v-popper__wrapper {
-        @apply origin-top-left;
-      }
-    }
-    &[data-popper-placement="bottom-end"] {
-      & .v-popper__wrapper {
-        @apply origin-top-right;
-      }
-    }
-    &[data-popper-placement="bottom-start"] {
-      & .v-popper__wrapper {
-        @apply origin-top-left;
-      }
-    }
-    &[data-popper-placement="left"] {
-      & .v-popper__wrapper {
-        @apply origin-right;
-      }
-    }
-    &[data-popper-placement="right"] {
-      & .v-popper__wrapper {
-        @apply origin-left;
-      }
-    }
-    &[data-popper-placement="right-start"] {
-      & .v-popper__wrapper {
-        @apply origin-top-left;
-      }
-    }
-    & .v-popper__wrapper {
-      @apply scale-90 opacity-0 transition duration-150 ease-in-out;
-    }
-    & .v-popper__inner {
-      @apply !z-0 !overflow-visible !rounded-none !border-0 !bg-transparent !shadow-none;
-    }
-    & .v-popper__arrow-outer {
-      @apply !border-gray-300/30;
-    }
-    &.v-popper__popper--shown {
-      @apply transition-none;
-      & .v-popper__wrapper {
-        @apply scale-100 opacity-100;
-      }
-    }
-
-    &.v-popper--theme-dark {
-      & .v-popper__arrow-inner {
-        border-color: theme(colors.gray.800);
-      }
-      & .v-popper__arrow-outer {
-        display: none;
-      }
-    }
-    &.hideArrow {
-      & .v-popper {
-        &__arrow-inner,
-        &__arrow-outer {
-          @apply hidden;
-        }
-      }
-    }
-  }
-  .v-popper__wrapper {
-    @apply font-sans text-sm;
-  }
-  .n-input__textarea {
-    @apply min-h-[86px];
-  }
-  .n-upload {
-    & .n-upload-trigger {
-      @apply h-full !flex items-stretch;
-    }
-    & .n-upload-dragger {
-      @apply flex items-center justify-center rounded !border-2 !border-dashed !border-gray-200 bg-white hover:!border-gray-300 hover:!bg-gray-100 py-3;
-    }
-    &.n-upload--drag-over {
-      & .n-upload-dragger {
-        @apply !border-gray-300 !bg-gray-100;
-      }
-    }
-  }
-  .n-dynamic-input {
-    @apply flex flex-col gap-4;
-    & .n-button {
-      @apply min-h-[40px] rounded border border-gray-300 px-5 py-2.5 text-base text-gray-700 shadow-md shadow-gray-500/10 hover:bg-gray-50 hover:text-gray-700 focus:border-gray-300 focus:text-gray-700 focus:ring-gray-300;
-      & .n-base-wave,
-      & .n-button__border,
-      & .n-button__state-border {
+  &.hideArrow {
+    & .v-popper {
+      &__arrow-inner,
+      &__arrow-outer {
         @apply hidden;
       }
     }
-    &
-      .n-button-group:not(.n-button-group--vertical):not(.n-button-group--rtl)
-      .n-button:first-child:not(:last-child) {
-      @apply border-r-0;
-    }
-    &
-      .n-button-group:not(.n-button-group--vertical):not(.n-button-group--rtl)
-      .n-button:not(:first-child):not(:last-child) {
-      @apply border-r-0;
-    }
-    & .n-dynamic-input-item {
-      @apply m-0 items-end;
-      & .n-dynamic-input-item__action {
-        @apply !mt-auto ml-4;
-      }
+  }
+}
+.v-popper__wrapper {
+  @apply font-sans text-sm;
+}
+.n-input__textarea {
+  @apply min-h-[86px];
+}
+.n-upload {
+  & .n-upload-trigger {
+    @apply h-full !flex items-stretch;
+  }
+  & .n-upload-dragger {
+    @apply flex items-center justify-center rounded !border-2 !border-dashed !border-gray-200 bg-white hover:!border-gray-300 hover:!bg-gray-100 py-3;
+  }
+  &.n-upload--drag-over {
+    & .n-upload-dragger {
+      @apply !border-gray-300 !bg-gray-100;
     }
   }
-  .n-radio {
-    @apply inline-flex cursor-pointer items-center gap-2 font-normal normal-case;
-    .n-radio__label {
-      @apply px-0;
-    }
-    .n-radio__dot-wrapper {
+}
+.n-dynamic-input {
+  @apply flex flex-col gap-4;
+  & .n-button {
+    @apply min-h-[40px] rounded border border-gray-300 px-5 py-2.5 text-base text-gray-700 shadow-md shadow-gray-500/10 hover:bg-gray-50 hover:text-gray-700 focus:border-gray-300 focus:text-gray-700 focus:ring-gray-300;
+    & .n-base-wave,
+    & .n-button__border,
+    & .n-button__state-border {
       @apply hidden;
     }
-    .n-radio-input {
-      @apply form-radio relative m-0 h-4 w-4 flex-shrink-0 align-top text-brand-500 opacity-100 transition duration-100 ease-in-out checked:border-brand-500 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50;
-      border: 1px solid theme(colors.gray.300);
+  }
+  &
+    .n-button-group:not(.n-button-group--vertical):not(.n-button-group--rtl)
+    .n-button:first-child:not(:last-child) {
+    @apply border-r-0;
+  }
+  &
+    .n-button-group:not(.n-button-group--vertical):not(.n-button-group--rtl)
+    .n-button:not(:first-child):not(:last-child) {
+    @apply border-r-0;
+  }
+  & .n-dynamic-input-item {
+    @apply m-0 items-end;
+    & .n-dynamic-input-item__action {
+      @apply !mt-auto ml-4;
     }
   }
-  .n-base-select-menu {
-    & .n-base-select-menu__loading {
-      @apply w-44;
-    }
-    & .n-base-select-option {
-      & .n-base-select-option__content {
-        @apply w-full;
-      }
+}
+.n-radio {
+  @apply inline-flex cursor-pointer items-center gap-2 font-normal normal-case;
+  .n-radio__label {
+    @apply px-0;
+  }
+  .n-radio__dot-wrapper {
+    @apply hidden;
+  }
+  .n-radio-input {
+    @apply form-radio relative m-0 h-4 w-4 flex-shrink-0 align-top text-brand-500 opacity-100 transition duration-100 ease-in-out checked:border-brand-500 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50;
+    border: 1px solid theme(colors.gray.300);
+  }
+}
+.n-base-select-menu {
+  & .n-base-select-menu__loading {
+    @apply w-44;
+  }
+  & .n-base-select-option {
+    & .n-base-select-option__content {
+      @apply w-full;
     }
   }
-  .vue-notification-group {
-    @apply !z-[65000] transition-transform;
-    &.top-edge {
-      @apply mt-2 translate-y-14 lg:translate-y-16;
-    }
-    > span {
-      @apply flex flex-col px-4 pb-4;
-      > .vue-notification-wrapper {
-        @apply overflow-visible transition-all;
-      }
+}
+.vue-notification-group {
+  @apply !z-[65000] transition-transform;
+  &.top-edge {
+    @apply mt-2 translate-y-14 lg:translate-y-16;
+  }
+  > span {
+    @apply flex flex-col px-4 pb-4;
+    > .vue-notification-wrapper {
+      @apply overflow-visible transition-all;
     }
   }
+}
 
-  .dp__main {
-    @apply font-sans;
-  }
+.dp__main {
+  @apply font-sans;
+}
 
-  .tw-dropdownWrapper{
-    @apply max-h-64 absolute -left-px -right-px bottom-0 translate-y-[calc(100%+1px)] overflow-y-auto customScrollbar z-[10001] bg-white shadow-md shadow-gray-400/20 ring-1 ring-gray-500/10 font-sans;
-    border-radius: theme(borderRadius.DEFAULT);
-  }
+.tw-dropdownWrapper{
+  @apply max-h-64 absolute -left-px -right-px bottom-0 translate-y-[calc(100%+1px)] overflow-y-auto customScrollbar z-[10001] bg-white shadow-md shadow-gray-400/20 ring-1 ring-gray-500/10 font-sans;
+  border-radius: theme(borderRadius.DEFAULT);
+}
 
-  .visually-hidden {
-    @apply absolute w-px h-px -m-px p-0 overflow-hidden border-none;
-    clip: rect(0, 0, 0, 0);
-  }
+.visually-hidden {
+  @apply absolute w-px h-px -m-px p-0 overflow-hidden border-none;
+  clip: rect(0, 0, 0, 0);
+}

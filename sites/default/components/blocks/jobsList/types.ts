@@ -1,10 +1,11 @@
 import type { BaseFormElementInterface } from '~/recruitis-shared/components/forms/commons';
-import type { MultiselectInterface } from '~/recruitis-shared/components/forms/multiSelect.vue';
+import type { IMultiselectProps } from '~/sites/default/components/Multiselect';
 import type { InputInterface } from '~/recruitis-shared/components/forms/input.vue';
 
 export interface IJob {
     title: string;
     description: string;
+    anchor: string;
 }
 
 type FilterType = 'multiSelect' | 'checkboxes' | 'inputSearch';
@@ -16,7 +17,7 @@ export interface ICheckboxes extends BaseFormElementInterface {
     }[];
     initialValue: string | string[] | undefined;
 }
-export interface IMultiselect extends BaseFormElementInterface, MultiselectInterface {
+export interface IMultiselect extends BaseFormElementInterface, IMultiselectProps {
     type: FilterType;
 }
 

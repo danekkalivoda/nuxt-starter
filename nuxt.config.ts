@@ -1,3 +1,5 @@
+import config from 'primevue/config';
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 let tailwindConfigUrl = 'sites/default/tailwind.config.js';
 if (process.env.NUXT_PROJECT_NAME) {
@@ -11,6 +13,10 @@ if (process.env.NUXT_PROJECT_NAME) {
 }
 
 export default defineNuxtConfig({
+    app: {
+        pageTransition: false,
+        layoutTransition: false,
+    },
     runtimeConfig: {
         private: {
             NUXT_SECRET: process.env.NUXT_SECRET,
@@ -33,6 +39,7 @@ export default defineNuxtConfig({
         '@nuxt/icon',
         '@nuxtjs/strapi',
         'nuxtjs-naive-ui',
+        '@primevue/nuxt-module',
     ],
     devtools: { enabled: false },
     ssr: true,
@@ -80,10 +87,16 @@ export default defineNuxtConfig({
         strict: false,
     }, */
     plugins: ['~/plugins/naive-ui'],
+    primevue: {
+        autoImport: false,
+        options: {
+            unstyled: true,
+        },
+    },
     build: {
         transpile:
             process.env.NODE_ENV === 'production'
-                ? ['naive-ui', 'vueuc', '@css-render/vue3-ssr', '@juggle/resize-observer']
-                : ['@juggle/resize-observer'],
+                ? ['@vueform/multiselect', 'naive-ui', 'vueuc', '@css-render/vue3-ssr', '@juggle/resize-observer']
+                : ['@vueform/multiselect', '@juggle/resize-observer'],
     },
 });

@@ -3,8 +3,8 @@ export const remove = async (key: string, value: string, formState: Ref<Types.IF
     const field = formState.value.find((f) => f.name + '[]' === key || f.name === key);
     if (field) {
         if (field.type === 'multiSelect') {
-            const values = (field as Types.IMultiselect).initialValue as string[];
-            (field as Types.IMultiselect).initialValue = values.filter((v) => v !== value);
+            const values = (field as Types.IMultiselect).initialValue;
+            (field as Types.IMultiselect).initialValue = values?.filter((v) => v.value !== value);
         } else if (field.type === 'checkboxes') {
             const values = (field as Types.ICheckboxes).initialValue as string[];
             (field as Types.ICheckboxes).initialValue = values.filter((v) => v !== value);

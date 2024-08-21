@@ -1,8 +1,13 @@
 <script setup lang="ts">
+import { defineExpose } from 'vue';
+import type { LocationQueryValue } from 'vue-router';
 import { useDebounceFn } from '@vueuse/core';
 import type { Types } from '~/sites/default/components/blocks/jobsList';
-import { Button, Checkboxes, Input } from '~/sites/default/components';
+import { Button, Checkboxes, Input, MultiSelect } from '~/sites/default/components';
+import type { IOption } from '~/sites/default/components/Multiselect';
 import { ActiveFilters } from '~/sites/default/components/blocks/jobsList';
+import { omit } from '~/recruitis-shared/utils/common';
+import { removeAll } from '~/sites/default/components/blocks/jobsList/lib/activeFilters';
 const props = withDefaults(defineProps<{
     showSubmitButton?: boolean
 }>(), {
@@ -13,6 +18,7 @@ const emits = defineEmits<{
 }>();
 const router = useRouter();
 const route = useRoute();
+
 
 /* TODO: Tady by se to mělo udělat tak, že filtry, které se vrátí z api, by měli setnout do formState
   aktuálně je jen zkopiruji, abych je mohl mutovat, ale lepší by bylo, aby to ovladalo API.
@@ -28,6 +34,7 @@ const fetchFiltersData = async () => {
 const { filters, refresh, status } = await fetchFiltersData();
 const formState = ref<Types.IFilterField[]>(structuredClone(toRaw(filters.value.data)));
 const activeFilters = ref<Types.IActiveFilter>({});
+
 const form = ref<HTMLFormElement | null>(null);
 const setFormState = () => {
     if (form.value) {
@@ -38,7 +45,7 @@ const setFormState = () => {
             }
         }
         const queryString = new URLSearchParams(formData as unknown as Record<string, string>);
-        const query: Record<string, any> = { ...router.currentRoute.value.query };
+        const query: Record<string, LocationQueryValue | LocationQueryValue[]> = { ...router.currentRoute.value.query };
         const f: Record<string, string[]> = {};
 
         for (const [key, value] of queryString.entries()) {
@@ -48,18 +55,11 @@ const setFormState = () => {
             f[key].push(value);
         }
 
-        for (const key of Object.keys(query)) {
-            if (!(key in f)) {
-                delete query[key];
-            }
-        }
-
-        for (const [key, values] of Object.entries(f)) {
-            if (values.length > 0) {
-                query[key] = values.join(',');
-            } else {
-                delete query[key];
-            }
+        // Update the query with the new filter state inside "jobsFilter"
+        if (Object.keys(f).length > 0) {
+            query.jobsFilter = JSON.stringify(f);
+        } else {
+            delete query.jobsFilter;
         }
 
         router.push({ query }).then(() => {
@@ -71,20 +71,32 @@ const setFormState = () => {
         });
     }
 };
+const clearFormState = async () => {
+    await removeAll(activeFilters, formState);
+    setFormState();
+};
 const debouncedSetFormState = useDebounceFn(setFormState, 500);
-const onChange = (field: Types.IFilterField, value: string | string[] | undefined) => {
+
+const onChange = (field: Types.IFilterField, value: string | string[] | undefined | null | IOption[]) => {
+
     switch (field.type) {
         case 'multiSelect':
-            (field as Types.IMultiselect).initialValue = value;
-            nextTick(() => setFormState());
+            if (Array.isArray(value) && value.every((v) => typeof v === 'object')) {
+                field.initialValue = value;
+                nextTick(() => setFormState());
+            }
             break;
         case 'checkboxes':
-            (field as Types.ICheckboxes).initialValue = value;
-            nextTick(() => setFormState());
+            if (Array.isArray(value) && value.every((v) => typeof v === 'string')) {
+                field.initialValue = value;
+                nextTick(() => setFormState());
+            }
             break;
         case 'inputSearch':
-            (field as Types.IInput).initialValue = value as string | undefined;
-            nextTick(() => debouncedSetFormState());
+            if (typeof value === 'string' || value === undefined) {
+                field.initialValue = value;
+                nextTick(() => debouncedSetFormState());
+            }
             break;
         default:
             nextTick(() => debouncedSetFormState());
@@ -97,8 +109,11 @@ const hasSubmitButton = computed(() => {
     return props.showSubmitButton;
 });
 const getMultiselectOptions = (field: Types.IFilterField) => {
-    return (field as Types.IMultiselect).options;
+    return (field as Types.IMultiselect).options ?? [];
 };
+
+// eslint-disable-next-line vue/no-expose-after-await -- at na ten status nezapomenu, případně ho smaznu později
+defineExpose({ clearFormState });
 </script>
 
 <template>
@@ -116,15 +131,10 @@ const getMultiselectOptions = (field: Types.IFilterField) => {
                 >
                     <MultiSelect
                         v-if="field.type === 'multiSelect'"
-                        :lang="{
-                            placeholder: 'Vyberte',
-                            multipleLabels: ['vybraná', 'vybrané', 'vybraných']
-                        }"
-                        v-bind="(field as Types.IMultiselect)"
+                        v-bind="(omit(field, ['type']) as Types.IMultiselect)"
+                        :key="field.name"
                         :name="field.name"
-                        :native-support="true"
-                        :close-on-select="true"
-                        :initial-value="(field as Types.IMultiselect).initialValue"
+                        :initial-value="(field as Types.IMultiselect).initialValue ?? []"
                         :options="getMultiselectOptions(field)"
                         @update:initial-value="(value) => onChange(field, value)"
                     ></MultiSelect>
@@ -153,6 +163,7 @@ const getMultiselectOptions = (field: Types.IFilterField) => {
         </form>
         <ActiveFilters
             v-if="hasActiveFilters"
+            ref="activeFiltersRef"
             :form="formState"
             :active="activeFilters"
             @update:active-filters="(value) => (activeFilters = value)"

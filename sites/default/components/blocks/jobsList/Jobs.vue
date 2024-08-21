@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useVueTable, createColumnHelper, getCoreRowModel, getSortedRowModel } from '@tanstack/vue-table';
+import Button from '~/sites/default/components/Button.vue';
 import Loading from '~/sites/default/components/Loading.vue';
 import type { SortingState } from '@tanstack/vue-table';
 import type { Types } from '~/sites/default/components/blocks/jobsList';
@@ -7,8 +8,11 @@ import { type AsyncDataRequestStatus } from '#app';
 import slugify from 'slugify';
 const router = useRouter();
 const route = useRoute();
-const emits = defineEmits<{ (e: 'refresh'): void }>();
-const props = defineProps<{ data?: Types.IJob[]; loading: AsyncDataRequestStatus }>();
+const emits = defineEmits<{
+    (e: 'refresh'): void
+    (e: 'loadMore', page: number): void
+}>();
+const props = defineProps<{ data?: Types.IJob[]; total?: number; loading: AsyncDataRequestStatus }>();
 const columnHelper = createColumnHelper<Types.IJob>();
 const columns = [
     columnHelper.accessor('title', {
@@ -29,7 +33,6 @@ const initialSorting = ref<SortingState>(
     }) ?? [],
 );
 const sorting = ref<SortingState>(initialSorting.value);
-
 const table = useVueTable({
     get data() {
         return props.data ?? [];
@@ -52,7 +55,9 @@ const table = useVueTable({
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    manualPagination: true, // Disable pagination
 });
+
 const hasHeader = computed(() => {
     return false; //TODO strapi
 });
@@ -62,6 +67,19 @@ const getCellLabel = (cell: any) => {
         ? cell.column.columnDef.cell(cell.getContext())
         : cell.column.columnDef.cell;
 };
+
+const loadMoreItems = (limit: number) => {
+    const currentLimit = parseInt(route.query.limit as string) || 25;
+    const newLimit = currentLimit + (typeof limit === 'number' ? limit : 25);
+    router.push({ query: { ...route.query, limit: newLimit.toString() } }).then(() => {
+        nextTick(() => {
+            emits('loadMore', newLimit);
+        });
+    });
+};
+const hasMoreItems = computed(() => {
+    return (props.data?.length ?? 0) < (props.total ?? 0);
+});
 
 </script>
 <template>
@@ -98,7 +116,7 @@ const getCellLabel = (cell: any) => {
                 </div>
             </div>
             <template
-                v-for="row in table.getRowModel().rows.slice(0, 10)"
+                v-for="row in table.getRowModel().rows"
                 :key="row.id"
             >
                 <slot
@@ -106,8 +124,10 @@ const getCellLabel = (cell: any) => {
                     :cells="row.getVisibleCells()"
                     :link="'/pozice/' + slugify(row.original.title, { lower: true, strict: true })"
                     :get-cell-label="getCellLabel"
+                    :anchor="row.original.anchor"
                 >
                     <a
+                        :id="row.original.anchor"
                         :href="'/pozice/' + slugify(row.original.title, { lower: true, strict: true })"
                         class="group block grid-cols-2 items-stretch overflow-hidden rounded ring-1 ring-black/5 md:grid md:py-0"
                     >
@@ -125,8 +145,18 @@ const getCellLabel = (cell: any) => {
             </template>
         </div>
         <div
+            v-if="hasMoreItems"
+            class="flex justify-center py-4"
+        >
+            <Button
+                @click="loadMoreItems"
+            >
+                Načíst více
+            </Button>
+        </div>
+        <div
             v-if="loading === 'pending'"
-            class="absolute inset-0 grid"
+            class="fixed inset-0 grid"
         >
             <div class="text-brand-500 -m-2 grid place-items-center bg-white/10 backdrop-blur-sm">
                 <Loading></Loading>
