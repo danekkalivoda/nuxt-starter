@@ -1,87 +1,103 @@
 <script setup lang="ts">
-import { useVueTable, createColumnHelper, getCoreRowModel, getSortedRowModel } from '@tanstack/vue-table';
-import Button from '~/sites/default/components/Button.vue';
-import Loading from '~/sites/default/components/Loading.vue';
-import type { SortingState } from '@tanstack/vue-table';
-import type { Types } from '~/sites/default/components/blocks/jobsList';
-import { type AsyncDataRequestStatus } from '#app';
-import slugify from 'slugify';
-const router = useRouter();
-const route = useRoute();
+import { type SortingState, useVueTable, createColumnHelper, getCoreRowModel, getSortedRowModel } from '@tanstack/vue-table'
+import slugify from 'slugify'
+import Button from '~/sites/default/components/Button.vue'
+import Loading from '~/sites/default/components/Loading.vue'
+import type { Types } from '~/sites/default/components/blocks/jobsList'
+import type { AsyncDataRequestStatus } from '#app'
+
+const router = useRouter()
+const route = useRoute()
 const emits = defineEmits<{
     (e: 'refresh'): void
     (e: 'loadMore', page: number): void
-}>();
-const props = defineProps<{ data?: Types.IJob[]; total?: number; loading: AsyncDataRequestStatus }>();
-const columnHelper = createColumnHelper<Types.IJob>();
+}>()
+const props = defineProps<{ data?: Types.IJob[]
+    total?: number
+    loading: AsyncDataRequestStatus }>()
+const columnHelper = createColumnHelper<Types.IJob>()
 const columns = [
-    columnHelper.accessor('title', {
-        header: 'Pozice',
-        cell: (info) => info.getValue(),
-        sortDescFirst: true,
-    }),
-    columnHelper.accessor('description', {
-        header: 'Popis',
-        cell: (info) => info.getValue(),
-        sortDescFirst: true,
-    }),
-];
-const initialSorting = ref<SortingState>(
-    (route.query.sort as string)?.split(',').map((s) => {
-        const [id, desc] = s.split(':');
-        return { id, desc: desc === 'desc' };
-    }) ?? [],
-);
-const sorting = ref<SortingState>(initialSorting.value);
+    columnHelper.accessor(
+        'title',
+        {
+            header: 'Pozice',
+            cell: (info) => info.getValue(),
+            sortDescFirst: true,
+        },
+    ),
+    columnHelper.accessor(
+        'description',
+        {
+            header: 'Popis',
+            cell: (info) => info.getValue(),
+            sortDescFirst: true,
+        },
+    ),
+]
+const initialSorting = ref<SortingState>((route.query.sort as string)?.split(',').map((s) => {
+    const [
+        id,
+        desc,
+    ] = s.split(':')
+    return { id,
+        desc: desc === 'desc' }
+}) ?? [])
+const sorting = ref<SortingState>(initialSorting.value)
 const table = useVueTable({
     get data() {
-        return props.data ?? [];
+        return props.data ?? []
     },
     columns,
     state: {
         get sorting() {
-            return sorting.value;
+            return sorting.value
         },
     },
     onSortingChange: (updaterOrValue) => {
-        sorting.value = typeof updaterOrValue === 'function' ? updaterOrValue(sorting.value) : updaterOrValue;
-        const sortParams = sorting.value.map((sort) => `${sort.id}:${sort.desc ? 'desc' : 'asc'}`).join(',');
-        const query = { ...router.currentRoute.value.query, sort: sortParams || undefined };
+        sorting.value = typeof updaterOrValue === 'function' ? updaterOrValue(sorting.value) : updaterOrValue
+        const sortParams = sorting.value.map((sort) => `${sort.id}:${sort.desc ? 'desc' : 'asc'}`).join(',')
+        const query = { ...router.currentRoute.value.query,
+            sort: sortParams || undefined }
         router.push({ query }).then(() => {
             nextTick(() => {
-                emits('refresh');
-            });
-        });
+                emits('refresh')
+            })
+        })
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     manualPagination: true, // Disable pagination
-});
+})
 
 const hasHeader = computed(() => {
-    return false; //TODO strapi
-});
+    return false // TODO strapi
+})
 
-const getCellLabel = (cell: any) => {
+const getCellLabel = (cell) => {
     return typeof cell.column.columnDef.cell === 'function'
         ? cell.column.columnDef.cell(cell.getContext())
-        : cell.column.columnDef.cell;
-};
+        : cell.column.columnDef.cell
+}
 
 const loadMoreItems = (limit: number) => {
-    const currentLimit = parseInt(route.query.limit as string) || 25;
-    const newLimit = currentLimit + (typeof limit === 'number' ? limit : 25);
-    router.push({ query: { ...route.query, limit: newLimit.toString() } }).then(() => {
+    const currentLimit = parseInt(route.query.limit as string) || 25
+    const newLimit = currentLimit + (typeof limit === 'number' ? limit : 25)
+    router.push({ query: { ...route.query,
+        limit: newLimit.toString() } }).then(() => {
         nextTick(() => {
-            emits('loadMore', newLimit);
-        });
-    });
-};
-const hasMoreItems = computed(() => {
-    return (props.data?.length ?? 0) < (props.total ?? 0);
-});
+            emits(
+                'loadMore',
+                newLimit,
+            )
+        })
+    })
+}
 
+const hasMoreItems = computed(() => {
+    return (props.data?.length ?? 0) < (props.total ?? 0)
+})
 </script>
+
 <template>
     <div class="relative">
         <div class="grid w-full gap-2">
@@ -148,9 +164,7 @@ const hasMoreItems = computed(() => {
             v-if="hasMoreItems"
             class="flex justify-center py-4"
         >
-            <Button
-                @click="loadMoreItems"
-            >
+            <Button @click="loadMoreItems">
                 Načíst více
             </Button>
         </div>

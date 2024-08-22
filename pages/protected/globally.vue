@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-definePageMeta({ auth: true });
+definePageMeta({ auth: true })
 </script>
+
 <template>
     <div>globally protected</div>
 </template>

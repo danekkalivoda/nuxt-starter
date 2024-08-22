@@ -1,24 +1,24 @@
-import type { IPage, IStrapiPage } from '~/sites/default/types/pages';
-import type { IMenuItem } from '~/sites/default/types/menus';
-import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue';
+import type { IPage, IStrapiPage } from '~/sites/default/types/pages'
+import type { IMenuItem } from '~/sites/default/types/menus'
+import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue'
 
 const getMenuLinkUrl = (item: IMenuItem) => {
     if (item.attributes.url !== '') {
-        return item.attributes.url;
+        return item.attributes.url
     } else if (item.attributes.page_relation.data) {
-        return item.attributes.page_relation.data.attributes.Url;
+        return item.attributes.page_relation.data.attributes.Url
     } else {
-        return null;
+        return null
     }
-};
+}
 
 const getMenuLinkBase = (item: IMenuItem) => {
     return {
         title: item.attributes.title,
         url: getMenuLinkUrl(item),
         target: item.attributes.target,
-    };
-};
+    }
+}
 
 const getMenuLinkChildren = (item: IMenuItem) => {
     if (item.attributes.children && item.attributes.children.data.length > 0) {
@@ -26,60 +26,66 @@ const getMenuLinkChildren = (item: IMenuItem) => {
             .filter((child: IMenuItem) => !child.attributes.link_hidden)
             .map((child: IMenuItem) => ({
                 ...getMenuLinkBase(child),
-            }));
-        return finalChildren;
+            }))
+        return finalChildren
     } else {
-        return null;
+        return null
     }
-};
+}
 
 const getMenus = (data: any) => {
-    const visibleItemsList: any[] = [];
+    const visibleItemsList: any[] = []
     for (const item of data) {
         const visibleItems = item.attributes.items.data
             .filter((IMenuItem: IMenuItem) => !IMenuItem.attributes?.link_hidden)
             .map((IMenuItem: IMenuItem) => ({
                 ...getMenuLinkBase(IMenuItem),
                 children: getMenuLinkChildren(IMenuItem),
-            }));
-        visibleItemsList.push(...visibleItems);
+            }))
+        visibleItemsList.push(...visibleItems)
     }
-    return visibleItemsList;
-};
+    return visibleItemsList
+}
 
 export const useMenu = async ({
     url = '',
     locale = 'cs-CZ',
     useFetchMode = false,
 }: {
-    url?: string;
-    locale?: string;
-    useFetchMode?: boolean;
+    url?: string
+    locale?: string
+    useFetchMode?: boolean
 }): Promise<MenulinkInterface[]> => {
-    const runtimeConfig = useRuntimeConfig();
-    const apiUrl = `${runtimeConfig.public.strapi.url}/api/${url}&filters[title][$eq]=${locale}`;
+    const runtimeConfig = useRuntimeConfig()
+    const apiUrl = `${runtimeConfig.public.strapi.url}/api/${url}&filters[title][$eq]=${locale}`
     const fetchOptions = {
         method: 'GET' as const,
         headers: {
             'Content-Type': 'application/json',
         },
-    };
+    }
     const fetchData = async (): Promise<any> => {
         if (useFetchMode) {
-            const response = await useFetch(apiUrl, fetchOptions);
+            const response = await useFetch(
+                apiUrl,
+                fetchOptions,
+            )
             if (response && typeof response.data === 'object' && response.data !== null) {
-                return (response.data as any).value.data;
+                return (response.data as any).value.data
             }
-            throw new Error('Špatný formát format.');
+            throw new Error('Špatný formát format.')
         } else {
-            const response = await fetch(apiUrl, fetchOptions);
-            const jsonData = await response.json();
-            return jsonData.data;
+            const response = await fetch(
+                apiUrl,
+                fetchOptions,
+            )
+            const jsonData = await response.json()
+            return jsonData.data
         }
-    };
+    }
 
-    return getMenus(await fetchData());
-};
+    return getMenus(await fetchData())
+}
 
 /**
  * This function fetches a page from Strapi based on the provided slug and locale.
@@ -92,46 +98,49 @@ export const usePages = async ({
     locale,
     homepage = false,
 }: {
-    url: string;
-    slug: string;
-    locale: string;
-    homepage?: boolean;
+    url: string
+    slug: string
+    locale: string
+    homepage?: boolean
 }): Promise<IPage | undefined> => {
-    const l = locale === 'cs-CZ' ? 'cs' : locale;
-    const filter = homepage ? 'Homepage' : 'Url';
-    const filterValue = homepage ? 'true' : slug;
-    const runtimeConfig = useRuntimeConfig();
-    const urlToFetch = runtimeConfig.public.strapi.url + '/api/' + `${url}&filters[${filter}][$eq]=${filterValue}`;
-    const response = await fetch(urlToFetch, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
+    const l = locale === 'cs-CZ' ? 'cs' : locale
+    const filter = homepage ? 'Homepage' : 'Url'
+    const filterValue = homepage ? 'true' : slug
+    const runtimeConfig = useRuntimeConfig()
+    const urlToFetch = runtimeConfig.public.strapi.url + '/api/' + `${url}&filters[${filter}][$eq]=${filterValue}`
+    const response = await fetch(
+        urlToFetch,
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         },
-    });
-    const jsonData = await response.json();
-    const data = jsonData.data;
+    )
+    const jsonData = await response.json()
+    const data = jsonData.data
 
     const findPageData = (pageData: IStrapiPage[]): IStrapiPage | undefined => {
         if (l === 'cs') {
-            return pageData.find((item: IStrapiPage) => item.attributes.locale === l);
+            return pageData.find((item: IStrapiPage) => item.attributes.locale === l)
         } else {
             return pageData
                 .flatMap((item: IStrapiPage) => item.attributes.localizations.data)
-                .find((loc: IStrapiPage) => loc.attributes.locale === l);
+                .find((loc: IStrapiPage) => loc.attributes.locale === l)
         }
-    };
-
-    const pageRawData: IStrapiPage | undefined = findPageData(data);
-
-    if (pageRawData === undefined) {
-        return undefined;
     }
 
-    const { Title: title, Description: description, Blocks: blocks } = pageRawData.attributes;
+    const pageRawData: IStrapiPage | undefined = findPageData(data)
+
+    if (pageRawData === undefined) {
+        return undefined
+    }
+
+    const { Title: title, Description: description, Blocks: blocks } = pageRawData.attributes
 
     return {
         title,
         description: description ?? undefined,
         blocks,
-    };
-};
+    }
+}

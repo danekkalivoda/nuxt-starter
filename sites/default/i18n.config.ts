@@ -7,8 +7,8 @@ export default defineI18nConfig(() => ({
         'cs-CZ': {
             welcome: 'Vítejte',
         },
-        en: {
+        'en': {
             welcome: 'Welcome',
         },
     },
-}));
+}))

@@ -1,27 +1,32 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
-import Input from '~/recruitis-shared/components/forms/input.vue';
-import Button from '~/sites/default/components/Button.vue';
-const { signIn, signOut, data, status, getSession, getCsrfToken, getProviders } = await useAuth();
-const providers = await getProviders();
-const crsf = await getCsrfToken();
+import Input from '~/recruitis-shared/components/forms/input.vue'
+import Button from '~/sites/default/components/Button.vue'
 
-let credentials = reactive({
+// eslint-disable-next-line no-unused-vars -- at na ten status nezapomenu, případně ho smaznu později
+const { signIn, signOut, data, status, getSession, getCsrfToken, getProviders } = await useAuth()
+// eslint-disable-next-line no-unused-vars -- at na ten status nezapomenu, případně ho smaznu později
+const providers = await getProviders()
+const crsf = await getCsrfToken()
+
+const credentials = reactive({
     username: '',
     password: '',
-});
+})
 
 const logIn = async (e: Event) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    await signIn('credentials', {
-        callbackUrl: '/protected/globally',
-        redirect: true,
-        username: credentials.username,
-        password: credentials.password,
-    });
-};
-
+    await signIn(
+        'credentials',
+        {
+            callbackUrl: '/protected/globally',
+            redirect: true,
+            username: credentials.username,
+            password: credentials.password,
+        },
+    )
+}
 </script>
 
 <template>

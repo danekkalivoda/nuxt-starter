@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import type { IPage, IStrapiBlock } from '~/sites/default/types/pages';
-import { IStrapiBlockName } from '~/sites/default/types/pages';
-const props = defineProps<IPage>();
+import type { IPage, IStrapiBlock } from '~/sites/default/types/pages'
+import { IStrapiBlockName } from '~/sites/default/types/pages'
+
+const props = defineProps<IPage>()
 
 const getComponent = (block: IStrapiBlock) => {
     switch (block.__component) {
         case IStrapiBlockName.JobsList:
-            return defineAsyncComponent(() => import('~/sites/default/components/blocks/jobsList/List.vue'));
+            return defineAsyncComponent(() => import('~/sites/default/components/blocks/jobsList/List.vue'))
         default:
-            return null;
+            return null
     }
-};
+}
 </script>
+
 <template>
     <div class="container">
         <div class="prose max-w-none">

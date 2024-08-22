@@ -1,15 +1,15 @@
-import config from 'primevue/config';
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
-let tailwindConfigUrl = 'sites/default/tailwind.config.js';
+let tailwindConfigUrl = 'sites/default/tailwind.config.js'
 if (process.env.NUXT_PROJECT_NAME) {
-    tailwindConfigUrl = 'sites/' + process.env.NUXT_PROJECT_NAME + '/tailwind.config.js';
+    tailwindConfigUrl = 'sites/' + process.env.NUXT_PROJECT_NAME + '/tailwind.config.js'
 }
-let projectConfig;
+let projectConfig
 if (process.env.NUXT_PROJECT_NAME) {
-    projectConfig = require(`./sites/${process.env.NUXT_PROJECT_NAME}/config`);
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- it is ok
+    projectConfig = require(`./sites/${process.env.NUXT_PROJECT_NAME}/config`)
 } else {
-    projectConfig = require('./sites/default/config');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- it is ok
+    projectConfig = require('./sites/default/config')
 }
 
 export default defineNuxtConfig({
@@ -28,28 +28,32 @@ export default defineNuxtConfig({
     },
     modules: [
         '@sidebase/nuxt-auth',
-        [
-            '@nuxtjs/eslint-module',
-            {
-                lintOnStart: false,
-            },
-        ],
         '@nuxtjs/google-fonts',
         '@nuxtjs/i18n',
         '@nuxt/icon',
         '@nuxtjs/strapi',
         'nuxtjs-naive-ui',
         '@primevue/nuxt-module',
+        '@nuxt/eslint',
     ],
-    devtools: { enabled: false },
+    eslint: {
+        config: {
+            stylistic: {
+                indent: 4,
+                braceStyle: '1tbs',
+                arrowParens: true,
+            },
+        },
+    },
+    devtools: { enabled: true },
     ssr: true,
     css: ['~/assets/css/tailwind.css'],
     postcss: {
         plugins: {
             'postcss-import': {},
             'tailwindcss/nesting': 'postcss-nesting',
-            tailwindcss: { config: tailwindConfigUrl },
-            autoprefixer: {},
+            'tailwindcss': { config: tailwindConfigUrl },
+            'autoprefixer': {},
         },
     },
     components: {
@@ -82,10 +86,10 @@ export default defineNuxtConfig({
         cookie: {},
         cookieName: 'strapi_jwt',
     },
-    /* typescript: {
+    typescript: {
         typeCheck: true,
         strict: false,
-    }, */
+    },
     plugins: ['~/plugins/naive-ui'],
     primevue: {
         autoImport: false,
@@ -96,7 +100,16 @@ export default defineNuxtConfig({
     build: {
         transpile:
             process.env.NODE_ENV === 'production'
-                ? ['@vueform/multiselect', 'naive-ui', 'vueuc', '@css-render/vue3-ssr', '@juggle/resize-observer']
-                : ['@vueform/multiselect', '@juggle/resize-observer'],
+                ? [
+                        '@vueform/multiselect',
+                        'naive-ui',
+                        'vueuc',
+                        '@css-render/vue3-ssr',
+                        '@juggle/resize-observer',
+                    ]
+                : [
+                        '@vueform/multiselect',
+                        '@juggle/resize-observer',
+                    ],
     },
-});
+})

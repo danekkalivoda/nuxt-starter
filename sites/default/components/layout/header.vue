@@ -1,12 +1,17 @@
 <script lang="ts" setup>
-const { locales } = useI18n();
-import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue';
+import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue'
+
+const { locales } = useI18n()
 interface HeaderInterface {
-    menu: MenulinkInterface[];
+    menu: MenulinkInterface[]
 }
-const props = withDefaults(defineProps<HeaderInterface>(), {});
-const mobileMenuOpen = ref(false);
+const props = withDefaults(
+    defineProps<HeaderInterface>(),
+    {},
+)
+const mobileMenuOpen = ref(false)
 </script>
+
 <template>
     <div>
         <AuthenticationStatus></AuthenticationStatus>

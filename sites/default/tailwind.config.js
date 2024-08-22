@@ -1,12 +1,15 @@
 /** @type {import('tailwindcss').Config} */
-import colors from 'tailwindcss/colors.js';
-import { sharedConfig } from './shared.tailwind.config.js';
+import colors from 'tailwindcss/colors.js'
+import { sharedConfig } from './shared.tailwind.config.js'
+
 export const config = {
     content: [
         ...sharedConfig.content,
         './components/**/*.{js,vue,ts}',
         './sites/default/**/*.{js,vue,ts}',
-        'col-span-full', 'col-span-1', 'col-span-2',
+        'col-span-full',
+        'col-span-1',
+        'col-span-2',
     ],
     theme: {
         ...sharedConfig.theme,
@@ -30,14 +33,23 @@ export const config = {
                 },
             },
             fontFamily: {
-                sans: ['"Inter"', 'sans-serif'],
-                brand: ['"Inter"', 'sans-serif'],
-                display: ['"Inter"', 'sans-serif'],
+                sans: [
+                    '"Inter"',
+                    'sans-serif',
+                ],
+                brand: [
+                    '"Inter"',
+                    'sans-serif',
+                ],
+                display: [
+                    '"Inter"',
+                    'sans-serif',
+                ],
             },
         },
     },
     variants: sharedConfig.variants,
     safelist: sharedConfig.safelist,
     plugins: sharedConfig.plugins,
-};
-export default config;
+}
+export default config

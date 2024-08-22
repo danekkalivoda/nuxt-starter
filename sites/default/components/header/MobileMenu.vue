@@ -1,27 +1,32 @@
 <script lang="ts" setup>
-const { locales } = useI18n();
-import { Dialog, DialogPanel, Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
+import { Dialog, DialogPanel, Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
+
+const { locales } = useI18n()
 interface MenulinkInterface {
-    title: string;
-    url: string;
-    target: string;
+    title: string
+    url: string
+    target: string
     children: [
         {
-            title: string;
-            url: string;
-            target: string;
+            title: string
+            url: string
+            target: string
         },
-    ];
+    ]
 }
 export interface MobileMenuInterface {
-    menu: MenulinkInterface[];
-    isOpen?: boolean;
+    menu: MenulinkInterface[]
+    isOpen?: boolean
 }
-const emit = defineEmits(['on-menu-toggle']);
-withDefaults(defineProps<MobileMenuInterface>(), {
-    isOpen: false,
-});
+const emit = defineEmits(['on-menu-toggle'])
+withDefaults(
+    defineProps<MobileMenuInterface>(),
+    {
+        isOpen: false,
+    },
+)
 </script>
+
 <template>
     <Dialog
         as="div"
@@ -31,7 +36,7 @@ withDefaults(defineProps<MobileMenuInterface>(), {
     >
         <div class="fixed inset-0 z-10"></div>
         <DialogPanel
-            class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
+            class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
         >
             <div class="flex items-center justify-between">
                 <HeaderLogo></HeaderLogo>
@@ -42,7 +47,7 @@ withDefaults(defineProps<MobileMenuInterface>(), {
                 >
                     <Icon
                         name="ion:close"
-                        class="h-4 w-4 text-gray-400 transition-transform"
+                        class="size-4 text-gray-400 transition-transform"
                     ></Icon>
                 </button>
             </div>
@@ -65,7 +70,7 @@ withDefaults(defineProps<MobileMenuInterface>(), {
                                     Product
                                     <Icon
                                         name="ion:chevron-down"
-                                        class="h-4 w-4 text-gray-400"
+                                        class="size-4 text-gray-400"
                                         :class="open ? 'rotate-180' : ''"
                                     ></Icon>
                                 </DisclosureButton>

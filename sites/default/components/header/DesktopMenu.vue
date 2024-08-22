@@ -1,23 +1,28 @@
 <script lang="ts" setup>
-import { Popover, PopoverButton, PopoverGroup, PopoverPanel, provideUseId } from '@headlessui/vue';
-provideUseId(() => useId());
+import { Popover, PopoverButton, PopoverGroup, PopoverPanel, provideUseId } from '@headlessui/vue'
+
+provideUseId(() => useId())
 export interface MenulinkInterface {
-    title: string;
-    url: string;
-    target: string;
+    title: string
+    url: string
+    target: string
     children: [
         {
-            title: string;
-            url: string;
-            target: string;
+            title: string
+            url: string
+            target: string
         },
-    ];
+    ]
 }
 export interface MenuInterface {
-    menu: MenulinkInterface[];
+    menu: MenulinkInterface[]
 }
-withDefaults(defineProps<MenuInterface>(), {});
+withDefaults(
+    defineProps<MenuInterface>(),
+    {},
+)
 </script>
+
 <template>
     <PopoverGroup class="hidden lg:flex lg:gap-x-12">
         <template
@@ -35,7 +40,7 @@ withDefaults(defineProps<MenuInterface>(), {});
                     {{ item.title }}
                     <Icon
                         name="ion:chevron-down"
-                        class="h-4 w-4 text-gray-400 transition-transform"
+                        class="size-4 text-gray-400 transition-transform"
                         :class="open ? '-rotate-180' : ''"
                     ></Icon>
                 </PopoverButton>

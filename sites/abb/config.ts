@@ -7,6 +7,10 @@ export const i18n = {
         },
     ],
     vueI18n: './sites/default/i18n.config.ts',
-};
-export const googleFonts = {};
-export const componentsPaths = ['~/sites/abb/components', '~/sites/default/components', '~/components'];
+}
+export const googleFonts = {}
+export const componentsPaths = [
+    '~/sites/abb/components',
+    '~/sites/default/components',
+    '~/components',
+]

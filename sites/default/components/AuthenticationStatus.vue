@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const { status, data, signOut, signIn } = useAuth();
+const { status, data, signOut, signIn } = useAuth()
 </script>
 
 <template>
@@ -13,7 +13,7 @@ const { status, data, signOut, signIn } = useAuth();
                     >
                         <Icon
                             name="ion:person-circle-outline"
-                            class="h-5 w-5 text-gray-400 transition-transform"
+                            class="size-5 text-gray-400 transition-transform"
                         ></Icon>
                         <span>
                             Přihlášený:

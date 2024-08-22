@@ -1,40 +1,62 @@
 <script setup lang="ts">
-import type { Types } from '~/sites/default/components/blocks/jobsList';
-import { remove, getLabel, findByKey, removeAll } from '~/sites/default/components/blocks/jobsList/lib/activeFilters';
+import type { Types } from '~/sites/default/components/blocks/jobsList'
+import { remove, getLabel, findByKey, removeAll } from '~/sites/default/components/blocks/jobsList/lib/activeFilters'
+
 const props = defineProps<{
-    form: Types.IFilterField[];
+    form: Types.IFilterField[]
     active: Types.IActiveFilter
-}>();
+}>()
 
 const emits = defineEmits<{
-    (e: 'update:formState', formState: Types.IFilterField[]): void;
+    (e: 'update:formState', formState: Types.IFilterField[]): void
     (e: 'update:activeFilters', activeFilters: Types.IActiveFilter): void
     (e: 'clearFormState'): void
-}>();
+}>()
 
 const formState = computed({
     get: () => props.form,
-    set: (newFormState) => emits('update:formState', newFormState),
-});
+    set: (newFormState) => emits(
+        'update:formState',
+        newFormState,
+    ),
+})
 const activeFilters = computed({
     get: () => props.active,
-    set: (value) => emits('update:activeFilters', value),
-});
+    set: (value) => emits(
+        'update:activeFilters',
+        value,
+    ),
+})
 const getActiveFilterLabel = (key: string, value: string) => {
-    return getLabel(key, value, formState);
-};
+    return getLabel(
+        key,
+        value,
+        formState,
+    )
+}
 const removeActiveFilter = async (key: string, value: string) => {
-    await remove(key, value, formState);
-    emits('clearFormState');
-};
+    await remove(
+        key,
+        value,
+        formState,
+    )
+    emits('clearFormState')
+}
 const findFieldByKey = (key: string) => {
-    return findByKey(key, formState);
-};
+    return findByKey(
+        key,
+        formState,
+    )
+}
 const clearFormState = async () => {
-    await removeAll(activeFilters, formState);
-    emits('clearFormState');
-};
+    await removeAll(
+        activeFilters,
+        formState,
+    )
+    emits('clearFormState')
+}
 </script>
+
 <template>
     <div
 
@@ -57,7 +79,7 @@ const clearFormState = async () => {
                     >
                         <Icon
                             name="ion:close"
-                            class="h-4 w-4"
+                            class="size-4"
                         ></Icon>
                         {{ getActiveFilterLabel(key, value) }}
                     </span>

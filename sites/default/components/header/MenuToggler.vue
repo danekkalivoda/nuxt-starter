@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-const emit = defineEmits(['onMenuToggle']);
+const emit = defineEmits(['onMenuToggle'])
 </script>
+
 <template>
     <div class="flex lg:hidden">
         <button
@@ -10,7 +11,7 @@ const emit = defineEmits(['onMenuToggle']);
         >
             <Icon
                 name="ion:menu"
-                class="h-6 w-6 text-gray-900 transition-transform"
+                class="size-6 text-gray-900 transition-transform"
             ></Icon>
         </button>
     </div>

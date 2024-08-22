@@ -1,11 +1,15 @@
 <script setup lang="ts">
-const localePath = useLocalePath();
+import Logo from '~/recruitis-shared/components/logo.vue'
 
-import Logo from '~/recruitis-shared/components/logo.vue';
-const props = withDefaults(defineProps<{ theme?: 'dark' | 'light' }>(), {
-    theme: 'light',
-});
+const localePath = useLocalePath()
+const props = withDefaults(
+    defineProps<{ theme?: 'dark' | 'light' }>(),
+    {
+        theme: 'light',
+    },
+)
 </script>
+
 <template>
     <NuxtLink
         :to="localePath('/')"
@@ -13,7 +17,7 @@ const props = withDefaults(defineProps<{ theme?: 'dark' | 'light' }>(), {
     >
         <Logo
             :theme="props.theme"
-            class="grid h-full w-full [&>*]:h-full [&>*]:w-full"
+            class="grid size-full [&>*]:size-full"
         ></Logo>
     </NuxtLink>
 </template>

@@ -1,18 +1,23 @@
 <script setup lang="ts">
-import type { ICheckboxes } from '~/sites/default/components/blocks/jobsList/types';
-const props = defineProps<ICheckboxes>();
+import type { ICheckboxes } from '~/sites/default/components/blocks/jobsList/types'
+
+const props = defineProps<ICheckboxes>()
 
 const emit = defineEmits<{
-    (e: 'update:initialValue', value: string[]): void;
-}>();
+    (e: 'update:initialValue', value: string[]): void
+}>()
 
 const selectedValues = computed({
     get: () => (Array.isArray(props.initialValue) ? props.initialValue : []),
     set: (value: string[]) => {
-        emit('update:initialValue', value);
+        emit(
+            'update:initialValue',
+            value,
+        )
     },
-});
+})
 </script>
+
 <template>
     <div class="flex min-h-10 flex-wrap gap-4 self-end">
         <div
@@ -26,7 +31,7 @@ const selectedValues = computed({
                 type="checkbox"
                 :name="`${props.name}[]`"
                 :value="option.value"
-                class="form-checkbox text-brand-500 focus:ring-brand-500 h-5 w-5 cursor-pointer rounded-md border-gray-300"
+                class="form-checkbox text-brand-500 focus:ring-brand-500 size-5 cursor-pointer rounded-md border-gray-300"
             >
             <label
                 :for="option.value"

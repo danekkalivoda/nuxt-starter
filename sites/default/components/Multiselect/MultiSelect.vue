@@ -1,31 +1,34 @@
 <script lang="ts" setup>
-import Multiselect, { type MultiSelectMethods } from 'primevue/multiselect';
-import { MultiselectStyles } from '~/sites/default/components/Multiselect';
-import type { IMultiselectProps, IOption } from '~/sites/default/components/Multiselect/types';
-import { getWordingByCount } from '~/recruitis-shared/utils/common';
+import Multiselect, { type MultiSelectMethods } from 'primevue/multiselect'
+import { MultiselectStyles } from '~/sites/default/components/Multiselect'
+import type { IMultiselectProps, IOption } from '~/sites/default/components/Multiselect/types'
+import { getWordingByCount } from '~/recruitis-shared/utils/common'
 
-const props = withDefaults(defineProps<IMultiselectProps>(), {
-    name: '',
-    initialValue: undefined,
-    display: 'comma',
-    showToggleAll: false,
-    maxSelectedLabels: 3,
-    closeOnSelect: false,
-    options: () => [],
-    lang: () => {
-        return {};
+const props = withDefaults(
+    defineProps<IMultiselectProps>(),
+    {
+        name: '',
+        initialValue: undefined,
+        display: 'comma',
+        showToggleAll: false,
+        maxSelectedLabels: 3,
+        closeOnSelect: false,
+        options: () => [],
+        lang: () => {
+            return {}
+        },
     },
-});
-const multiselect = ref<MultiSelectMethods>();
+)
+const multiselect = ref<MultiSelectMethods>()
 const t = computed(() => {
     return {
         placeholder: 'Vyberte',
         ...props.lang,
-    };
-});
+    }
+})
 
-const value = defineModel<IOption[]>('initialValue');
-const close = () => props.closeOnSelect && multiselect.value?.hide();
+const value = defineModel<IOption[]>('initialValue')
+const close = () => props.closeOnSelect && multiselect.value?.hide()
 </script>
 
 <template>
@@ -52,7 +55,7 @@ const close = () => props.closeOnSelect && multiselect.value?.hide();
                 >
                     <Icon
                         name="ion:checkmark-sharp"
-                        class="h-4 w-4"
+                        class="size-4"
                     ></Icon>
                 </div>
             </template>
@@ -66,7 +69,7 @@ const close = () => props.closeOnSelect && multiselect.value?.hide();
                     >
                         <Icon
                             name="ion:close"
-                            class="h-4 w-4"
+                            class="size-4"
                         ></Icon>
                     </div>
                 </div>

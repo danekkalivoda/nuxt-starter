@@ -1,5 +1,8 @@
-import Multiselect from '@vueform/multiselect';
+import Multiselect from '@vueform/multiselect'
 
 export default defineNuxtPlugin((nuxtApp) => {
-    nuxtApp.vueApp.component('Multiselect', Multiselect);
-});
+    nuxtApp.vueApp.component(
+        'Multiselect',
+        Multiselect,
+    )
+})

@@ -1,119 +1,146 @@
 <script setup lang="ts">
-import { defineExpose } from 'vue';
-import type { LocationQueryValue } from 'vue-router';
-import { useDebounceFn } from '@vueuse/core';
-import type { Types } from '~/sites/default/components/blocks/jobsList';
-import { Button, Checkboxes, Input, MultiSelect } from '~/sites/default/components';
-import type { IOption } from '~/sites/default/components/Multiselect';
-import { ActiveFilters } from '~/sites/default/components/blocks/jobsList';
-import { omit } from '~/recruitis-shared/utils/common';
-import { removeAll } from '~/sites/default/components/blocks/jobsList/lib/activeFilters';
-const props = withDefaults(defineProps<{
-    showSubmitButton?: boolean
-}>(), {
-    showSubmitButton: true,
-});
+import { defineExpose } from 'vue'
+import type { LocationQueryValue } from 'vue-router'
+import { useDebounceFn } from '@vueuse/core'
+import type { Types } from '~/sites/default/components/blocks/jobsList'
+import { Button, Checkboxes, Input, MultiSelect } from '~/sites/default/components'
+import type { IOption } from '~/sites/default/components/Multiselect'
+import { ActiveFilters } from '~/sites/default/components/blocks/jobsList'
+import { omit } from '~/recruitis-shared/utils/common'
+import { removeAll } from '~/sites/default/components/blocks/jobsList/lib/activeFilters'
+
+const props = withDefaults(
+    defineProps<{
+        showSubmitButton?: boolean
+    }>(),
+    {
+        showSubmitButton: true,
+    },
+)
 const emits = defineEmits<{
-    (e: 'update:formState', queryString: URLSearchParams): void;
-}>();
-const router = useRouter();
-const route = useRoute();
+    (e: 'update:formState', queryString: URLSearchParams): void
+}>()
+const router = useRouter()
+const route = useRoute()
 
-
-/* TODO: Tady by se to mělo udělat tak, že filtry, které se vrátí z api, by měli setnout do formState
-  aktuálně je jen zkopiruji, abych je mohl mutovat, ale lepší by bylo, aby to ovladalo API.
-*/
+/*
+ * TODO: Tady by se to mělo udělat tak, že filtry, které se vrátí z api, by měli setnout do formState
+ * aktuálně je jen zkopiruji, abych je mohl mutovat, ale lepší by bylo, aby to ovladalo API.
+ */
 const fetchFiltersData = async () => {
-    const { data: filters, refresh, status } = await useAsyncData('filters', () => $fetch('/api/job-filters', {
-        params: route.query,
-    }));
-    return { filters, refresh, status };
-};
+    const { data: filters, refresh, status } = await useAsyncData(
+        'filters',
+        () => $fetch(
+            '/api/job-filters',
+            {
+                params: route.query,
+            },
+        ),
+    )
+    return {
+        filters,
+        refresh,
+        status,
+    }
+}
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- at na ten status nezapomenu, případně ho smaznu později
-const { filters, refresh, status } = await fetchFiltersData();
-const formState = ref<Types.IFilterField[]>(structuredClone(toRaw(filters.value.data)));
-const activeFilters = ref<Types.IActiveFilter>({});
+const { filters, refresh } = await fetchFiltersData()
+const formState = ref<Types.IFilterField[]>(structuredClone(toRaw(filters.value.data)))
+const activeFilters = ref<Types.IActiveFilter>({})
 
-const form = ref<HTMLFormElement | null>(null);
+const form = ref<HTMLFormElement | null>(null)
 const setFormState = () => {
     if (form.value) {
-        const formData = new FormData(form.value);
-        for (const [key, value] of formData.entries()) {
+        const formData = new FormData(form.value)
+        for (const [
+            key,
+            value,
+        ] of formData.entries()) {
             if (value === '') {
-                formData.delete(key);
+                formData.delete(key)
             }
         }
-        const queryString = new URLSearchParams(formData as unknown as Record<string, string>);
-        const query: Record<string, LocationQueryValue | LocationQueryValue[]> = { ...router.currentRoute.value.query };
-        const f: Record<string, string[]> = {};
+        const queryString = new URLSearchParams(formData as unknown as Record<string, string>)
+        const query: Record<string, LocationQueryValue | LocationQueryValue[]> = { ...router.currentRoute.value.query }
+        const f: Record<string, string[]> = {}
 
-        for (const [key, value] of queryString.entries()) {
+        for (const [
+            key,
+            value,
+        ] of queryString.entries()) {
             if (!f[key]) {
-                f[key] = [];
+                f[key] = []
             }
-            f[key].push(value);
+            f[key].push(value)
         }
 
         // Update the query with the new filter state inside "jobsFilter"
         if (Object.keys(f).length > 0) {
-            query.jobsFilter = JSON.stringify(f);
+            query.jobsFilter = JSON.stringify(f)
         } else {
-            delete query.jobsFilter;
+            delete query.jobsFilter
         }
 
         router.push({ query }).then(() => {
             nextTick(() => {
-                refresh();
-                emits('update:formState', queryString);
-                activeFilters.value = f;
-            });
-        });
+                refresh()
+                emits(
+                    'update:formState',
+                    queryString,
+                )
+                activeFilters.value = f
+            })
+        })
     }
-};
+}
 const clearFormState = async () => {
-    await removeAll(activeFilters, formState);
-    setFormState();
-};
-const debouncedSetFormState = useDebounceFn(setFormState, 500);
+    await removeAll(
+        activeFilters,
+        formState,
+    )
+    setFormState()
+}
+const debouncedSetFormState = useDebounceFn(
+    setFormState,
+    500,
+)
 
 const onChange = (field: Types.IFilterField, value: string | string[] | undefined | null | IOption[]) => {
-
     switch (field.type) {
         case 'multiSelect':
             if (Array.isArray(value) && value.every((v) => typeof v === 'object')) {
-                field.initialValue = value;
-                nextTick(() => setFormState());
+                field.initialValue = value
+                nextTick(() => setFormState())
             }
-            break;
+            break
         case 'checkboxes':
             if (Array.isArray(value) && value.every((v) => typeof v === 'string')) {
-                field.initialValue = value;
-                nextTick(() => setFormState());
+                field.initialValue = value
+                nextTick(() => setFormState())
             }
-            break;
+            break
         case 'inputSearch':
             if (typeof value === 'string' || value === undefined) {
-                field.initialValue = value;
-                nextTick(() => debouncedSetFormState());
+                field.initialValue = value
+                nextTick(() => debouncedSetFormState())
             }
-            break;
+            break
         default:
-            nextTick(() => debouncedSetFormState());
-            break;
+            nextTick(() => debouncedSetFormState())
+            break
     }
-};
+}
 
-const hasActiveFilters = computed(() => Object.keys(activeFilters.value).length > 0);
+const hasActiveFilters = computed(() => Object.keys(activeFilters.value).length > 0)
 const hasSubmitButton = computed(() => {
-    return props.showSubmitButton;
-});
+    return props.showSubmitButton
+})
 const getMultiselectOptions = (field: Types.IFilterField) => {
-    return (field as Types.IMultiselect).options ?? [];
-};
+    return (field as Types.IMultiselect).options ?? []
+}
 
 // eslint-disable-next-line vue/no-expose-after-await -- at na ten status nezapomenu, případně ho smaznu později
-defineExpose({ clearFormState });
+defineExpose({ clearFormState })
 </script>
 
 <template>
@@ -146,7 +173,7 @@ defineExpose({ clearFormState });
                     <Input
                         v-else-if="field.type === 'inputSearch'"
                         :input-props="{
-                            autocomplete:'off'
+                            autocomplete: 'off',
                         }"
                         v-bind="(field as Types.IInput)"
                         @update:initial-value="(value) => onChange(field, value)"

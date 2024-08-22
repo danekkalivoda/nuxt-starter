@@ -1,18 +1,20 @@
 <script lang="ts" setup>
-/* Chtěl sem to udělat async, ale v tu chvíli to rozbije SSR. */
-import DefaultLayout from '~/sites/default/layout/default.vue';
-import GrouponLayout from '~/sites/groupon/layout/default.vue';
+import DefaultLayout from '~/sites/default/layout/default.vue'
+import GrouponLayout from '~/sites/groupon/layout/default.vue'
 
-const config = useRuntimeConfig();
-const layoutName = config.public.NUXT_PROJECT_NAME;
+/* Chtěl sem to udělat async, ale v tu chvíli to rozbije SSR. */
+
+const config = useRuntimeConfig()
+const layoutName = config.public.NUXT_PROJECT_NAME
 
 const layouts: { [key: string]: typeof DefaultLayout } = {
     default: DefaultLayout,
     groupon: GrouponLayout,
-};
+}
 
-const layoutComponent = layouts[layoutName] || DefaultLayout;
+const layoutComponent = layouts[layoutName] || DefaultLayout
 </script>
+
 <template>
     <div>
         <component :is="layoutComponent"></component>

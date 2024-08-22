@@ -16,12 +16,14 @@ export const MultiselectStyles = {
             { 'outline-none ring ring-gray-400/10': state.focused },
             'cursor-pointer',
             'select-none',
-            { 'opacity-60': props.disabled, 'pointer-events-none': props.disabled, 'cursor-default': props.disabled },
+            { 'opacity-60': props.disabled,
+                'pointer-events-none': props.disabled,
+                'cursor-default': props.disabled },
         ],
     }),
     labelContainer: 'overflow-hidden flex flex-auto cursor-pointer',
-    label: ({ props }: { props: any }) => {
-        let _a, _b, _c, _d;
+    label: ({ props }) => {
+        let _a, _b, _c, _d
         return {
             class: [
                 'inline-flex items-center flex-wrap',
@@ -32,26 +34,55 @@ export const MultiselectStyles = {
                     'py-1 px-1 leading-4 min-h-[38px] gap-1': props.display === 'chip' && ((_b = props == null ? void 0 : props.modelValue) == null ? void 0 : _b.length) > 0,
                 },
                 // Color
-                { 'text-gray-800': (_c = props.modelValue) == null ? void 0 : _c.length, 'text-gray-400': !((_d = props.modelValue) != null && _d.length) },
+                { 'text-gray-800': (_c = props.modelValue) == null ? void 0 : _c.length,
+                    'text-gray-400': !((_d = props.modelValue) != null && _d.length) },
                 'placeholder:text-gray-400',
                 // Transitions
                 'transition duration-150',
                 // Misc
                 'overflow-hidden whitespace-nowrap cursor-pointer overflow-ellipsis',
             ],
-        };
+        }
     },
     dropdown: {
-        class: ['flex items-center justify-center', 'shrink-0', 'bg-transparent', 'text-gray-500', 'w-10', 'rounded-tr-md', 'rounded-br-md'],
+        class: [
+            'flex items-center justify-center',
+            'shrink-0',
+            'bg-transparent',
+            'text-gray-500',
+            'w-10',
+            'rounded-tr-md',
+            'rounded-br-md',
+        ],
     },
     overlay: {
-        class: ['border', 'rounded', 'shadow-md', 'bg-white', 'text-gray-800'],
+        class: [
+            'border',
+            'rounded',
+            'shadow-md',
+            'bg-white',
+            'text-gray-800',
+        ],
     },
     header: {
-        class: ['flex items-center justify-between', 'py-3 px-5 gap-2', 'm-0', 'border-b', 'rounded-tl-md', 'rounded-tr-md', 'text-gray-600', 'bg-gray-50', '[&_[data-pc-name=pcfiltercontainer]]:!flex-auto', '[&_[data-pc-name=pcfilter]]:w-full'],
+        class: [
+            'flex items-center justify-between',
+            'py-3 px-5 gap-2',
+            'm-0',
+            'border-b',
+            'rounded-tl-md',
+            'rounded-tr-md',
+            'text-gray-600',
+            'bg-gray-50',
+            '[&_[data-pc-name=pcfiltercontainer]]:!flex-auto',
+            '[&_[data-pc-name=pcfilter]]:w-full',
+        ],
     },
     listContainer: {
-        class: ['max-h-[200px]', 'overflow-auto'],
+        class: [
+            'max-h-[200px]',
+            'overflow-auto',
+        ],
     },
     list: {
         class: 'py-2 list-none m-0',
@@ -71,12 +102,15 @@ export const MultiselectStyles = {
             // Spacing
             'm-0',
             'py-3 px-5 gap-2',
-            '[&>div[data-pc-name]]:relative', '[&>div[data-pc-name]]:size-4', '[&>div[data-pc-name]>input]:opacity-0', '[&>div[data-pc-name]>input]:absolute',
+            '[&>div[data-pc-name]]:relative',
+            '[&>div[data-pc-name]]:size-4',
+            '[&>div[data-pc-name]>input]:opacity-0',
+            '[&>div[data-pc-name]>input]:absolute',
             // Color
             { 'text-gray-700': !context.focused && !context.selected },
             { 'bg-gray-50 text-gray-700': context.focused && !context.selected },
             { 'bg-brand-50/50': context.selected },
-            //States
+            // States
             { 'hover:bg-gray-50': !context.focused && !context.selected },
             { 'hover:text-gray-700 hover:bg-gray-50': context.focused && !context.selected },
             // Transitions
@@ -93,10 +127,22 @@ export const MultiselectStyles = {
         class: ['inline-flex'],
     },
     optionGroup: {
-        class: ['font-bold', 'm-0', 'p-3 px-5', 'text-surface-800 dark:text-white/80', 'bg-surface-0 dark:bg-surface-600/80', 'cursor-auto'],
+        class: [
+            'font-bold',
+            'm-0',
+            'p-3 px-5',
+            'text-surface-800 dark:text-white/80',
+            'bg-surface-0 dark:bg-surface-600/80',
+            'cursor-auto',
+        ],
     },
     emptyMessage: {
-        class: ['leading-none', 'py-3 px-5', 'text-gray-400', 'bg-transparent'],
+        class: [
+            'leading-none',
+            'py-3 px-5',
+            'text-gray-400',
+            'bg-transparent',
+        ],
     },
     loadingIcon: {
         class: 'text-gray-400 animate-spin',
@@ -107,4 +153,4 @@ export const MultiselectStyles = {
         leaveActiveClass: 'transition-opacity duration-100 ease-linear',
         leaveToClass: 'opacity-0',
     },
-};
+}
