@@ -1,4 +1,4 @@
-import type { IPage, IStrapiPage } from '~/sites/default/types/pages'
+import { type IPage, type IStrapiPage, IStrapiBlockName } from '~/sites/default/types/pages'
 import type { IMenuItem } from '~/sites/default/types/menus'
 import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue'
 
@@ -6,7 +6,7 @@ const getMenuLinkUrl = (item: IMenuItem) => {
     if (item.attributes.url !== '') {
         return item.attributes.url
     } else if (item.attributes.page_relation.data) {
-        return item.attributes.page_relation.data.attributes.Url
+        return item.attributes.page_relation.data.attributes.url
     } else {
         return null
     }
@@ -92,6 +92,28 @@ export const useMenu = async ({
  * If the homepage flag is true, it fetches the page marked as the homepage.
  * Otherwise, it uses the findOne method to fetch the page by its slug.
  */
+const processBlocks = (blocks: any[], runtimeConfig: any) => {
+    return blocks.map((block) => {
+        if (block.__component === IStrapiBlockName.hero) {
+            return {
+                ...block,
+                slides: (block as any).slides.map((slide: any) => {
+                    return {
+                        ...slide,
+                        image: {
+                            alt: slide?.hero || slide?.description || '',
+                            url: runtimeConfig.public.strapi.url + slide.image.data.attributes.url,
+                            width: slide.image.data.attributes.width,
+                            height: slide.image.data.attributes.height,
+                        },
+                    }
+                }),
+            }
+        }
+        return block
+    })
+}
+
 export const usePages = async ({
     url = '',
     slug,
@@ -104,7 +126,7 @@ export const usePages = async ({
     homepage?: boolean
 }): Promise<IPage | undefined> => {
     const l = locale === 'cs-CZ' ? 'cs' : locale
-    const filter = homepage ? 'Homepage' : 'Url'
+    const filter = homepage ? 'homepage' : 'url'
     const filterValue = homepage ? 'true' : slug
     const runtimeConfig = useRuntimeConfig()
     const urlToFetch = runtimeConfig.public.strapi.url + '/api/' + `${url}&filters[${filter}][$eq]=${filterValue}`
@@ -136,11 +158,20 @@ export const usePages = async ({
         return undefined
     }
 
-    const { Title: title, Description: description, Blocks: blocks } = pageRawData.attributes
+    if (pageRawData.attributes?.blocks) {
+        pageRawData.attributes.blocks = processBlocks(
+            pageRawData.attributes.blocks,
+            runtimeConfig,
+        )
+    }
+
+    const { title, description, hideTitle, hideDescription, blocks } = pageRawData.attributes
 
     return {
         title,
         description: description ?? undefined,
+        hideTitle,
+        hideDescription,
         blocks,
     }
 }

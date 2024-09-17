@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import type { Types } from '~/sites/default/components/blocks/jobsList'
+import type { IFilterField, IActiveFilter } from '~/sites/default/components/blocks/jobsList/types'
 import { remove, getLabel, findByKey, removeAll } from '~/sites/default/components/blocks/jobsList/lib/activeFilters'
 
 const props = defineProps<{
-    form: Types.IFilterField[]
-    active: Types.IActiveFilter
+    form: IFilterField[]
+    active: IActiveFilter
 }>()
 
 const emits = defineEmits<{
-    (e: 'update:formState', formState: Types.IFilterField[]): void
-    (e: 'update:activeFilters', activeFilters: Types.IActiveFilter): void
+    (e: 'update:formState', formState: IFilterField[]): void
+    (e: 'update:activeFilters', activeFilters: IActiveFilter): void
     (e: 'clearFormState'): void
 }>()
 
@@ -85,13 +85,13 @@ const clearFormState = async () => {
                     </span>
                 </template>
             </template>
+            <button
+                type="button"
+                class="text-sm tracking-tight text-gray-700 underline hover:no-underline focus:outline-none"
+                @click="() => clearFormState()"
+            >
+                Zrušit všechny filtry
+            </button>
         </div>
-        <button
-            type="button"
-            class="text-sm tracking-tight text-gray-700 underline hover:no-underline focus:outline-none"
-            @click="() => clearFormState()"
-        >
-            Zrušit všechny filtry
-        </button>
     </div>
 </template>

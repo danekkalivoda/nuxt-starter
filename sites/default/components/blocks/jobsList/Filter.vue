@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { defineExpose } from 'vue'
 import type { LocationQueryValue } from 'vue-router'
 import { useDebounceFn } from '@vueuse/core'
-import type { Types } from '~/sites/default/components/blocks/jobsList'
-import { Button, Checkboxes, Input, MultiSelect } from '~/sites/default/components'
-import type { IOption } from '~/sites/default/components/Multiselect'
-import { ActiveFilters } from '~/sites/default/components/blocks/jobsList'
+import type { IActiveFilter, IFilterField, ICheckboxes, IInput, IMultiselect } from '~/sites/default/components/blocks/jobsList/types'
+import type { IOption } from '~/sites/default/components/Multiselect/types'
 import { omit } from '~/recruitis-shared/utils/common'
 import { removeAll } from '~/sites/default/components/blocks/jobsList/lib/activeFilters'
 
@@ -45,8 +42,8 @@ const fetchFiltersData = async () => {
 }
 
 const { filters, refresh } = await fetchFiltersData()
-const formState = ref<Types.IFilterField[]>(structuredClone(toRaw(filters.value.data)))
-const activeFilters = ref<Types.IActiveFilter>({})
+const formState = ref<IFilterField[]>(structuredClone(toRaw(filters.value.data)))
+const activeFilters = ref<IActiveFilter>({})
 
 const form = ref<HTMLFormElement | null>(null)
 const setFormState = () => {
@@ -105,7 +102,7 @@ const debouncedSetFormState = useDebounceFn(
     500,
 )
 
-const onChange = (field: Types.IFilterField, value: string | string[] | undefined | null | IOption[]) => {
+const onChange = (field: IFilterField, value: string | string[] | undefined | null | IOption[]) => {
     switch (field.type) {
         case 'multiSelect':
             if (Array.isArray(value) && value.every((v) => typeof v === 'object')) {
@@ -135,8 +132,8 @@ const hasActiveFilters = computed(() => Object.keys(activeFilters.value).length 
 const hasSubmitButton = computed(() => {
     return props.showSubmitButton
 })
-const getMultiselectOptions = (field: Types.IFilterField) => {
-    return (field as Types.IMultiselect).options ?? []
+const getMultiselectOptions = (field: IFilterField) => {
+    return (field as IMultiselect).options ?? []
 }
 
 // eslint-disable-next-line vue/no-expose-after-await -- at na ten status nezapomenu, případně ho smaznu později
@@ -144,30 +141,30 @@ defineExpose({ clearFormState })
 </script>
 
 <template>
-    <div class="space-y-4 py-4">
+    <div class="@container/jobsFilter space-y-4">
         <form
             ref="form"
-            class="grid w-full items-end gap-2"
-            :class="{ 'xs:grid-cols-[1fr_max-content]': hasSubmitButton }"
+            class="grid w-full items-end gap-2 lg:gap-8"
+            :class="{ '@2xl/jobsFilter:grid-cols-[1fr_max-content]': hasSubmitButton }"
             @submit.prevent="setFormState"
         >
-            <div class="grid w-full grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-2">
+            <div class="@2xl/jobsFilter:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] grid w-full gap-4 lg:gap-x-8">
                 <template
                     v-for="field in formState"
                     :key="field.name"
                 >
-                    <MultiSelect
+                    <MultiselectMultiSelect
                         v-if="field.type === 'multiSelect'"
-                        v-bind="(omit(field, ['type']) as Types.IMultiselect)"
+                        v-bind="(omit(field, ['type']) as IMultiselect)"
                         :key="field.name"
                         :name="field.name"
-                        :initial-value="(field as Types.IMultiselect).initialValue ?? []"
+                        :initial-value="(field as IMultiselect).initialValue ?? []"
                         :options="getMultiselectOptions(field)"
                         @update:initial-value="(value) => onChange(field, value)"
-                    ></MultiSelect>
+                    ></MultiselectMultiSelect>
                     <Checkboxes
                         v-else-if="field.type === 'checkboxes'"
-                        v-bind="(field as Types.ICheckboxes)"
+                        v-bind="(field as ICheckboxes)"
                         @update:initial-value="(value) => onChange(field, value)"
                     ></Checkboxes>
                     <Input
@@ -175,7 +172,7 @@ defineExpose({ clearFormState })
                         :input-props="{
                             autocomplete: 'off',
                         }"
-                        v-bind="(field as Types.IInput)"
+                        v-bind="(field as IInput)"
                         @update:initial-value="(value) => onChange(field, value)"
                     ></Input>
                 </template>
@@ -188,7 +185,7 @@ defineExpose({ clearFormState })
                 Submit
             </Button>
         </form>
-        <ActiveFilters
+        <BlocksJobsListActiveFilters
             v-if="hasActiveFilters"
             ref="activeFiltersRef"
             :form="formState"
@@ -196,6 +193,6 @@ defineExpose({ clearFormState })
             @update:active-filters="(value) => (activeFilters = value)"
             @update:form-state="(value) => (formState = value)"
             @clear-form-state="() => setFormState()"
-        ></ActiveFilters>
+        ></BlocksJobsListActiveFilters>
     </div>
 </template>

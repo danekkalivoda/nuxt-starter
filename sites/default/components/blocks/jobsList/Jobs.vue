@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { type SortingState, useVueTable, createColumnHelper, getCoreRowModel, getSortedRowModel } from '@tanstack/vue-table'
 import slugify from 'slugify'
-import Button from '~/sites/default/components/Button.vue'
-import Loading from '~/sites/default/components/Loading.vue'
-import type { Types } from '~/sites/default/components/blocks/jobsList'
+import type { IJob } from '~/sites/default/components/blocks/jobsList/types'
 import type { AsyncDataRequestStatus } from '#app'
 
 const router = useRouter()
@@ -12,10 +10,11 @@ const emits = defineEmits<{
     (e: 'refresh'): void
     (e: 'loadMore', page: number): void
 }>()
-const props = defineProps<{ data?: Types.IJob[]
+const props = defineProps<{ data?: IJob[]
     total?: number
-    loading: AsyncDataRequestStatus }>()
-const columnHelper = createColumnHelper<Types.IJob>()
+    loading: AsyncDataRequestStatus
+    gridClass?: string }>()
+const columnHelper = createColumnHelper<IJob>()
 const columns = [
     columnHelper.accessor(
         'title',
@@ -26,7 +25,7 @@ const columns = [
         },
     ),
     columnHelper.accessor(
-        'description',
+        'shortDesc',
         {
             header: 'Popis',
             cell: (info) => info.getValue(),
@@ -79,17 +78,15 @@ const getCellLabel = (cell) => {
         : cell.column.columnDef.cell
 }
 
-const loadMoreItems = (limit: number) => {
+const loadMoreItems = (limit: number = 25) => {
     const currentLimit = parseInt(route.query.limit as string) || 25
-    const newLimit = currentLimit + (typeof limit === 'number' ? limit : 25)
+    const newLimit = currentLimit + limit
     router.push({ query: { ...route.query,
         limit: newLimit.toString() } }).then(() => {
-        nextTick(() => {
-            emits(
-                'loadMore',
-                newLimit,
-            )
-        })
+        nextTick(() => emits(
+            'loadMore',
+            newLimit,
+        ))
     })
 }
 
@@ -99,8 +96,12 @@ const hasMoreItems = computed(() => {
 </script>
 
 <template>
-    <div class="relative">
-        <div class="grid w-full gap-2">
+    <div class="relative grid">
+        <div
+            :class="
+                [props.gridClass ? props.gridClass : 'grid w-full divide-y rounded border-t bg-white'].join(' ')
+            "
+        >
             <div
                 v-if="hasHeader"
                 class="overflow-hidden rounded md:table-row"
@@ -138,19 +139,19 @@ const hasMoreItems = computed(() => {
                 <slot
                     :row="row"
                     :cells="row.getVisibleCells()"
-                    :link="'/pozice/' + slugify(row.original.title, { lower: true, strict: true })"
+                    :link="'/pozice/' + row.original.id + '-' + slugify(row.original.title, { lower: true, strict: true })"
                     :get-cell-label="getCellLabel"
                     :anchor="row.original.anchor"
                 >
                     <a
                         :id="row.original.anchor"
-                        :href="'/pozice/' + slugify(row.original.title, { lower: true, strict: true })"
-                        class="group block grid-cols-2 items-stretch overflow-hidden rounded ring-1 ring-black/5 md:grid md:py-0"
+                        :href="'/pozice/' + row.original.id + '-' + slugify(row.original.title, { lower: true, strict: true })"
+                        class="group block grid-cols-2 items-stretch overflow-hidden md:grid md:py-0 lg:grid-cols-[400px_1fr]"
                     >
                         <div
                             v-for="cell in row.getVisibleCells()"
                             :key="cell.id"
-                            class="px-4 first:pt-3 last:pb-3 group-hover:bg-gray-50 md:flex md:items-center md:py-2 md:first:rounded-l md:first:pt-2 md:last:rounded-r md:last:pb-2"
+                            class="bg-gray-50 px-4 first:pt-3 last:pb-3 group-hover:bg-white md:flex md:items-center md:py-2 md:first:rounded-l md:first:pt-2 md:last:rounded-r md:last:pb-2 lg:px-8"
                             :class="[cell.column.id === 'title' ? 'text-base' : 'text-xs text-gray-400 md:text-sm'].join('')"
                         >
 
@@ -160,17 +161,25 @@ const hasMoreItems = computed(() => {
                 </slot>
             </template>
         </div>
-        <div
-            v-if="hasMoreItems"
-            class="flex justify-center py-4"
+        <slot
+            name="load-more-items"
+            :load-more-items="loadMoreItems"
+            :has-more-items="hasMoreItems"
         >
-            <Button @click="loadMoreItems">
-                Načíst více
-            </Button>
-        </div>
+            <div
+                v-if="hasMoreItems"
+                class="flex justify-center border-t py-4 lg:py-8"
+            >
+                <Button
+                    @click="() => loadMoreItems()"
+                >
+                    Načíst více
+                </Button>
+            </div>
+        </slot>
         <div
             v-if="loading === 'pending'"
-            class="fixed inset-0 grid"
+            class="absolute inset-0 grid"
         >
             <div class="text-brand-500 -m-2 grid place-items-center bg-white/10 backdrop-blur-sm">
                 <Loading></Loading>

@@ -10,11 +10,12 @@ export const i18n = {
 }
 export const googleFonts = {
     families: {
-        'Nunito+Sans': {
+        'Onest': {
             wght: [
+                300,
+                400,
                 600,
                 700,
-                800,
             ],
         },
         'DM+Serif+Display': {
@@ -23,6 +24,8 @@ export const googleFonts = {
     },
 }
 export const componentsPaths = [
+    '~/sites/groupon/components',
     '~/sites/default/components',
-    '~/components',
+    '~/sites/groupon/pages',
+    '~/sites/default/pages',
 ]

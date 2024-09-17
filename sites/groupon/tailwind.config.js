@@ -40,13 +40,14 @@ export const config = {
                 },
             },
             fontWeight: {
-                medium: '600',
-                semibold: '700',
-                bold: '800',
+                normal: '300',
+                medium: '400',
+                semibold: '600',
+                bold: '700',
             },
             fontFamily: {
                 sans: [
-                    '"Nunito sans"',
+                    '"Onest"',
                     'ui-sans-serif',
                     'system-ui',
                     '-apple-system',

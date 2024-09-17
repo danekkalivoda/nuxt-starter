@@ -15,9 +15,11 @@ const props = withDefaults(
         :to="localePath('/')"
         class="grid h-8 w-24 lg:h-12 lg:w-32"
     >
-        <Logo
-            :theme="props.theme"
-            class="grid size-full [&>*]:size-full"
-        ></Logo>
+        <slot>
+            <Logo
+                :theme="props.theme"
+                class="grid size-full [&>*]:size-full"
+            ></Logo>
+        </slot>
     </NuxtLink>
 </template>

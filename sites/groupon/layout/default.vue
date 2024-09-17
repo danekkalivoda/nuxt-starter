@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue'
-import Header from '~/sites/groupon/layout/header.vue'
 
 const { locale } = useI18n()
 const menu = ref<MenulinkInterface[]>([])
@@ -32,7 +31,7 @@ watch(
 </script>
 
 <template>
-    <Header :menu="menu"></Header>
+    <LayoutHeader :menu="menu"></LayoutHeader>
     <NuxtPage></NuxtPage>
     <LayoutFooter></LayoutFooter>
 </template>

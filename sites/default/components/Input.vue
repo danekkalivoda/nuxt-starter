@@ -14,6 +14,8 @@ const emit = defineEmits(['update:initialValue'])
     <Input
         v-bind="props"
         :controlled="true"
-        @update:initial-value="(value) => emit('update:initialValue', value)"
+        @update:initial-value="(value) => {
+            emit('update:initialValue', value)
+        }"
     ></Input>
 </template>

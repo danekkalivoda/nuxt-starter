@@ -1,16 +1,22 @@
-export const useJobsData = <T>(initialKey = 'jobs', initialUrl = '/api/jobs') => {
+export const useJobsData = <T>(initialKey = 'jobs', initialUrl = '/api/jobs', id?: string) => {
     const route = useRoute()
     const url = ref(initialUrl)
     const key = ref(initialKey)
 
     const { data, refresh, status } = useAsyncData<T>(
         key.value,
-        () => $fetch(
-            url.value,
-            {
-                params: route.query,
-            },
-        ),
+        () => {
+            const params = { ...route.query }
+            if (id) {
+                params.id = id
+            }
+            return $fetch(
+                url.value,
+                {
+                    params,
+                },
+            )
+        },
     )
 
     return { data,

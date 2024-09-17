@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import Page from '~/sites/default/pages/page.vue'
-
 const { locale } = useI18n()
 const route = useRoute()
 const slug = Array.isArray(route.params.slug) ? route.params.slug[0] : route.params.slug || 'index'

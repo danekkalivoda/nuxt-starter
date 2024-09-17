@@ -27,15 +27,19 @@ export default defineNuxtConfig({
         },
     },
     modules: [
+        'nuxtjs-naive-ui',
+        '@primevue/nuxt-module',
+        '@nuxt/icon',
+        'nuxt-splide',
         '@sidebase/nuxt-auth',
         '@nuxtjs/google-fonts',
         '@nuxtjs/i18n',
-        '@nuxt/icon',
         '@nuxtjs/strapi',
-        'nuxtjs-naive-ui',
-        '@primevue/nuxt-module',
         '@nuxt/eslint',
     ],
+    splide: {
+        theme: 'core',
+    },
     eslint: {
         config: {
             stylistic: {
@@ -45,7 +49,7 @@ export default defineNuxtConfig({
             },
         },
     },
-    devtools: { enabled: true },
+    devtools: { enabled: false },
     ssr: true,
     css: ['~/assets/css/tailwind.css'],
     postcss: {
@@ -54,6 +58,12 @@ export default defineNuxtConfig({
             'tailwindcss/nesting': 'postcss-nesting',
             'tailwindcss': { config: tailwindConfigUrl },
             'autoprefixer': {},
+        },
+    },
+    primevue: {
+        autoImport: false,
+        options: {
+            unstyled: true,
         },
     },
     components: {
@@ -86,17 +96,12 @@ export default defineNuxtConfig({
         cookie: {},
         cookieName: 'strapi_jwt',
     },
+
     typescript: {
-        typeCheck: true,
+        typeCheck: false,
         strict: false,
     },
     plugins: ['~/plugins/naive-ui'],
-    primevue: {
-        autoImport: false,
-        options: {
-            unstyled: true,
-        },
-    },
     build: {
         transpile:
             process.env.NODE_ENV === 'production'

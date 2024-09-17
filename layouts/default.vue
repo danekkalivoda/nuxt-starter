@@ -16,7 +16,5 @@ const layoutComponent = layouts[layoutName] || DefaultLayout
 </script>
 
 <template>
-    <div>
-        <component :is="layoutComponent"></component>
-    </div>
+    <component :is="layoutComponent"></component>
 </template>

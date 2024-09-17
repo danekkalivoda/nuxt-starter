@@ -12,5 +12,6 @@ export const googleFonts = {}
 export const componentsPaths = [
     '~/sites/abb/components',
     '~/sites/default/components',
-    '~/components',
+    '~/sites/abb/pages',
+    '~/sites/default/pages',
 ]

@@ -2,9 +2,9 @@ interface IMenuItemPageRelation {
     data: {
         id: number
         attributes: {
-            Title: string
-            Url: string
-            Homepage: boolean
+            title: string
+            url: string
+            homepage: boolean
         }
     }
 }

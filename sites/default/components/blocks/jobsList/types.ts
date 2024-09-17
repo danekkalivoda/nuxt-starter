@@ -3,8 +3,10 @@ import type { IMultiselectProps } from '~/sites/default/components/Multiselect'
 import type { InputInterface } from '~/recruitis-shared/components/forms/input.vue'
 
 export interface IJob {
+    id: string
     title: string
-    description: string
+    shortDesc: string
+    description?: string
     anchor: string
 }
 

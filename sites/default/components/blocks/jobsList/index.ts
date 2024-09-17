@@ -1,5 +1,0 @@
-export { default as JobsList } from '~/sites/default/components/blocks/jobsList/List.vue'
-export { default as JobsFilter } from '~/sites/default/components/blocks/jobsList/Filter.vue'
-export { default as ActiveFilters } from '~/sites/default/components/blocks/jobsList/ActiveFilters.vue'
-export { default as Jobs } from '~/sites/default/components/blocks/jobsList/Jobs.vue'
-export * as Types from '~/sites/default/components/blocks/jobsList/types'

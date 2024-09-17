@@ -15,17 +15,16 @@ export const sharedConfig = {
         container: {
             center: true,
             padding: {
-                'DEFAULT': '1rem',
-                'sm': '2rem',
-                'lg': '2rem',
-                'xl': '2rem',
-                '2xl': '2rem',
+                'DEFAULT': '1.5rem',
+                'lg': '4rem',
+                'xl': '4rem',
+                '2xl': '4rem',
             },
             screens: {
+                'lg': '1024px',
                 'xl': '1280px',
                 '2xl': '1536px',
-                '3xl': '1536px',
-                '4xl': '1536px',
+                '3xl': '1920px',
             },
         },
         screens: {
@@ -36,7 +35,6 @@ export const sharedConfig = {
             'xl': '1280px',
             '2xl': '1536px',
             '3xl': '1920px',
-            '4xl': '2560px',
             'can-hover': { raw: '(hover: hover)' },
             'touch': { raw: '(hover: none)' },
         },

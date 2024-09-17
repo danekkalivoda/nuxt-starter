@@ -23,6 +23,7 @@ const customStyles = computed(() => {
     <Button
         v-bind="props"
         :class="customStyles"
+        :show-default-slot="true"
     >
         <slot></slot>
     </Button>

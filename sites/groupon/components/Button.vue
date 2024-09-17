@@ -5,11 +5,15 @@ import type { ButtonInterface } from '~/recruitis-shared/components/forms/button
 export type NButtonInterface = ButtonInterface
 const props = withDefaults(
     defineProps<NButtonInterface>(),
-    {},
+    {
+        theme: 'default',
+    },
 )
 const customStyles = computed(() => {
     if (props.theme === 'primary') {
         return '!rounded-full border-none bg-gradient-to-r from-brand-700 via-brand-500 to-brand-200 hover:from-brand-500 hover:to-brand-500 focus:ring-gray-300 ring-offset-1 shadow-none'
+    } else if (props.theme === 'default') {
+        return '!rounded-full'
     }
     return ''
 })

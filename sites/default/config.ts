@@ -24,4 +24,7 @@ export const googleFonts = {
         },
     },
 }
-export const componentsPaths = ['~/sites/default/components']
+export const componentsPaths = [
+    '~/sites/default/components',
+    '~/sites/default/pages',
+]
