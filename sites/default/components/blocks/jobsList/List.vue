@@ -49,8 +49,8 @@ watch(
 
 <template>
     <div class="container">
-        <div class="space-y-4 rounded pt-4  shadow-lg ring-1 ring-black/5 lg:pt-8">
-            <div class="prose prose-sm lg:prose px-4 lg:px-8">
+        <Box class="space-y-4 px-0 pt-6 lg:px-0 lg:pt-8">
+            <div class="prose prose-sm lg:prose px-6 lg:px-8">
                 <h2>
                     Máme pro vás <span class="text-brand-500">{{ jobs?.meta.entries_total }} volných pozic</span>.
                 </h2>
@@ -59,7 +59,7 @@ watch(
                 v-if="props.showFilter"
                 ref="filter"
                 :show-submit-button="props.showSubmitButton"
-                class="rounded px-4 lg:px-8 lg:pb-4"
+                class="rounded px-6 lg:px-8 lg:pb-6"
                 @update:form-state="() => refresh()"
             ></BlocksJobsListFilter>
             <BlocksJobsListJobs
@@ -70,6 +70,6 @@ watch(
                 @load-more="(limit) => onAfterRefresh(limit)"
             >
             </BlocksJobsListJobs>
-        </div>
+        </Box>
     </div>
 </template>

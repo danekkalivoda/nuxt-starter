@@ -1,7 +1,17 @@
+<!-- eslint-disable vue/no-v-html -->
 <script setup lang="ts">
-import { type IHeroBlock, type IJobsListBlock, type IPage, type IStrapiBlockUnion, IStrapiBlockName } from '~/sites/default/types/pages'
+import {
+    type IHeroBlock,
+    type IJobsListBlock,
+    type ITextBlock,
+    type IPage,
+    type IStrapiBlockUnion,
+    type ITilesBlock,
+    IStrapiBlockName,
+} from '~/sites/default/types/pages'
 
 const props = defineProps<IPage>()
+console.warn(props)
 
 function isBlockOfType<T extends IStrapiBlockUnion>(block: IStrapiBlockUnion, type: IStrapiBlockName): block is T {
     return block.__component === type
@@ -9,20 +19,6 @@ function isBlockOfType<T extends IStrapiBlockUnion>(block: IStrapiBlockUnion, ty
 </script>
 
 <template>
-    <BlocksBase
-        v-if="!props.hideTitle || !props.hideDescription"
-    >
-        <div class="container">
-            <div class="prose prose-sm lg:prose mx-auto text-center">
-                <h1 :class="props.hideTitle ? 'visually-hidden' : ''">
-                    {{ props.title }}
-                </h1>
-                <p v-if="!props.hideDescription && props?.description">
-                    {{ props.description }}
-                </p>
-            </div>
-        </div>
-    </BlocksBase>
     <slot></slot>
     <BlocksBase
         v-for="block in props.blocks"
@@ -39,5 +35,15 @@ function isBlockOfType<T extends IStrapiBlockUnion>(block: IStrapiBlockUnion, ty
             v-if="isBlockOfType<IHeroBlock>(block, IStrapiBlockName.hero)"
             v-bind="block"
         ></LazyBlocksHeroImage>
+        <LazyBlocksTextProse
+            v-if="isBlockOfType<ITextBlock>(block, IStrapiBlockName.text)"
+            v-bind="block"
+        >
+        </LazyBlocksTextProse>
+        <LazyBlocksTilesList
+            v-if="isBlockOfType<ITilesBlock>(block, IStrapiBlockName.tiles)"
+            v-bind="block"
+        >
+        </LazyBlocksTilesList>
     </BlocksBase>
 </template>

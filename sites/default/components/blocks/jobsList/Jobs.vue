@@ -151,7 +151,7 @@ const hasMoreItems = computed(() => {
                         <div
                             v-for="cell in row.getVisibleCells()"
                             :key="cell.id"
-                            class="bg-gray-50 px-4 first:pt-3 last:pb-3 group-hover:bg-white md:flex md:items-center md:py-2 md:first:rounded-l md:first:pt-2 md:last:rounded-r md:last:pb-2 lg:px-8"
+                            class="bg-gray-50 px-6 first:pt-3 last:pb-3 group-hover:bg-white md:flex md:items-center md:py-2 md:first:rounded-l md:first:pt-2 md:last:rounded-r md:last:pb-2 lg:px-8"
                             :class="[cell.column.id === 'title' ? 'text-base' : 'text-xs text-gray-400 md:text-sm'].join('')"
                         >
 
@@ -168,7 +168,7 @@ const hasMoreItems = computed(() => {
         >
             <div
                 v-if="hasMoreItems"
-                class="flex justify-center border-t py-4 lg:py-8"
+                class="flex justify-center border-t py-6 lg:py-8"
             >
                 <Button
                     @click="() => loadMoreItems()"

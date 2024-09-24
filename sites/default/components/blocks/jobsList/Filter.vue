@@ -148,7 +148,7 @@ defineExpose({ clearFormState })
             :class="{ '@2xl/jobsFilter:grid-cols-[1fr_max-content]': hasSubmitButton }"
             @submit.prevent="setFormState"
         >
-            <div class="@2xl/jobsFilter:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] grid w-full gap-4 lg:gap-x-8">
+            <div class="@2xl/jobsFilter:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] grid w-full gap-4">
                 <template
                     v-for="field in formState"
                     :key="field.name"

@@ -9,6 +9,8 @@ const { data: pageData } = await useAsyncData(() => $fetch(
     },
 ))
 const page = pageData.value
+console.log(page)
+
 useHead({
     title: page?.title,
 })

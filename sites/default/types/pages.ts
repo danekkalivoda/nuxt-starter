@@ -5,8 +5,10 @@ interface IStrapiPageLocalizations {
 export enum IStrapiBlockName {
     jobsList = 'blocks.jobs-list',
     hero = 'blocks.hero-image',
+    text = 'blocks.text',
+    tiles = 'blocks.tiles',
 }
-export type IStrapiBlockNameUnion = IStrapiBlockName.jobsList | IStrapiBlockName.hero
+export type IStrapiBlockNameUnion = IStrapiBlockName.jobsList | IStrapiBlockName.hero | IStrapiBlockName.text | IStrapiBlockName.tiles
 
 export enum IStrapiBlockBackground {
     Transparent = 'Transparent',
@@ -17,10 +19,10 @@ export enum IStrapiBlockBackground {
 }
 
 export enum IStrapiBlockGap {
-    none = 'None',
-    small = 'Small',
-    medium = 'Medium',
-    large = 'Large',
+    None = 'None',
+    Small = 'Small',
+    Medium = 'Medium',
+    Large = 'Large',
 }
 
 export interface IStrapiBlockSettings {
@@ -28,11 +30,19 @@ export interface IStrapiBlockSettings {
     background?: keyof typeof IStrapiBlockBackground
     bottomGap?: keyof typeof IStrapiBlockGap
     topGap?: keyof typeof IStrapiBlockGap
+    backgroundImage?: {
+        url: string
+        width: number
+        height: number
+    }
+    backgroundPosition?: 'TopLeft' | 'TopCenter' | 'TopRight' | 'CenterLeft' | 'Center' | 'CenterRight' | 'BottomLeft' | 'BottomCenter' | 'BottomRight'
+    backgroundRepeat?: 'NoRepeat' | 'Repeat' | 'RepeatX' | 'RepeatY'
+    backgroundSize?: 'Auto' | 'Cover' | 'Contain'
 }
 
 export interface IStrapiBlock {
     id: number
-    __component: IStrapiBlockName
+    __component?: IStrapiBlockName
     baseSettings?: IStrapiBlockSettings
 }
 
@@ -63,16 +73,30 @@ export interface IHeroBlock extends IStrapiBlock {
     showProgress: boolean
     slides: IHeroSlide[]
 }
+export interface ITextBlock extends IStrapiBlock {
+    text?: string
+    boxed?: boolean
+    centered?: boolean
+    width?: 'Small' | 'Medium' | 'Large' | 'Full'
+}
 
-export type IStrapiBlockUnion = IJobsListBlock | IHeroBlock
+export interface ITile {
+    id: number
+    header?: string
+    icon?: string
+    text?: string
+}
+export interface ITilesBlock extends IStrapiBlock {
+    tiles: ITile[]
+}
+
+export type IStrapiBlockUnion = IJobsListBlock | IHeroBlock | ITextBlock | ITilesBlock
 
 export interface IStrapiPage {
     attributes: {
         homepage: boolean
         description?: string | null
         title: string
-        hideTitle: boolean
-        hideDescription: boolean
         locale: string
         localizations: IStrapiPageLocalizations
         blocks: IStrapiBlockUnion[]
@@ -86,7 +110,5 @@ export interface IStrapiPage {
 export interface IPage {
     title: string
     description?: string | null
-    hideTitle?: boolean
-    hideDescription?: boolean
     blocks?: IStrapiBlockUnion[]
 }

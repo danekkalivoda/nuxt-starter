@@ -1,6 +1,16 @@
-import { type IPage, type IStrapiPage, IStrapiBlockName } from '~/sites/default/types/pages'
+import {
+    type IPage,
+    type IStrapiPage,
+    type IStrapiBlockUnion,
+    type IHeroBlock,
+    type IHeroSlide,
+    IStrapiBlockName,
+} from '~/sites/default/types/pages'
 import type { IMenuItem } from '~/sites/default/types/menus'
 import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue'
+
+const runtimeConfig = useRuntimeConfig()
+const strapiUrl = runtimeConfig.public.strapi.url
 
 const getMenuLinkUrl = (item: IMenuItem) => {
     if (item.attributes.url !== '') {
@@ -56,8 +66,7 @@ export const useMenu = async ({
     locale?: string
     useFetchMode?: boolean
 }): Promise<MenulinkInterface[]> => {
-    const runtimeConfig = useRuntimeConfig()
-    const apiUrl = `${runtimeConfig.public.strapi.url}/api/${url}&filters[title][$eq]=${locale}`
+    const apiUrl = `${strapiUrl}/api/${url}&filters[title][$eq]=${locale}`
     const fetchOptions = {
         method: 'GET' as const,
         headers: {
@@ -73,7 +82,7 @@ export const useMenu = async ({
             if (response && typeof response.data === 'object' && response.data !== null) {
                 return (response.data as any).value.data
             }
-            throw new Error('Špatný formát format.')
+            throw new Error('Špatný formát.')
         } else {
             const response = await fetch(
                 apiUrl,
@@ -87,30 +96,57 @@ export const useMenu = async ({
     return getMenus(await fetchData())
 }
 
-/**
- * This function fetches a page from Strapi based on the provided slug and locale.
- * If the homepage flag is true, it fetches the page marked as the homepage.
- * Otherwise, it uses the findOne method to fetch the page by its slug.
- */
-const processBlocks = (blocks: any[], runtimeConfig: any) => {
-    return blocks.map((block) => {
-        if (block.__component === IStrapiBlockName.hero) {
-            return {
-                ...block,
-                slides: (block as any).slides.map((slide: any) => {
-                    return {
-                        ...slide,
-                        image: {
-                            alt: slide?.hero || slide?.description || '',
-                            url: runtimeConfig.public.strapi.url + slide.image.data.attributes.url,
-                            width: slide.image.data.attributes.width,
-                            height: slide.image.data.attributes.height,
-                        },
-                    }
-                }),
-            }
+const updateBackgroundImage = (blk: any) => {
+    const bgImageData = blk?.baseSettings?.backgroundImage?.data?.attributes
+    if (bgImageData) {
+        const { url, width, height } = bgImageData
+        return {
+            ...blk,
+            baseSettings: {
+                ...blk.baseSettings,
+                backgroundImage: {
+                    url: strapiUrl + url,
+                    width,
+                    height,
+                },
+            },
         }
-        return block
+    }
+    return blk
+}
+
+const updateHeroSlides = (blk: any) => {
+    if (blk.__component === IStrapiBlockName.hero && Array.isArray(blk.slides)) {
+        const updatedSlides = blk.slides.map((slide: any) => {
+            const imageData = slide?.image?.data?.attributes
+            if (imageData) {
+                const { url, width, height } = imageData
+                return {
+                    ...slide,
+                    image: {
+                        alt: slide.hero || slide.description || '',
+                        url: strapiUrl + url,
+                        width,
+                        height,
+                    },
+                }
+            }
+            return slide
+        })
+        return {
+            ...blk,
+            slides: updatedSlides,
+        }
+    }
+    return blk
+}
+
+const processBlocks = (blocks: IStrapiBlockUnion[]) => {
+    return blocks.map((block) => {
+        let updatedBlock = { ...block }
+        updatedBlock = updateBackgroundImage(updatedBlock)
+        updatedBlock = updateHeroSlides(updatedBlock)
+        return updatedBlock
     })
 }
 
@@ -128,8 +164,7 @@ export const usePages = async ({
     const l = locale === 'cs-CZ' ? 'cs' : locale
     const filter = homepage ? 'homepage' : 'url'
     const filterValue = homepage ? 'true' : slug
-    const runtimeConfig = useRuntimeConfig()
-    const urlToFetch = runtimeConfig.public.strapi.url + '/api/' + `${url}&filters[${filter}][$eq]=${filterValue}`
+    const urlToFetch = strapiUrl + '/api/' + `${url}&filters[${filter}][$eq]=${filterValue}`
     const response = await fetch(
         urlToFetch,
         {
@@ -159,19 +194,14 @@ export const usePages = async ({
     }
 
     if (pageRawData.attributes?.blocks) {
-        pageRawData.attributes.blocks = processBlocks(
-            pageRawData.attributes.blocks,
-            runtimeConfig,
-        )
+        pageRawData.attributes.blocks = processBlocks(pageRawData.attributes.blocks)
     }
 
-    const { title, description, hideTitle, hideDescription, blocks } = pageRawData.attributes
+    const { title, description, blocks } = pageRawData.attributes
 
     return {
         title,
         description: description ?? undefined,
-        hideTitle,
-        hideDescription,
         blocks,
     }
 }
