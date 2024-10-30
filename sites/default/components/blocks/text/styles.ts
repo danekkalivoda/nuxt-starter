@@ -18,7 +18,7 @@ export const proseClasses = tv({
     base: ' w-full max-w-none',
     variants: {
         dark: {
-            true: 'prose prose-white text-white/60',
+            true: 'prose prose-white text-white/75',
             false: 'prose',
         },
     },

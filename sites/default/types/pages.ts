@@ -30,6 +30,8 @@ export interface IStrapiBlockSettings {
     background?: keyof typeof IStrapiBlockBackground
     bottomGap?: keyof typeof IStrapiBlockGap
     topGap?: keyof typeof IStrapiBlockGap
+    bottomBorder?: 'None' | 'Light'
+    topBorder?: 'None' | 'Light'
     backgroundImage?: {
         url: string
         width: number
@@ -50,17 +52,23 @@ export interface IJobsListBlock extends IStrapiBlock {
     showFilter?: boolean
     showSubmitButton?: boolean
 }
-export interface IHeroSlideImage {
+export interface IImage {
+    id: number
     alt: string
     url: string
     width: number
     height: number
+    formats?: {
+        large?: IImage
+        medium?: IImage
+        small?: IImage
+    }
 }
 export interface IHeroSlide {
     id: number
     header?: string
     description?: string
-    image: IHeroSlideImage
+    image: IImage
     textBackground: 'None' | 'White' | 'Black'
     textColor: 'White' | 'Black'
     textAlignX: 'Left' | 'Center' | 'Right'
@@ -78,6 +86,19 @@ export interface ITextBlock extends IStrapiBlock {
     boxed?: boolean
     centered?: boolean
     width?: 'Small' | 'Medium' | 'Large' | 'Full'
+    images?: {
+        id: number
+        theme: 'List' | 'Simple grid'
+        beforeText: boolean
+        overlapY: boolean
+        alignX: 'Left' | 'Center' | 'Right'
+        alignY: 'Top' | 'Center' | 'Bottom'
+        size: 'Small' | 'Medium' | 'Large'
+        onMobile: boolean
+        onTable: boolean
+        onDesktop: boolean
+        images: IImage[]
+    }
 }
 
 export interface ITile {
@@ -85,9 +106,13 @@ export interface ITile {
     header?: string
     icon?: string
     text?: string
+    linkUrl?: string
+    linkText?: string
 }
+export type ITileTheme = 'Theme 1' | 'Theme 2' | 'Theme 3'
 export interface ITilesBlock extends IStrapiBlock {
     tiles: ITile[]
+    theme: ITileTheme
 }
 
 export type IStrapiBlockUnion = IJobsListBlock | IHeroBlock | ITextBlock | ITilesBlock

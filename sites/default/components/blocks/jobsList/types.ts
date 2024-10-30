@@ -2,14 +2,6 @@ import type { BaseFormElementInterface } from '~/recruitis-shared/components/for
 import type { IMultiselectProps } from '~/sites/default/components/Multiselect'
 import type { InputInterface } from '~/recruitis-shared/components/forms/input.vue'
 
-export interface IJob {
-    id: string
-    title: string
-    shortDesc: string
-    description?: string
-    anchor: string
-}
-
 type FilterType = 'multiSelect' | 'checkboxes' | 'inputSearch'
 export interface ICheckboxes extends BaseFormElementInterface {
     type: FilterType

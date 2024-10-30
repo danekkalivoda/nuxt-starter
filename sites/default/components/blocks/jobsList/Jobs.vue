@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type SortingState, useVueTable, createColumnHelper, getCoreRowModel, getSortedRowModel } from '@tanstack/vue-table'
 import slugify from 'slugify'
-import type { IJob } from '~/sites/default/components/blocks/jobsList/types'
+import type { IJob } from '~/sites/default/types/jobs'
 import type { AsyncDataRequestStatus } from '#app'
 
 const router = useRouter()
@@ -168,7 +168,7 @@ const hasMoreItems = computed(() => {
         >
             <div
                 v-if="hasMoreItems"
-                class="flex justify-center border-t py-6 lg:py-8"
+                class="flex justify-center border-t pt-6 lg:pt-8"
             >
                 <Button
                     @click="() => loadMoreItems()"
@@ -179,7 +179,7 @@ const hasMoreItems = computed(() => {
         </slot>
         <div
             v-if="loading === 'pending'"
-            class="absolute inset-0 grid"
+            class="absolute inset-2 grid"
         >
             <div class="text-brand-500 -m-2 grid place-items-center bg-white/10 backdrop-blur-sm">
                 <Loading></Loading>

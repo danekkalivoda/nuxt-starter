@@ -24,7 +24,7 @@ const textBlockWrapperClasses = tv({
     },
 })
 const textBlockClasses = tv({
-    base: 'xl:max-w-128 relative inline-flex flex-col items-start justify-center space-y-4 px-6 pb-8 pt-4 text-black lg:max-w-96  lg:space-y-6 lg:rounded lg:p-8 xl:p-10',
+    base: 'xl:max-w-128 relative inline-flex flex-col items-start justify-center space-y-4 p-6 text-black lg:max-w-96  lg:space-y-6 lg:rounded lg:p-8 xl:p-10',
     variants: {
         background: {
             None: '',
@@ -45,13 +45,15 @@ const combinedContent = computed(() => {
 </script>
 
 <template>
-    <div class="relative grid-cols-1 grid-rows-1 overflow-hidden lg:grid">
-        <img
-            :src="props.image.url"
-            :alt="props.image.alt"
-            loading="lazy"
-            class="lg:h-128 col-span-1 col-start-1 row-span-1 row-start-1 h-96 w-full object-cover align-top"
-        >
+    <div class="relative grid-cols-1 grid-rows-1 lg:container lg:grid">
+        <div class="container col-span-1 col-start-1 row-span-1 row-start-1 overflow-hidden rounded lg:px-0 lg:shadow-lg">
+            <img
+                :src="props.image.url"
+                :alt="props.image.alt"
+                loading="lazy"
+                class="lg:h-128  h-96 w-full rounded object-cover align-top"
+            >
+        </div>
         <div
             v-if="props.header || props.description || props.buttonName"
             :class="textBlockWrapperClasses({ alignX: props.textAlignX, textAlignY: props.textAlignY })"

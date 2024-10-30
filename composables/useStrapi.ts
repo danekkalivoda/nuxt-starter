@@ -9,9 +9,6 @@ import {
 import type { IMenuItem } from '~/sites/default/types/menus'
 import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue'
 
-const runtimeConfig = useRuntimeConfig()
-const strapiUrl = runtimeConfig.public.strapi.url
-
 const getMenuLinkUrl = (item: IMenuItem) => {
     if (item.attributes.url !== '') {
         return item.attributes.url
@@ -66,6 +63,8 @@ export const useMenu = async ({
     locale?: string
     useFetchMode?: boolean
 }): Promise<MenulinkInterface[]> => {
+    const runtimeConfig = useRuntimeConfig()
+    const strapiUrl = runtimeConfig.public.strapi.url
     const apiUrl = `${strapiUrl}/api/${url}&filters[title][$eq]=${locale}`
     const fetchOptions = {
         method: 'GET' as const,
@@ -96,7 +95,7 @@ export const useMenu = async ({
     return getMenus(await fetchData())
 }
 
-const updateBackgroundImage = (blk: any) => {
+const updateBackgroundImage = (blk: any, strapiUrl: string) => {
     const bgImageData = blk?.baseSettings?.backgroundImage?.data?.attributes
     if (bgImageData) {
         const { url, width, height } = bgImageData
@@ -115,7 +114,7 @@ const updateBackgroundImage = (blk: any) => {
     return blk
 }
 
-const updateHeroSlides = (blk: any) => {
+const updateHeroSlides = (blk: any, strapiUrl: string) => {
     if (blk.__component === IStrapiBlockName.hero && Array.isArray(blk.slides)) {
         const updatedSlides = blk.slides.map((slide: any) => {
             const imageData = slide?.image?.data?.attributes
@@ -140,12 +139,65 @@ const updateHeroSlides = (blk: any) => {
     }
     return blk
 }
+const updateTextBlock = (blk: any, strapiUrl: string) => {
+    if (blk.__component === IStrapiBlockName.text && blk?.images) {
+        const updatedImages = blk?.images.images.data.map((image: any) => {
+            const imageData = image?.attributes
+            if (imageData) {
+                const { url, width, height } = imageData
+                return {
+                    id: image.id,
+                    alt: image.attributes.alternativeText || '',
+                    url: strapiUrl + url,
+                    width,
+                    height,
+                    formats: {
+                        large: {
+                            url: strapiUrl + (imageData.formats?.large?.url || imageData.url),
+                            width: (imageData.formats?.large?.width || imageData.width),
+                            height: (imageData.formats?.large?.height || imageData.height),
+                        },
+                        medium: {
+                            url: strapiUrl + (imageData.formats?.medium?.url || imageData.url),
+                            width: (imageData.formats?.medium?.width || imageData.width),
+                            height: (imageData.formats?.medium?.height || imageData.height),
+                        },
+                        small: {
+                            url: strapiUrl + (imageData.formats?.small?.url || imageData.url),
+                            width: (imageData.formats?.small?.width || imageData.width),
+                            height: (imageData.formats?.small?.height || imageData.height),
+                        },
+                    },
+                }
+            }
+            return image
+        })
+        return {
+            ...blk,
+            images: {
+                ...blk.images,
+                images: updatedImages,
+            },
+        }
+    }
+    return blk
+}
 
-const processBlocks = (blocks: IStrapiBlockUnion[]) => {
+const processBlocks = (blocks: IStrapiBlockUnion[], strapiUrl: string) => {
     return blocks.map((block) => {
         let updatedBlock = { ...block }
-        updatedBlock = updateBackgroundImage(updatedBlock)
-        updatedBlock = updateHeroSlides(updatedBlock)
+        updatedBlock = updateBackgroundImage(
+            updatedBlock,
+            strapiUrl,
+        )
+        updatedBlock = updateHeroSlides(
+            updatedBlock,
+            strapiUrl,
+        )
+        updatedBlock = updateTextBlock(
+            updatedBlock,
+            strapiUrl,
+        )
         return updatedBlock
     })
 }
@@ -161,6 +213,8 @@ export const usePages = async ({
     locale: string
     homepage?: boolean
 }): Promise<IPage | undefined> => {
+    const runtimeConfig = useRuntimeConfig()
+    const strapiUrl = runtimeConfig.public.strapi.url
     const l = locale === 'cs-CZ' ? 'cs' : locale
     const filter = homepage ? 'homepage' : 'url'
     const filterValue = homepage ? 'true' : slug
@@ -194,7 +248,10 @@ export const usePages = async ({
     }
 
     if (pageRawData.attributes?.blocks) {
-        pageRawData.attributes.blocks = processBlocks(pageRawData.attributes.blocks)
+        pageRawData.attributes.blocks = processBlocks(
+            pageRawData.attributes.blocks,
+            strapiUrl,
+        )
     }
 
     const { title, description, blocks } = pageRawData.attributes

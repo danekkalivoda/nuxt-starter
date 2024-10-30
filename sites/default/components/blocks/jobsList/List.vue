@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IJob } from '~/sites/default/components/blocks/jobsList/types'
+import type { IJob } from '~/sites/default/types/jobs'
 import type { IJobsListBlock } from '~/sites/default/types/pages'
 import { useJobsData } from '~/composables/useJobsData'
 
@@ -59,7 +59,7 @@ watch(
                 v-if="props.showFilter"
                 ref="filter"
                 :show-submit-button="props.showSubmitButton"
-                class="rounded px-6 lg:px-8 lg:pb-6"
+                class="rounded px-6 lg:px-8"
                 @update:form-state="() => refresh()"
             ></BlocksJobsListFilter>
             <BlocksJobsListJobs

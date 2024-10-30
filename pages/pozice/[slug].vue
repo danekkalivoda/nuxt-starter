@@ -15,7 +15,7 @@ const splitSlug = (slug: string): { number: number | null
                     match[1],
                     10,
                 ),
-                rest: match[2] || '', // Pokud část za pomlčkou není, vrátí prázdný řetězec
+                rest: match[2] || '',
             }
         : { number: null,
                 rest: slug }
@@ -33,16 +33,12 @@ const { data: job } = await useJobsData<{
 </script>
 
 <template>
-    <Page
+    <JobDetail
+        v-if="job"
+        :id="job.data.id"
         :title="job.data.title"
-        :description="job.data.shortDesc"
-    >
-        <div class="container">
-            <div
-                class="prose mx-auto"
-                v-html="job.data.description"
-            >
-            </div>
-        </div>
-    </Page>
+        :short-desc="job.data.shortDesc"
+        :description="job.data.description"
+        :form="job.data.form"
+    ></JobDetail>
 </template>

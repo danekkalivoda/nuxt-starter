@@ -24,7 +24,6 @@ export const sharedConfig = {
                 'lg': '1024px',
                 'xl': '1280px',
                 '2xl': '1536px',
-                '3xl': '1920px',
             },
         },
         screens: {
@@ -34,7 +33,6 @@ export const sharedConfig = {
             'lg': '1024px',
             'xl': '1280px',
             '2xl': '1536px',
-            '3xl': '1920px',
             'can-hover': { raw: '(hover: hover)' },
             'touch': { raw: '(hover: none)' },
         },

@@ -7,6 +7,8 @@ const props = withDefaults(
         background: 'Transparent',
         bottomGap: 'None',
         topGap: 'None',
+        bottomBorder: 'None',
+        topBorder: 'None',
     },
 )
 
@@ -17,11 +19,19 @@ const classMappings: Record<string, Record<string, string>> = {
         Medium: 'pb-8 lg:pb-16',
         Large: 'pb-16 lg:pb-32',
     },
+    bottomBorder: {
+        None: '',
+        Light: 'before:border-b before:border-black/10 before:-bottom-px border-b border-transparent',
+    },
     topGap: {
         None: 'pt-0',
         Small: 'pt-4 lg:pt-8',
         Medium: 'pt-8 lg:pt-16',
         Large: 'pt-16 lg:pt-32',
+    },
+    topBorder: {
+        None: '',
+        Light: 'before:border-t before:border-black/10 before:-top-px border-t border-transparent',
     },
     background: {
         Transparent: 'before:bg-transparent',
@@ -53,7 +63,7 @@ const classMappings: Record<string, Record<string, string>> = {
         Auto: '',
     },
     additional: {
-        background: 'relative before:absolute before:z-[-1] before:inset-0 before:w-full before:h-full',
+        background: 'relative before:absolute before:z-[-1] before:inset-0 before:w-full',
         backgroundImage: 'before:[background-image:var(--bg-image)]',
     },
 }
@@ -62,6 +72,8 @@ const computedClasses = computed(() => {
     const classes = [
         classMappings.topGap[props.topGap] || '',
         classMappings.bottomGap[props.bottomGap] || '',
+        classMappings.bottomBorder[props.bottomBorder] || '',
+        classMappings.topBorder[props.topBorder] || '',
         classMappings.background[props.background] || '',
         props.backgroundImage?.url ? classMappings.backgroundPosition[props.backgroundPosition || 'Center'] : '',
         props.backgroundImage?.url ? classMappings.backgroundRepeat[props.backgroundRepeat || 'NoRepeat'] : '',
