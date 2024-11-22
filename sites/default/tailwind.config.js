@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 import colors from 'tailwindcss/colors.js'
+import typography from '@tailwindcss/typography'
 import { sharedConfig } from './shared.tailwind.config.js'
 
 export const config = {
@@ -46,6 +47,20 @@ export const config = {
                     'sans-serif',
                 ],
             },
+            typography: (theme) => ({
+                ...sharedConfig.theme.extend.typography,
+                DEFAULT: {
+                    css: {
+                        '--tw-prose-body': theme('colors.gray[700]'),
+                        '--tw-prose-headings': theme('colors.gray[800]'),
+                        'color': theme('colors.gray[800]'),
+                        'fontSize': 'clamp(0.8rem,1vw,1rem)',
+                        'h2': {
+                            fontWeight: '600',
+                        },
+                    },
+                },
+            }),
         },
     },
     variants: sharedConfig.variants,

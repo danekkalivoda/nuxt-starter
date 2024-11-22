@@ -8,7 +8,11 @@ export enum IStrapiBlockName {
     text = 'blocks.text',
     tiles = 'blocks.tiles',
 }
-export type IStrapiBlockNameUnion = IStrapiBlockName.jobsList | IStrapiBlockName.hero | IStrapiBlockName.text | IStrapiBlockName.tiles
+export type IStrapiBlockNameUnion =
+    IStrapiBlockName.jobsList |
+    IStrapiBlockName.hero |
+    IStrapiBlockName.text |
+    IStrapiBlockName.tiles
 
 export enum IStrapiBlockBackground {
     Transparent = 'Transparent',
@@ -23,6 +27,12 @@ export enum IStrapiBlockGap {
     Small = 'Small',
     Medium = 'Medium',
     Large = 'Large',
+}
+
+export enum IStrapiBlockFilterTabs {
+    All = 'All',
+    Positions = 'Positions',
+    Candidates = 'Candidates',
 }
 
 export interface IStrapiBlockSettings {
@@ -51,6 +61,8 @@ export interface IStrapiBlock {
 export interface IJobsListBlock extends IStrapiBlock {
     showFilter?: boolean
     showSubmitButton?: boolean
+    filterTabs?: IStrapiBlockFilterTabs
+    hideHeader?: boolean
 }
 export interface IImage {
     id: number

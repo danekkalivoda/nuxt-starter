@@ -48,3 +48,16 @@ const camelCaseToKebabCase = (str) => {
         )
         .toLowerCase()
 }
+
+export const isAbsoluteUrl = (url: string): boolean => {
+    return (/^https?:\/\//i).test(url)
+}
+
+export const getUrl = (url: string, locale: string) => {
+    if (isAbsoluteUrl(url)) {
+        return url
+    } else if (url !== null) {
+        return locale === 'cs-CZ' ? '/' + url : '/' + locale + '/' + url
+    }
+    return undefined
+}

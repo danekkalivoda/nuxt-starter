@@ -62,7 +62,7 @@ const clearFormState = async () => {
 
         class="flex flex-wrap items-center gap-4 border-t pt-4"
     >
-        <div class="inline-flex flex-wrap items-center gap-2">
+        <div class="inline-flex flex-wrap items-center gap-x-4 gap-y-2">
             <template
                 v-for="(values, key) in activeFilters"
                 :key="key"
@@ -74,7 +74,7 @@ const clearFormState = async () => {
                     <span
                         v-if="findFieldByKey(key)"
                         role="button"
-                        class="inline-flex cursor-pointer flex-nowrap items-center gap-1 rounded bg-white px-2 py-1 text-sm tracking-tight shadow ring-1 ring-black/5"
+                        class="ring-brand-100 bg-brand-50/50 text-brand-700 hover:bg-brand-50/90 inline-flex cursor-pointer flex-nowrap items-center gap-1 rounded px-2 py-1 text-sm tracking-tight ring-1"
                         @click="removeActiveFilter(key, value)"
                     >
                         <Icon

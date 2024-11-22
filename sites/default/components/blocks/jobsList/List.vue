@@ -1,28 +1,48 @@
 <script setup lang="ts">
-import type { IJob } from '~/sites/default/types/jobs'
+import { scrollToAnchor } from '~/sites/default/components/blocks/jobsList/lib/helpers'
+import type { IJob, IJobCandidate } from '~/sites/default/types/jobs'
 import type { IJobsListBlock } from '~/sites/default/types/pages'
-import { useJobsData } from '~/composables/useJobsData'
 
+const { $router: router, _route: route } = useNuxtApp()
+const headers = useRequestHeaders(['cookie']) as HeadersInit
 const props = defineProps<IJobsListBlock>()
-const { data: jobs, refresh, status } = useJobsData<{
-    data: IJob[]
+
+const { data: jobs, refresh, status: loading } = await useAsyncData<{
+    data: IJob[] | IJobCandidate[] | null | undefined
     meta: { entries_total: number }
-}>()
-
-const route = useRoute()
-
-const scrollToAnchor = (limit: string, smooth: boolean = true) => {
-    const element = document.getElementById(`anchor-${limit}`)
-    if (element) {
-        element.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' })
-    }
+}>(
+    'jobs-data',
+    () => {
+        const params = { ...router.currentRoute.value.query }
+        if (props.filterTabs === 'Candidates' || props.filterTabs === 'Positions') {
+            params.filtersTab = props.filterTabs.toLowerCase()
+        }
+        return $fetch(
+            '/api/job/list',
+            {
+                params,
+                headers,
+            },
+        )
+    },
+)
+const hasMoreItems = computed(() => {
+    return jobs.value?.data?.length < jobs.value?.meta.entries_total
+})
+const isJobsArray = (data: IJob[] | IJobCandidate[] | null | undefined): data is IJob[] => {
+    return (
+        !!data && (data.length === 0 || 'title' in data[0])
+    )
 }
-
-const onAfterRefresh = async (limit: number) => {
-    await refresh()
-    scrollToAnchor(limit.toString())
+const loadMoreItems = async (limit: number = 25) => {
+    const currentLimit = parseInt(route.query.limit as string) || 25
+    const newLimit = currentLimit + limit
+    router.push({ query: { ...route.query,
+        limit: newLimit.toString() } }).then(async () => {
+        await refresh()
+        scrollToAnchor(String(currentLimit))
+    })
 }
-
 onMounted(() => {
     const limit = route.query.limit as string
     if (limit) {
@@ -32,44 +52,54 @@ onMounted(() => {
         )
     }
 })
-const filter = ref()
-watch(
-    () => route.query,
-    async (newQuery, oldQuery) => {
-        if (Object.keys(newQuery).length === 0 && JSON.stringify(newQuery) !== JSON.stringify(oldQuery)) {
-            if (filter.value) {
-                await filter.value?.clearFormState()
-            }
-            await refresh()
-        }
-    },
-    { deep: true },
-)
 </script>
 
 <template>
     <div class="container">
-        <Box class="space-y-4 px-0 pt-6 lg:px-0 lg:pt-8">
-            <div class="prose prose-sm lg:prose px-6 lg:px-8">
-                <h2>
-                    Máme pro vás <span class="text-brand-500">{{ jobs?.meta.entries_total }} volných pozic</span>.
-                </h2>
+        <slot
+            :jobs="jobs"
+            :loading="loading"
+            :has-more-items="hasMoreItems"
+            :entries-count="jobs?.meta.entries_total"
+            :show-filter="props.showFilter"
+            :show-submit-button="props.showSubmitButton"
+            :filter-tabs="props.filterTabs"
+            :hide-header="props?.hideHeader"
+            :is-jobs-array="(data) => isJobsArray(data)"
+            :load-more-items="loadMoreItems"
+            :refresh="refresh"
+            :update:form-state="refresh"
+        >
+            <div class="space-y-4">
+                <BlocksJobsListFilter
+                    v-if="props.showFilter"
+                    :entries-count="jobs?.meta.entries_total"
+                    :show-submit-button="props.showSubmitButton"
+                    :filter-tabs="props.filterTabs"
+                    :hide-header="props?.hideHeader"
+                    @update:form-state="() => refresh()"
+                ></BlocksJobsListFilter>
+
+                <BlocksJobsListJobs
+                    v-if="isJobsArray(jobs?.data)"
+                    :data="jobs?.data"
+                    :loading="loading"
+                    :has-more-items="hasMoreItems"
+                    @load-more-items="() => loadMoreItems()"
+                    @refresh="() => refresh()"
+                >
+                </BlocksJobsListJobs>
+
+                <BlocksJobsListCandidates
+                    v-else
+                    :data="jobs?.data"
+                    :loading="loading"
+                    :has-more-items="hasMoreItems"
+                    @load-more-items="() => loadMoreItems()"
+                    @refresh="() => refresh()"
+                >
+                </BlocksJobsListCandidates>
             </div>
-            <BlocksJobsListFilter
-                v-if="props.showFilter"
-                ref="filter"
-                :show-submit-button="props.showSubmitButton"
-                class="rounded px-6 lg:px-8"
-                @update:form-state="() => refresh()"
-            ></BlocksJobsListFilter>
-            <BlocksJobsListJobs
-                :data="jobs?.data"
-                :total="jobs?.meta.entries_total"
-                :loading="status"
-                @refresh="() => refresh()"
-                @load-more="(limit) => onAfterRefresh(limit)"
-            >
-            </BlocksJobsListJobs>
-        </Box>
+        </slot>
     </div>
 </template>

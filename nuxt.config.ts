@@ -24,6 +24,7 @@ export default defineNuxtConfig({
         },
         public: {
             NUXT_PROJECT_NAME: process.env.NUXT_PROJECT_NAME,
+            NUXT_PROJECT_CONFIG: projectConfig,
         },
     },
     modules: [
@@ -31,6 +32,7 @@ export default defineNuxtConfig({
         '@primevue/nuxt-module',
         '@nuxt/icon',
         'nuxt-splide',
+        'floating-vue/nuxt',
         '@sidebase/nuxt-auth',
         '@nuxtjs/google-fonts',
         '@nuxtjs/i18n',
@@ -100,6 +102,18 @@ export default defineNuxtConfig({
     typescript: {
         typeCheck: false,
         strict: false,
+    },
+    vite: {
+        esbuild: {
+            legalComments: 'none',
+        },
+        build: {
+            terserOptions: {
+                format: {
+                    comments: false,
+                },
+            },
+        },
     },
     plugins: ['~/plugins/naive-ui'],
     build: {

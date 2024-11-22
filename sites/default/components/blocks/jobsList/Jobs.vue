@@ -1,38 +1,23 @@
 <script setup lang="ts">
-import { type SortingState, useVueTable, createColumnHelper, getCoreRowModel, getSortedRowModel } from '@tanstack/vue-table'
-import slugify from 'slugify'
-import type { IJob } from '~/sites/default/types/jobs'
+import { useVueTable, createColumnHelper, getCoreRowModel, getSortedRowModel, type SortingState } from '@tanstack/vue-table'
+import { computed } from 'vue'
+import { getDetailLink, onSort, getCellLabel } from './lib/helpers'
 import type { AsyncDataRequestStatus } from '#app'
+import type { IJob } from '~/sites/default/types/jobs'
 
-const router = useRouter()
-const route = useRoute()
+const { _route: route, $router: router } = useNuxtApp()
+
 const emits = defineEmits<{
-    (e: 'refresh'): void
-    (e: 'loadMore', page: number): void
+    (e: 'refresh' | 'loadMoreItems'): void
 }>()
-const props = defineProps<{ data?: IJob[]
-    total?: number
+
+const props = defineProps<{
+    gridClass?: string
+    hasMoreItems?: boolean
     loading: AsyncDataRequestStatus
-    gridClass?: string }>()
-const columnHelper = createColumnHelper<IJob>()
-const columns = [
-    columnHelper.accessor(
-        'title',
-        {
-            header: 'Pozice',
-            cell: (info) => info.getValue(),
-            sortDescFirst: true,
-        },
-    ),
-    columnHelper.accessor(
-        'shortDesc',
-        {
-            header: 'Popis',
-            cell: (info) => info.getValue(),
-            sortDescFirst: true,
-        },
-    ),
-]
+    data?: IJob[]
+}>()
+
 const initialSorting = ref<SortingState>((route.query.sort as string)?.split(',').map((s) => {
     const [
         id,
@@ -42,11 +27,56 @@ const initialSorting = ref<SortingState>((route.query.sort as string)?.split(','
         desc: desc === 'desc' }
 }) ?? [])
 const sorting = ref<SortingState>(initialSorting.value)
-const table = useVueTable({
+
+const columnHelper = createColumnHelper<IJob>()
+
+const columns = computed(() => [
+    columnHelper.accessor(
+        'title',
+        {
+            header: 'Pozice',
+            cell: (info) => ({
+                title: info.getValue(),
+            }),
+            sortDescFirst: true,
+        },
+    ),
+    columnHelper.accessor(
+        'location',
+        {
+            header: 'Lokalita',
+            cell: (info) => ({
+                title: info.getValue(),
+            }),
+            sortDescFirst: true,
+        },
+    ),
+    columnHelper.accessor(
+        'employmentType',
+        {
+            header: 'Typ úvazku',
+            cell: (info) => ({
+                id: info.getValue(),
+            }),
+            sortDescFirst: true,
+        },
+    ),
+    columnHelper.accessor(
+        'id',
+        {
+            header: 'Detail',
+            cell: (info) => ({
+                id: info.getValue(),
+            }),
+        },
+    ),
+])
+
+const table = computed(() => useVueTable({
     get data() {
         return props.data ?? []
     },
-    columns,
+    columns: columns.value,
     state: {
         get sorting() {
             return sorting.value
@@ -55,8 +85,10 @@ const table = useVueTable({
     onSortingChange: (updaterOrValue) => {
         sorting.value = typeof updaterOrValue === 'function' ? updaterOrValue(sorting.value) : updaterOrValue
         const sortParams = sorting.value.map((sort) => `${sort.id}:${sort.desc ? 'desc' : 'asc'}`).join(',')
-        const query = { ...router.currentRoute.value.query,
-            sort: sortParams || undefined }
+        const query = {
+            ...router.currentRoute.value.query,
+            sort: sortParams || undefined,
+        }
         router.push({ query }).then(() => {
             nextTick(() => {
                 emits('refresh')
@@ -65,121 +97,73 @@ const table = useVueTable({
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    manualPagination: true, // Disable pagination
-})
-
-const hasHeader = computed(() => {
-    return false // TODO strapi
-})
-
-const getCellLabel = (cell) => {
-    return typeof cell.column.columnDef.cell === 'function'
-        ? cell.column.columnDef.cell(cell.getContext())
-        : cell.column.columnDef.cell
-}
-
-const loadMoreItems = (limit: number = 25) => {
-    const currentLimit = parseInt(route.query.limit as string) || 25
-    const newLimit = currentLimit + limit
-    router.push({ query: { ...route.query,
-        limit: newLimit.toString() } }).then(() => {
-        nextTick(() => emits(
-            'loadMore',
-            newLimit,
-        ))
-    })
-}
-
-const hasMoreItems = computed(() => {
-    return (props.data?.length ?? 0) < (props.total ?? 0)
-})
+    manualPagination: true,
+}))
 </script>
 
 <template>
     <div class="relative grid">
-        <div
-            :class="
-                [props.gridClass ? props.gridClass : 'grid w-full divide-y rounded border-t bg-white'].join(' ')
-            "
+        <slot
+            name="table"
+            :table="table"
+            :headers="table.getHeaderGroups()[0].headers"
+            :on-sort="($event, header) => onSort($event, header)"
+            :rows="table.getRowModel().rows"
+            :cell-label="getCellLabel"
+            :detail-link="getDetailLink"
         >
             <div
-                v-if="hasHeader"
-                class="overflow-hidden rounded md:table-row"
-            >
-                <div
-                    v-for="header in table.getHeaderGroups()[0].headers"
-                    :key="header.id"
-                    class="hidden border-b bg-gray-100 md:table-cell md:first:rounded-l md:last:rounded-r"
-                    @click="header.column.getToggleSortingHandler()?.($event)"
-                >
-                    <button
-                        type="button"
-                        class="group flex items-center gap-2 px-4 py-2 text-sm font-medium"
-                    >
-                        {{ header.column.columnDef.header }}
-                        <div class="inline-flex">
-                            <Icon
-                                name="ion:arrow-up"
-                                :class="header.column.getIsSorted() === 'asc' ? 'text-gray-800' : 'text-gray-300'"
-                                class="inline-flex group-hover:text-gray-800"
-                            ></Icon>
-                            <Icon
-                                name="ion:arrow-down"
-                                :class="header.column.getIsSorted() === 'desc' ? 'text-gray-800' : 'text-gray-300'"
-                                class="inline-flex group-hover:text-gray-800"
-                            ></Icon>
-                        </div>
-                    </button>
-                </div>
-            </div>
-            <template
-                v-for="row in table.getRowModel().rows"
-                :key="row.id"
+                :class="[props.gridClass ?? 'grid w-full grid-cols-[1fr_max-content_max-content_max-content]'].join(' ')"
             >
                 <slot
-                    :row="row"
-                    :cells="row.getVisibleCells()"
-                    :link="'/pozice/' + row.original.id + '-' + slugify(row.original.title, { lower: true, strict: true })"
-                    :get-cell-label="getCellLabel"
-                    :anchor="row.original.anchor"
+                    name="header"
+                    :headers="table.getHeaderGroups()[0].headers"
+                    :on-sort="($event, header) => onSort($event, header)"
                 >
-                    <a
-                        :id="row.original.anchor"
-                        :href="'/pozice/' + row.original.id + '-' + slugify(row.original.title, { lower: true, strict: true })"
-                        class="group block grid-cols-2 items-stretch overflow-hidden md:grid md:py-0 lg:grid-cols-[400px_1fr]"
-                    >
-                        <div
-                            v-for="cell in row.getVisibleCells()"
-                            :key="cell.id"
-                            class="bg-gray-50 px-6 first:pt-3 last:pb-3 group-hover:bg-white md:flex md:items-center md:py-2 md:first:rounded-l md:first:pt-2 md:last:rounded-r md:last:pb-2 lg:px-8"
-                            :class="[cell.column.id === 'title' ? 'text-base' : 'text-xs text-gray-400 md:text-sm'].join('')"
-                        >
-
-                            {{ getCellLabel(cell) }}
-                        </div>
-                    </a>
+                    <BlocksJobsListHeader
+                        v-if="false"
+                        :headers="table.getHeaderGroups()[0].headers"
+                        :on-sort="($event, header) => onSort($event, header)"
+                    ></BlocksJobsListHeader>
                 </slot>
-            </template>
-        </div>
+                <template
+                    v-for="row in table.getRowModel().rows"
+                    :key="row.id"
+                >
+                    <slot
+                        name="row"
+                        :row="row"
+                        :cells="row.getVisibleCells()"
+                        :link="getDetailLink(row.original.id, row.original.title)"
+                        :get-cell-label="getCellLabel"
+                        :anchor="row.original.anchor"
+                    >
+                        <BlocksJobsListBaseRow
+                            :row="row"
+                            :href="getDetailLink(row.original.id, row.original.title)"
+                            :get-cell-label="getCellLabel"
+                        ></BlocksJobsListBaseRow>
+                    </slot>
+                </template>
+            </div>
+        </slot>
         <slot
             name="load-more-items"
-            :load-more-items="loadMoreItems"
-            :has-more-items="hasMoreItems"
+            :load-more-items="() => emits('loadMoreItems')"
+            :has-more-items="props.hasMoreItems"
         >
             <div
-                v-if="hasMoreItems"
-                class="flex justify-center border-t pt-6 lg:pt-8"
+                v-if="props.hasMoreItems"
+                class="flex justify-center pt-6 lg:pt-8"
             >
-                <Button
-                    @click="() => loadMoreItems()"
-                >
+                <Button @click="() => emits('loadMoreItems')">
                     Načíst více
                 </Button>
             </div>
         </slot>
         <div
             v-if="loading === 'pending'"
-            class="absolute inset-2 grid"
+            class="absolute inset-0 z-50 grid"
         >
             <div class="text-brand-500 -m-2 grid place-items-center bg-white/10 backdrop-blur-sm">
                 <Loading></Loading>

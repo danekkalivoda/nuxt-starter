@@ -1,4 +1,4 @@
-import type { IFilterField, IMultiselect, ICheckboxes, IInput, IActiveFilter } from '~/sites/default/components/blocks/jobsList/types'
+import type { IFilterField, IMultiselect, ICheckboxes, IInput, IActiveFilter, IRadioTabs } from '~/sites/default/components/blocks/jobsList/types'
 
 export const remove = async (key: string, value: string, formState: Ref<IFilterField[]>) => {
     const field = formState.value.find((f) => f.name + '[]' === key || f.name === key)
@@ -11,6 +11,8 @@ export const remove = async (key: string, value: string, formState: Ref<IFilterF
             (field as ICheckboxes).initialValue = values.filter((v) => v !== value)
         } else if (field.type === 'inputSearch') {
             (field as IInput).initialValue = ''
+        } else if (field.type === 'radioTabs') {
+            (field as IRadioTabs).initialValue = null
         }
         await nextTick()
     }
@@ -24,7 +26,13 @@ export const getLabel = (key: string, value: string, formState: Ref<IFilterField
                 const option = options.find((opt) => opt.value === value)
                 return option?.label || value
             }
-        } else if (field.type === 'inputSearch') {
+        } else if (field.type === 'radioTabs') {
+            const options = (field as IRadioTabs).tabs
+            if (Array.isArray(options)) {
+                const option = options.find((opt) => opt.value === value)
+                return option?.label || value
+            }
+        } else {
             return value
         }
     }
@@ -34,7 +42,10 @@ export const getLabel = (key: string, value: string, formState: Ref<IFilterField
 export const findByKey = (key: string, formState: Ref<IFilterField[]>) => {
     return formState.value.some((f) => f.name + '[]' === key || f.name === key)
 }
-export const removeAll = async (activeFilters: Ref<IActiveFilter>, formState: Ref<IFilterField[]>) => {
+export const removeAll = async (
+    activeFilters: Ref<IActiveFilter>,
+    formState: Ref<IFilterField[]>,
+) => {
     for (const [
         key,
         values,

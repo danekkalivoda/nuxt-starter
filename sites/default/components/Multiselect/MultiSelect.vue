@@ -28,6 +28,7 @@ const t = computed(() => {
 })
 
 const value = defineModel<IOption[]>('initialValue')
+
 const close = () => props.closeOnSelect && multiselect.value?.hide()
 </script>
 

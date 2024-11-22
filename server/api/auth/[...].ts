@@ -9,14 +9,11 @@ export default NuxtAuthHandler({
     providers: [
         CredentialsProvider.default({
             name: 'Credentials',
-            credentials: {
-                username: { label: 'Username',
-                    type: 'text' },
-                password: { label: 'Password',
-                    type: 'password' },
-            },
-            async authorize(credentials: { username: string
-                password: string }) {
+            credentials: {},
+            async authorize(credentials: {
+                username: string
+                password: string
+            }) {
                 const body = JSON.stringify({
                     identifier: credentials.username,
                     password: credentials.password,
@@ -36,22 +33,52 @@ export default NuxtAuthHandler({
 
                 if (response.ok) {
                     const data = await response.json()
-                    const u = { id: data.id,
-                        name: data.user.username,
-                        email: data.jwt }
+                    const u = {
+                        id: data.id,
+                        name: data.user.name,
+                        surname: data.user.surname,
+                        username: data.user.username,
+                        email: data.jwt,
+                    }
                     return u
                 } else {
                     const data = await response.json()
-                    console.warn(data)
 
-                    throw createError({ statusCode: 401,
-                        message: 'Unauthorized' })
+                    throw createError({
+                        statusCode: data.error.status,
+                        message: data.error.message,
+                    })
                 }
             },
         }),
     ],
+    callbacks: {
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id
+                token.name = user.name
+                token.surname = user.surname
+                token.username = user.username
+                token.credits = user.credits
+            }
+            return token
+        },
+        async session({ session, token }) {
+            // TODO: tady bych měl získat kredity pro konkrétního uživatele recruitisu
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    name: token.name,
+                    surname: token.surname,
+                    username: token.username,
+                    email: session.user?.email,
+                    credits: 11500,
+                },
+            }
+        },
+    },
     pages: {
-        signIn: '/auth/signin',
-        error: '/auth/signin',
+        signIn: '/login',
     },
 })

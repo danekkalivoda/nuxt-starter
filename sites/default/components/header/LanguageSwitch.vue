@@ -6,7 +6,7 @@ interface Locale {
     code: string
     name: string
 }
-const router = useRouter()
+const { $router: router } = useNuxtApp()
 const handleLocaleChange = (newLocale: string) => {
     setLocale(newLocale)
     const localeUrl = newLocale === 'cs-CZ' ? '' : newLocale

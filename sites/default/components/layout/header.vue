@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue'
 
+const { status } = useAuth()
+
 const { locales } = useI18n()
 interface HeaderInterface {
     menu: MenulinkInterface[]
@@ -14,7 +16,7 @@ const mobileMenuOpen = ref(false)
 
 <template>
     <div>
-        <AuthenticationStatus></AuthenticationStatus>
+        <AuthenticationStatus v-if="status === 'authenticated'"></AuthenticationStatus>
         <nav
             class="container mx-auto flex items-center justify-between py-6"
             aria-label="Global"

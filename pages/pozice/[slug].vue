@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import type { IJob } from '~/sites/default/components/blocks/jobsList/types'
+import type { IJobDetail } from '~/sites/default/types/jobs'
 
 definePageMeta({
     middleware: 'dynamic-redirect',
 })
 const route = useRoute()
 const slug = Array.isArray(route.params.slug) ? route.params.slug[0] : route.params.slug || 'index'
-const splitSlug = (slug: string): { number: number | null
-    rest: string } => {
+const splitSlug = (slug: string): {
+    number: number | null
+    rest: string
+} => {
     const match = slug.match(/^(\d+)(?:-(.+))?/)
     return match
         ? {
@@ -22,14 +24,14 @@ const splitSlug = (slug: string): { number: number | null
 }
 const { number } = splitSlug(slug)
 
-const { data: job } = await useJobsData<{
-    data: IJob
-    meta: { entries_total: number }
-}>(
-    'jobDetail',
-    '/api/jobs',
-    String(number),
-)
+const { data: job } = await useAsyncData<{
+    data: IJobDetail
+}>(() => $fetch(
+    '/api/job/list',
+    {
+        params: { id: String(number) },
+    },
+))
 </script>
 
 <template>
@@ -39,6 +41,7 @@ const { data: job } = await useJobsData<{
         :title="job.data.title"
         :short-desc="job.data.shortDesc"
         :description="job.data.description"
+        :referral="job.data.referral"
         :form="job.data.form"
     ></JobDetail>
 </template>

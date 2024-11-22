@@ -10,7 +10,11 @@ import {
 
 const props = defineProps<{ blocks: IStrapiBlockUnion[] }>()
 
-function isBlockOfType<T extends IStrapiBlockUnion>(block: IStrapiBlockUnion, type: IStrapiBlockName): block is T {
+function isBlockOfType<T extends IStrapiBlockUnion>(
+    block: IStrapiBlockUnion,
+    type: IStrapiBlockName,
+):
+  block is T {
     return block.__component === type
 }
 </script>
@@ -23,10 +27,11 @@ function isBlockOfType<T extends IStrapiBlockUnion>(block: IStrapiBlockUnion, ty
         :key="block.id"
         :type="block.__component"
     >
-        <LazyBlocksJobsList
+        <!-- Tento blok může být i LazyBlocksJosList, ale z pohledu SSR to takto funguje lépe -->
+        <BlocksJobsList
             v-if="isBlockOfType<IJobsListBlock>(block, IStrapiBlockName.jobsList)"
             v-bind="block"
-        ></LazyBlocksJobsList>
+        ></BlocksJobsList>
         <LazyBlocksHeroImage
             v-if="isBlockOfType<IHeroBlock>(block, IStrapiBlockName.hero)"
             v-bind="block"

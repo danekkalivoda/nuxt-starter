@@ -1,3 +1,6 @@
+import type { NotificationProviderProps } from 'naive-ui'
+
+type NotificationProviderThemeOverrides = NotificationProviderProps['themeOverrides']
 export const i18n = {
     defaultLocale: 'cs-CZ',
     locales: [
@@ -29,3 +32,10 @@ export const componentsPaths = [
     '~/sites/groupon/pages',
     '~/sites/default/pages',
 ]
+export const notificationThemeOverrides: NotificationProviderThemeOverrides = {
+    color: 'var(--tw-white)',
+    textColor: 'var(--tw-gray-600)',
+    headerTextColor: 'var(--tw-gray-900)',
+    borderRadius: '8px',
+    boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.1)',
+}

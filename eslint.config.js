@@ -1,6 +1,6 @@
 import tailwind from 'eslint-plugin-tailwindcss'
-import eslint from '@eslint/js'
 import comments from '@eslint-community/eslint-plugin-eslint-comments/configs'
+import eslint from '@eslint/js'
 import stylistic from '@stylistic/eslint-plugin'
 import withNuxt from './.nuxt/eslint.config.mjs'
 
@@ -15,6 +15,10 @@ export default withNuxt([
             '**/*.vue',
         ],
         rules: {
+            'multiline-comment-style': [
+                'error',
+                'bare-block',
+            ],
             'vue/html-indent': [
                 'error',
                 4,
@@ -36,16 +40,27 @@ export default withNuxt([
                 'always',
             ],
             'vue/max-len': [
-                'warn',
+                'error',
                 {
-                    code: 160,
-                    template: 300,
+                    code: 100,
+                    template: 100,
                     ignoreStrings: true,
                     ignoreComments: true,
                     ignoreUrls: true,
                     ignoreHTMLAttributeValues: true,
                     ignoreRegExpLiterals: true,
                     ignoreTemplateLiterals: true,
+                },
+            ],
+            'vue/max-attributes-per-line': [
+                'error',
+                {
+                    singleline: {
+                        max: 1,
+                    },
+                    multiline: {
+                        max: 1,
+                    },
                 },
             ],
             'no-continue': 'off',

@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { Popover, PopoverButton, PopoverGroup, PopoverPanel, provideUseId } from '@headlessui/vue'
+import { getUrl } from '~/utils/client'
 
+const { locale } = useI18n()
 provideUseId(() => useId())
 export interface MenulinkInterface {
     title: string
@@ -69,7 +71,7 @@ withDefaults(
                 </transition>
             </Popover>
             <NuxtLink
-                :to="item.url !== null ? item.url : undefined"
+                :to="getUrl(item.url, locale)"
                 :target="item.target"
                 class="text-sm font-semibold leading-6 text-gray-900"
             >

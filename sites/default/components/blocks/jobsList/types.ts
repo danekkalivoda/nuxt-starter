@@ -1,8 +1,9 @@
 import type { BaseFormElementInterface } from '~/recruitis-shared/components/forms/commons'
 import type { IMultiselectProps } from '~/sites/default/components/Multiselect'
 import type { InputInterface } from '~/recruitis-shared/components/forms/input.vue'
+import type { RadioTabsInterface } from '~/recruitis-shared/components/forms/radioTabs.vue'
 
-type FilterType = 'multiSelect' | 'checkboxes' | 'inputSearch'
+type FilterType = 'multiSelect' | 'checkboxes' | 'inputSearch' | 'radioTabs'
 export interface ICheckboxes extends BaseFormElementInterface {
     type: FilterType
     options: {
@@ -19,5 +20,9 @@ export interface IInput extends BaseFormElementInterface, InputInterface {
     type: FilterType
 }
 
-export type IFilterField = IMultiselect | ICheckboxes | IInput
+export interface IRadioTabs extends BaseFormElementInterface, RadioTabsInterface {
+    type: FilterType
+}
+
+export type IFilterField = IMultiselect | ICheckboxes | IInput | IRadioTabs
 export type IActiveFilter = Record<string, string[]>

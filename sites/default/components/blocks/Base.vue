@@ -36,7 +36,7 @@ const classMappings: Record<string, Record<string, string>> = {
     background: {
         Transparent: 'before:bg-transparent',
         White: 'before:bg-white',
-        Light: 'before:bg-gray-100',
+        Light: 'before:bg-gray-50',
         Dark: 'before:bg-gray-900',
         Brand: 'before:bg-brand-500',
     },

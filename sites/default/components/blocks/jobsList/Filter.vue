@@ -1,93 +1,118 @@
 <script setup lang="ts">
 import type { LocationQueryValue } from 'vue-router'
 import { useDebounceFn } from '@vueuse/core'
-import type { IActiveFilter, IFilterField, ICheckboxes, IInput, IMultiselect } from '~/sites/default/components/blocks/jobsList/types'
+import Tabs from 'primevue/tabs'
+import TabList from 'primevue/tablist'
+import Tab from 'primevue/tab'
+import { useRequestHeaders } from '#app'
+import type { IActiveFilter, IFilterField, ICheckboxes, IInput, IMultiselect, IRadioTabs } from '~/sites/default/components/blocks/jobsList/types'
+import type { IStrapiBlockFilterTabs } from '~/sites/default/types/pages'
 import type { IOption } from '~/sites/default/components/Multiselect/types'
 import { omit } from '~/recruitis-shared/utils/common'
 import { removeAll } from '~/sites/default/components/blocks/jobsList/lib/activeFilters'
 
+const { status: authStatus } = useAuth()
+const RadioTabs = defineAsyncComponent(() => import('~/recruitis-shared/components/forms/radioTabs.vue'))
+
 const props = withDefaults(
     defineProps<{
         showSubmitButton?: boolean
+        entriesCount?: number
+        filterTabs: IStrapiBlockFilterTabs
+        hideHeader?: boolean
     }>(),
     {
         showSubmitButton: true,
+        entriesCount: 0,
+        hideHeader: false,
     },
 )
 const emits = defineEmits<{
-    (e: 'update:formState', queryString: URLSearchParams): void
+    (e: 'update:formState'): void
 }>()
-const router = useRouter()
-const route = useRoute()
+const { _route: route, $router: router } = useNuxtApp()
+const headers = useRequestHeaders(['cookie']) as HeadersInit
 
-/*
- * TODO: Tady by se to mělo udělat tak, že filtry, které se vrátí z api, by měli setnout do formState
- * aktuálně je jen zkopiruji, abych je mohl mutovat, ale lepší by bylo, aby to ovladalo API.
- */
-const fetchFiltersData = async () => {
-    const { data: filters, refresh, status } = await useAsyncData(
-        'filters',
-        () => $fetch(
-            '/api/job-filters',
+const { data: filters, refresh } = await useAsyncData(
+    'jobs-filters',
+    () => {
+        const params = { ...router.currentRoute.value.query }
+
+        if (props.filterTabs === 'Candidates' || props.filterTabs === 'Positions') {
+            params.filtersTab = props.filterTabs.toLowerCase()
+        }
+        return $fetch(
+            '/api/job/filters',
             {
-                params: route.query,
+                params,
+                headers,
             },
-        ),
-    )
-    return {
-        filters,
-        refresh,
-        status,
-    }
-}
-
-const { filters, refresh } = await fetchFiltersData()
+        )
+    },
+)
 const formState = ref<IFilterField[]>(structuredClone(toRaw(filters.value.data)))
 const activeFilters = ref<IActiveFilter>({})
-
 const form = ref<HTMLFormElement | null>(null)
-const setFormState = () => {
+const isLoading = ref(false)
+
+watch(
+    () => filters.value.data,
+    (newFiltersData) => {
+        formState.value = structuredClone(toRaw(newFiltersData))
+    },
+)
+
+const updateListFilter = async (filters: Record<string, any>) => {
+    const query: Record<string, LocationQueryValue | LocationQueryValue[]>
+    = { ...router.currentRoute.value.query }
+
+    if (Object.keys(filters).length > 0) {
+        query.listFilter = JSON.stringify(filters)
+    } else {
+        delete query.listFilter
+    }
+
+    return router.push({ query })
+}
+const setActiveFiltersFromQuery = async () => {
+    const query = router.currentRoute.value.query
+    if (query.listFilter) {
+        activeFilters.value = JSON.parse(String(query.listFilter))
+    } else {
+        activeFilters.value = {}
+    }
+}
+const setFormState = async () => {
     if (form.value) {
         const formData = new FormData(form.value)
         for (const [
             key,
             value,
         ] of formData.entries()) {
-            if (value === '') {
+            if (value === '' || value === null) {
                 formData.delete(key)
             }
         }
         const queryString = new URLSearchParams(formData as unknown as Record<string, string>)
-        const query: Record<string, LocationQueryValue | LocationQueryValue[]> = { ...router.currentRoute.value.query }
-        const f: Record<string, string[]> = {}
+        const filters: Record<string, any> = {}
 
         for (const [
             key,
             value,
         ] of queryString.entries()) {
-            if (!f[key]) {
-                f[key] = []
+            if (!filters[key]) {
+                filters[key] = []
             }
-            f[key].push(value)
+            filters[key].push(value)
         }
 
-        // Update the query with the new filter state inside "jobsFilter"
-        if (Object.keys(f).length > 0) {
-            query.jobsFilter = JSON.stringify(f)
-        } else {
-            delete query.jobsFilter
-        }
-
-        router.push({ query }).then(() => {
-            nextTick(() => {
-                refresh()
-                emits(
-                    'update:formState',
-                    queryString,
-                )
-                activeFilters.value = f
-            })
+        await updateListFilter(filters)
+        await setActiveFiltersFromQuery()
+        await refresh()
+        nextTick(() => {
+            emits('update:formState')
         })
+        isLoading.value = false
     }
 }
 const clearFormState = async () => {
@@ -95,11 +120,11 @@ const clearFormState = async () => {
         activeFilters,
         formState,
     )
-    setFormState()
+    await setFormState()
 }
 const debouncedSetFormState = useDebounceFn(
     setFormState,
-    500,
+    800,
 )
 
 const onChange = (field: IFilterField, value: string | string[] | undefined | null | IOption[]) => {
@@ -122,7 +147,14 @@ const onChange = (field: IFilterField, value: string | string[] | undefined | nu
                 nextTick(() => debouncedSetFormState())
             }
             break
+        case 'radioTabs':
+            if (typeof value === 'string' || value === undefined) {
+                field.initialValue = value
+                nextTick(() => setFormState())
+            }
+            break
         default:
+            field.initialValue = value
             nextTick(() => debouncedSetFormState())
             break
     }
@@ -136,63 +168,145 @@ const getMultiselectOptions = (field: IFilterField) => {
     return (field as IMultiselect).options ?? []
 }
 
-// eslint-disable-next-line vue/no-expose-after-await -- at na ten status nezapomenu, případně ho smaznu později
-defineExpose({ clearFormState })
+const tabs = ref({
+    initialValue: router.currentRoute.value.query.filtersTab ? String(router.currentRoute.value.query.filtersTab) : props.filterTabs === 'Candidates' ? 'candidates' : 'positions',
+    tabs: [
+        {
+            value: 'positions',
+            label: 'Pozice',
+        },
+        {
+            value: 'candidates',
+            label: 'Vaše doporučení',
+        },
+    ],
+})
+
+const showTabs = computed(() => {
+    if (props.filterTabs === 'All') {
+        return authStatus.value === 'authenticated'
+    } else {
+        return false
+    }
+})
+const tabValue = computed(() => {
+    return router.currentRoute.value.query.filtersTab ? String(router.currentRoute.value.query.filtersTab) : props.filterTabs === 'Candidates' ? 'candidates' : 'positions'
+})
+
+const setTab = async (value: string) => {
+    isLoading.value = true
+    const query: Record<string, LocationQueryValue | LocationQueryValue[]>
+        = { ...router.currentRoute.value.query }
+    query.filtersTab = value
+    await router.push({ query })
+    await clearFormState()
+}
+setActiveFiltersFromQuery()
 </script>
 
 <template>
-    <div class="@container/jobsFilter space-y-4">
-        <form
-            ref="form"
-            class="grid w-full items-end gap-2 lg:gap-8"
-            :class="{ '@2xl/jobsFilter:grid-cols-[1fr_max-content]': hasSubmitButton }"
-            @submit.prevent="setFormState"
-        >
-            <div class="@2xl/jobsFilter:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] grid w-full gap-4">
-                <template
-                    v-for="field in formState"
-                    :key="field.name"
-                >
-                    <MultiselectMultiSelect
-                        v-if="field.type === 'multiSelect'"
-                        v-bind="(omit(field, ['type']) as IMultiselect)"
-                        :key="field.name"
-                        :name="field.name"
-                        :initial-value="(field as IMultiselect).initialValue ?? []"
-                        :options="getMultiselectOptions(field)"
-                        @update:initial-value="(value) => onChange(field, value)"
-                    ></MultiselectMultiSelect>
-                    <Checkboxes
-                        v-else-if="field.type === 'checkboxes'"
-                        v-bind="(field as ICheckboxes)"
-                        @update:initial-value="(value) => onChange(field, value)"
-                    ></Checkboxes>
-                    <Input
-                        v-else-if="field.type === 'inputSearch'"
-                        :input-props="{
-                            autocomplete: 'off',
-                        }"
-                        v-bind="(field as IInput)"
-                        @update:initial-value="(value) => onChange(field, value)"
-                    ></Input>
-                </template>
-            </div>
-            <Button
-                v-if="hasSubmitButton"
-                type="submit"
-                theme="primary"
-            >
-                Submit
-            </Button>
-        </form>
-        <BlocksJobsListActiveFilters
-            v-if="hasActiveFilters"
-            ref="activeFiltersRef"
-            :form="formState"
-            :active="activeFilters"
-            @update:active-filters="(value) => (activeFilters = value)"
-            @update:form-state="(value) => (formState = value)"
-            @clear-form-state="() => setFormState()"
-        ></BlocksJobsListActiveFilters>
+    <div
+        v-if="!props.hideHeader"
+        class="prose prose-sm lg:prose"
+    >
+        <h2>
+            <template v-if="tabValue === 'positions'">
+                Máme pro vás <span class="text-brand-500">{{ props.entriesCount }} volných pozic</span>.
+            </template>
+            <template v-else>
+                Vámi doporučení kandidáti: <span class="text-brand-500">{{ props.entriesCount }}</span>.
+            </template>
+        </h2>
     </div>
+    <Box class="@container/jobsFilter ">
+        <div
+            v-if="showTabs"
+            class="col-span-full mb-4"
+        >
+            <Tabs
+                :value="tabValue"
+                class="relative"
+                @update:value="setTab"
+            >
+                <TabList>
+                    <Tab
+                        v-for="tab in tabs.tabs"
+                        :key="tab.value"
+                        :value="tab.value"
+                        class="data-[p-active=true]:text-brand-500 mr-2 rounded-md px-3 py-2 text-sm font-semibold tracking-tight ring-1 ring-transparent data-[p-active=false]:text-gray-400 data-[p-active=true]:shadow data-[p-active=true]:ring-black/5 data-[p-active=false]:hover:bg-gray-50 data-[p-active=false]:hover:text-gray-900 data-[p-active=false]:hover:ring-black/5 lg:px-5 lg:py-2 lg:text-base"
+                    >
+                        {{ tab.label }}
+                    </Tab>
+                </TabList>
+            </Tabs>
+        </div>
+        <div class="relative">
+            <form
+                ref="form"
+                class="grid w-full items-end gap-2 lg:gap-8"
+                :class="{ '@2xl/jobsFilter:grid-cols-[1fr_max-content]': hasSubmitButton }"
+                @submit.prevent="setFormState"
+            >
+                <div class="@2xl/jobsFilter:grid-cols-2 @4xl/jobsFilter:grid-cols-3 @6xl/jobsFilter:grid-cols-4 grid w-full grid-cols-1 gap-4">
+                    <template
+                        v-for="field in formState"
+                        :key="field.name"
+                    >
+                        <MultiselectMultiSelect
+                            v-if="field.type === 'multiSelect'"
+                            v-bind="(omit(field, ['type']) as IMultiselect)"
+                            :key="field.name"
+                            :name="field.name"
+                            :initial-value="(field as IMultiselect).initialValue ?? []"
+                            :options="getMultiselectOptions(field)"
+                            @update:initial-value="(value) => onChange(field, value)"
+                        ></MultiselectMultiSelect>
+                        <Checkboxes
+                            v-else-if="field.type === 'checkboxes'"
+                            v-bind="(field as ICheckboxes)"
+                            @update:initial-value="(value) => onChange(field, value)"
+                        ></Checkboxes>
+                        <Input
+                            v-else-if="field.type === 'inputSearch'"
+                            :input-props="{
+                                autocomplete: 'off',
+                            }"
+                            v-bind="(field as IInput)"
+                            @update:initial-value="(value) => onChange(field, value)"
+                        ></Input>
+                        <RadioTabs
+                            v-else-if="field.type === 'radioTabs'"
+                            v-bind="(field as IRadioTabs)"
+                            @update:initial-value="(value) => onChange(field, value)"
+                        ></RadioTabs>
+                    </template>
+                </div>
+                <Button
+                    v-if="hasSubmitButton"
+                    type="submit"
+                    theme="primary"
+                >
+                    Submit
+                </Button>
+            </form>
+            <BlocksJobsListActiveFilters
+                v-if="hasActiveFilters"
+                ref="activeFiltersRef"
+                :form="formState"
+                :active="activeFilters"
+                class="mt-4"
+                @update:active-filters="(value) => (activeFilters = value)"
+                @update:form-state="(value) => (formState = value)"
+                @clear-form-state="() => setFormState()"
+            ></BlocksJobsListActiveFilters>
+            <div
+                v-if="isLoading"
+                class="absolute inset-0 z-50 grid"
+            >
+                <div class="text-brand-500 -m-2 grid place-items-center bg-white/10 backdrop-blur-sm">
+                    <Loading></Loading>
+                </div>
+            </div>
+        </div>
+    </Box>
 </template>

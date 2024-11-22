@@ -2,11 +2,11 @@
 import Button from '~/recruitis-shared/components/forms/button.vue'
 import type { ButtonInterface } from '~/recruitis-shared/components/forms/button.vue'
 
-export interface NButtonInterface extends ButtonInterface {
+export interface IButtonInterface extends ButtonInterface {
     showDefaultSlot?: boolean
 }
 const props = withDefaults(
-    defineProps<NButtonInterface>(),
+    defineProps<IButtonInterface>(),
     {
         showDefaultSlot: true,
     },
