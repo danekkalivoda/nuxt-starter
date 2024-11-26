@@ -1,23 +1,25 @@
 <script setup lang="ts">
-import type { IImage } from '~/sites/default/types/pages'
+import type { IImage } from '~/sites/default/types/pages';
 
 const props = withDefaults(
     defineProps<{
         images: IImage[]
         size?: 'Small' | 'Medium' | 'Large'
     }>(),
-    {},
-)
+    {
+        size: 'Medium',
+    },
+);
 const imgSizes = (image: IImage) => {
-    const width = props.size === 'Small' ? image?.formats?.medium?.width / 2 : props.size === 'Medium' ? image?.formats?.large?.width / 1.5 : image?.width
-    const height = props.size === 'Small' ? image?.formats?.medium?.height / 2 : props.size === 'Medium' ? image?.formats?.large?.height / 1.5 : image?.height
-    const url = props.size === 'Small' ? image?.formats?.medium?.url : props.size === 'Medium' ? image?.formats?.large?.url : image?.url
+    const width = props.size === 'Small' ? image?.formats?.medium?.width / 2 : props.size === 'Medium' ? image?.formats?.large?.width / 1.5 : image?.width;
+    const height = props.size === 'Small' ? image?.formats?.medium?.height / 2 : props.size === 'Medium' ? image?.formats?.large?.height / 1.5 : image?.height;
+    const url = props.size === 'Small' ? image?.formats?.medium?.url : props.size === 'Medium' ? image?.formats?.large?.url : image?.url;
     return {
         width,
         height,
         url,
-    }
-}
+    };
+};
 </script>
 
 <template>

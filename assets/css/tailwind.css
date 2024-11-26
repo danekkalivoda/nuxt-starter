@@ -338,3 +338,21 @@ html.iosModalOpened body div[id^="popper_"] {
     transform: scaleY(-1) rotate(-135deg)
   }
 }
+
+.n-modal {
+  transition: none !important;
+  transform: none !important;
+}
+
+.n-modal-mask {
+  transition: none !important;
+}
+
+.n-modal-container {
+  transition: none !important;
+  transform: none !important;
+  & > * {
+    transition: none !important;
+    transform: none !important;
+  }
+}

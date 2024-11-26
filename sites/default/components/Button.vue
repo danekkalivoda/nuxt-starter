@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import Button from '~/recruitis-shared/components/forms/button.vue'
-import type { ButtonInterface } from '~/recruitis-shared/components/forms/button.vue'
+import Button from '~/recruitis-shared/components/forms/button.vue';
+import type { ButtonInterface } from '~/recruitis-shared/components/forms/button.vue';
 
 export interface IButtonInterface extends ButtonInterface {
     showDefaultSlot?: boolean
@@ -10,13 +10,13 @@ const props = withDefaults(
     {
         showDefaultSlot: true,
     },
-)
+);
 const customStyles = computed(() => {
     if (props.theme === 'primary') {
-        return '!font-semibold'
+        return 'font-semibold';
     }
-    return '!font-semibold'
-})
+    return 'font-semibold';
+});
 </script>
 
 <template>

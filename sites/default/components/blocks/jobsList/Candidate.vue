@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { getDetailLink } from './lib/helpers'
-import Badge from '~/recruitis-shared/components/badge.vue'
-import FlowBar from '~/recruitis-shared/components/flowBar/flowBar.vue'
-import type { IJobCandidate } from '~/sites/default/types/jobs'
+import { getDetailLink } from './lib/helpers';
+import Badge from '~/recruitis-shared/components/badge.vue';
+import FlowBar from '~/recruitis-shared/components/flowBar/flowBar.vue';
+import type { IJobCandidate } from '~/sites/default/types/jobs';
 
-const props = defineProps<IJobCandidate>()
+const props = defineProps<IJobCandidate>();
 </script>
 
 <template>
@@ -110,14 +110,12 @@ const props = defineProps<IJobCandidate>()
                 </div>
             </div>
         </div>
-        <div
-            class="group min-w-0 px-2 lg:pr-4"
-        >
+        <div class="group min-w-0 px-2 lg:pr-4">
             <FlowBar
                 v-bind="props.flow"
                 :rejected="props?.rejected"
                 :show-step-tooltips="true"
-                :class="props?.rejected ? 'opacity-70' : '' "
+                :class="props?.rejected ? 'opacity-70' : ''"
             >
                 <template #lastActiveIcon="slotProps">
                     <Icon
@@ -136,10 +134,9 @@ const props = defineProps<IJobCandidate>()
                         type="button"
                         size="small"
                         class="m-1"
-                        :class="
-                            slotProps.arrowPosition === 'left'
-                                ? (slotProps.isLeftArrowVisible ? 'pointer-events-auto' : 'pointer-events-none')
-                                : (slotProps.isRightArrowVisible ? 'pointer-events-auto' : 'pointer-events-none')"
+                        :class="slotProps.arrowPosition === 'left'
+                            ? (slotProps.isLeftArrowVisible ? 'pointer-events-auto' : 'pointer-events-none')
+                            : (slotProps.isRightArrowVisible ? 'pointer-events-auto' : 'pointer-events-none')"
                         @click.stop="
                             slotProps.arrowPosition === 'left'
                                 ? slotProps.scrollLeft()
@@ -157,7 +154,7 @@ const props = defineProps<IJobCandidate>()
                         {{ slotProps.step.name }}
                     </div>
                     <span
-                        v-if=" slotProps.step.date"
+                        v-if="slotProps.step.date"
                         class="text-xs"
                     >{{ slotProps.step.date }}</span>
                 </template>

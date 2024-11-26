@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { useValidation, type ValidatedFieldInterface, type ValidationMessages } from '~/recruitis-shared/composables/useValidation'
-import type { FileInteface } from '~/recruitis-shared/components/forms/file.vue'
-import { omit, lodashCloneDeep } from '~/recruitis-shared/utils/common'
-import type { FieldInterface, FormFieldsInterface } from '~/recruitis-shared/components/forms/formFields.vue'
-
-const FormFields = defineAsyncComponent(() => import('~/recruitis-shared/components/forms/formFields.vue'))
-const FormFileList = defineAsyncComponent(() => import('./fileList.vue'))
-const File = defineAsyncComponent(() => import('~/recruitis-shared/components/forms/file.vue'))
-const DateTimePicker = defineAsyncComponent(() => import('~/recruitis-shared/components/forms/dateTimePicker.vue'))
+import { useValidation, type ValidatedFieldInterface, type ValidationMessages } from '~/recruitis-shared/composables/useValidation';
+import type { FileInteface } from '~/recruitis-shared/components/forms/file.vue';
+import { omit, lodashCloneDeep } from '~/recruitis-shared/utils/common';
+import type { FieldInterface, FormFieldsInterface } from '~/recruitis-shared/components/forms/formFields.vue';
+import FormFields from '~/recruitis-shared/components/forms/formFields.vue';
+const FormFileList = defineAsyncComponent(() => import('./fileList.vue'));
+const File = defineAsyncComponent(() => import('~/recruitis-shared/components/forms/file.vue'));
+const DateTimePicker = defineAsyncComponent(() => import('~/recruitis-shared/components/forms/dateTimePicker.vue'));
 
 export interface IFormRenderer extends FormFieldsInterface {
     validationMessages?: ValidationMessages
@@ -21,7 +20,7 @@ const emits = defineEmits<{
         e: 'submit',
         hasErrors?: boolean,
     ): void
-}>()
+}>();
 const props = withDefaults(
     defineProps<IFormRenderer>(),
     {
@@ -64,9 +63,9 @@ const props = withDefaults(
             },
         }),
     },
-)
+);
 
-const { validateAllFields, updateFieldWithValidation, hasErrors } = useValidation(props)
+const { validateAllFields, updateFieldWithValidation, hasErrors } = useValidation(props);
 
 const onUpdate = async (
     index: number,
@@ -76,36 +75,36 @@ const onUpdate = async (
         changedField: ValidatedFieldInterface
     },
 ) => {
-    const originalFields = lodashCloneDeep(props.fields)
-    const changedField = lodashCloneDeep(value.updatedFieldOrFields)
+    const originalFields = lodashCloneDeep(props.fields);
+    const changedField = lodashCloneDeep(value.updatedFieldOrFields);
     const updatedFields = updateFieldWithValidation(
         originalFields,
         index,
         changedField,
-    )
+    );
 
     emits(
         'update:fields',
         updatedFields as FieldInterface[],
-    )
-}
+    );
+};
 
 const validateAllFieldsHandler = async () => {
-    const updatedFields = validateAllFields(props.fields as ValidatedFieldInterface[])
+    const updatedFields = validateAllFields(props.fields as ValidatedFieldInterface[]);
     emits(
         'update:fields',
         updatedFields as FieldInterface[],
-    )
-}
+    );
+};
 const formState = computed({
     get: () => props.fields,
     set: (value) => {
         emits(
             'update:fields',
             value,
-        )
+        );
     },
-})
+});
 const onDeleteFile = (value: { name: string
     file: FileInteface }, field: FieldInterface) => {
     const updatedFields = formState.value.map((f) => {
@@ -113,20 +112,20 @@ const onDeleteFile = (value: { name: string
             return {
                 ...f,
                 initialValue: f.initialValue.filter((item: any) => item.id !== value.file.id),
-            }
+            };
         }
-        return f
-    })
-    formState.value = updatedFields
-}
+        return f;
+    });
+    formState.value = updatedFields;
+};
 const onSubmit = async (e) => {
-    e.preventDefault()
-    await validateAllFieldsHandler()
+    e.preventDefault();
+    await validateAllFieldsHandler();
     emits(
         'submit',
         hasErrors(props.fields as ValidatedFieldInterface[]),
-    )
-}
+    );
+};
 </script>
 
 <template>

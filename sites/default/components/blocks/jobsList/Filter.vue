@@ -1,172 +1,177 @@
 <script setup lang="ts">
-import type { LocationQueryValue } from 'vue-router'
-import { useDebounceFn } from '@vueuse/core'
-import Tabs from 'primevue/tabs'
-import TabList from 'primevue/tablist'
-import Tab from 'primevue/tab'
-import { useRequestHeaders } from '#app'
-import type { IActiveFilter, IFilterField, ICheckboxes, IInput, IMultiselect, IRadioTabs } from '~/sites/default/components/blocks/jobsList/types'
-import type { IStrapiBlockFilterTabs } from '~/sites/default/types/pages'
-import type { IOption } from '~/sites/default/components/Multiselect/types'
-import { omit } from '~/recruitis-shared/utils/common'
-import { removeAll } from '~/sites/default/components/blocks/jobsList/lib/activeFilters'
+import type { LocationQueryValue } from 'vue-router';
+import { useDebounceFn } from '@vueuse/core';
+import Tabs from 'primevue/tabs';
+import TabList from 'primevue/tablist';
+import Tab from 'primevue/tab';
+import { useRequestHeaders } from '#app';
+import type { IActiveFilter, IFilterField, ICheckboxes, IInput, IMultiselect, IRadioTabs } from '~/sites/default/components/blocks/jobsList/types';
+import type { IStrapiBlockFilterTabs } from '~/sites/default/types/pages';
+import type { IOption } from '~/sites/default/components/Multiselect/types';
+import { omit } from '~/recruitis-shared/utils/common';
+import { removeAll } from '~/sites/default/components/blocks/jobsList/lib/activeFilters';
 
-const { status: authStatus } = useAuth()
-const RadioTabs = defineAsyncComponent(() => import('~/recruitis-shared/components/forms/radioTabs.vue'))
+const { status: authStatus } = useAuth();
+const RadioTabs = defineAsyncComponent(() => import('~/recruitis-shared/components/forms/radioTabs.vue'));
 
 const props = withDefaults(
     defineProps<{
-        showSubmitButton?: boolean
-        entriesCount?: number
-        filterTabs: IStrapiBlockFilterTabs
-        hideHeader?: boolean
+        showSubmitButton?: boolean;
+        entriesCount?: number;
+        filterTabs?: IStrapiBlockFilterTabs;
+        hideHeader?: boolean;
+        url?: string;
+        showTabs?: boolean;
     }>(),
     {
         showSubmitButton: true,
         entriesCount: 0,
         hideHeader: false,
+        url: '/api/job/filters',
+        filterTabs: 'All' as IStrapiBlockFilterTabs,
+        showTabs: true,
     },
-)
+);
 const emits = defineEmits<{
-    (e: 'update:formState'): void
-}>()
-const { _route: route, $router: router } = useNuxtApp()
-const headers = useRequestHeaders(['cookie']) as HeadersInit
+    (e: 'update:formState'): void;
+}>();
+const { _route: route, $router: router } = useNuxtApp();
+const headers = useRequestHeaders(['cookie']) as HeadersInit;
 
 const { data: filters, refresh } = await useAsyncData(
     'jobs-filters',
     () => {
-        const params = { ...router.currentRoute.value.query }
+        const params = { ...router.currentRoute.value.query };
 
         if (props.filterTabs === 'Candidates' || props.filterTabs === 'Positions') {
-            params.filtersTab = props.filterTabs.toLowerCase()
+            params.filtersTab = props.filterTabs.toLowerCase();
         }
         return $fetch(
-            '/api/job/filters',
+            props.url,
             {
                 params,
                 headers,
             },
-        )
+        );
     },
-)
-const formState = ref<IFilterField[]>(structuredClone(toRaw(filters.value.data)))
-const activeFilters = ref<IActiveFilter>({})
-const form = ref<HTMLFormElement | null>(null)
-const isLoading = ref(false)
+);
+const formState = ref<IFilterField[]>(structuredClone(toRaw(filters.value.data)));
+const activeFilters = ref<IActiveFilter>({});
+const form = ref<HTMLFormElement | null>(null);
+const isLoading = ref(false);
 
 watch(
     () => filters.value.data,
     (newFiltersData) => {
-        formState.value = structuredClone(toRaw(newFiltersData))
+        formState.value = structuredClone(toRaw(newFiltersData));
     },
-)
+);
 
 const updateListFilter = async (filters: Record<string, any>) => {
     const query: Record<string, LocationQueryValue | LocationQueryValue[]>
-    = { ...router.currentRoute.value.query }
+    = { ...router.currentRoute.value.query };
 
     if (Object.keys(filters).length > 0) {
-        query.listFilter = JSON.stringify(filters)
+        query.listFilter = JSON.stringify(filters);
     } else {
-        delete query.listFilter
+        delete query.listFilter;
     }
 
-    return router.push({ query })
-}
+    return router.push({ query });
+};
 const setActiveFiltersFromQuery = async () => {
-    const query = router.currentRoute.value.query
+    const query = router.currentRoute.value.query;
     if (query.listFilter) {
-        activeFilters.value = JSON.parse(String(query.listFilter))
+        activeFilters.value = JSON.parse(String(query.listFilter));
     } else {
-        activeFilters.value = {}
+        activeFilters.value = {};
     }
-}
+};
 const setFormState = async () => {
     if (form.value) {
-        const formData = new FormData(form.value)
+        const formData = new FormData(form.value);
         for (const [
             key,
             value,
         ] of formData.entries()) {
             if (value === '' || value === null) {
-                formData.delete(key)
+                formData.delete(key);
             }
         }
-        const queryString = new URLSearchParams(formData as unknown as Record<string, string>)
-        const filters: Record<string, any> = {}
+        const queryString = new URLSearchParams(formData as unknown as Record<string, string>);
+        const filters: Record<string, any> = {};
 
         for (const [
             key,
             value,
         ] of queryString.entries()) {
             if (!filters[key]) {
-                filters[key] = []
+                filters[key] = [];
             }
-            filters[key].push(value)
+            filters[key].push(value);
         }
 
-        await updateListFilter(filters)
-        await setActiveFiltersFromQuery()
-        await refresh()
+        await updateListFilter(filters);
+        await setActiveFiltersFromQuery();
+        await refresh();
         nextTick(() => {
-            emits('update:formState')
-        })
-        isLoading.value = false
+            emits('update:formState');
+        });
+        isLoading.value = false;
     }
-}
+};
 const clearFormState = async () => {
     await removeAll(
         activeFilters,
         formState,
-    )
-    await setFormState()
-}
+    );
+    await setFormState();
+};
 const debouncedSetFormState = useDebounceFn(
     setFormState,
     800,
-)
+);
 
 const onChange = (field: IFilterField, value: string | string[] | undefined | null | IOption[]) => {
     switch (field.type) {
         case 'multiSelect':
             if (Array.isArray(value) && value.every((v) => typeof v === 'object')) {
-                field.initialValue = value
-                nextTick(() => setFormState())
+                field.initialValue = value;
+                nextTick(() => setFormState());
             }
-            break
+            break;
         case 'checkboxes':
             if (Array.isArray(value) && value.every((v) => typeof v === 'string')) {
-                field.initialValue = value
-                nextTick(() => setFormState())
+                field.initialValue = value;
+                nextTick(() => setFormState());
             }
-            break
+            break;
         case 'inputSearch':
             if (typeof value === 'string' || value === undefined) {
-                field.initialValue = value
-                nextTick(() => debouncedSetFormState())
+                field.initialValue = value;
+                nextTick(() => debouncedSetFormState());
             }
-            break
+            break;
         case 'radioTabs':
             if (typeof value === 'string' || value === undefined) {
-                field.initialValue = value
-                nextTick(() => setFormState())
+                field.initialValue = value;
+                nextTick(() => setFormState());
             }
-            break
+            break;
         default:
-            field.initialValue = value
-            nextTick(() => debouncedSetFormState())
-            break
+            field.initialValue = value;
+            nextTick(() => debouncedSetFormState());
+            break;
     }
-}
+};
 
-const hasActiveFilters = computed(() => Object.keys(activeFilters.value).length > 0)
+const hasActiveFilters = computed(() => Object.keys(activeFilters.value).length > 0);
 const hasSubmitButton = computed(() => {
-    return props.showSubmitButton
-})
+    return props.showSubmitButton;
+});
 const getMultiselectOptions = (field: IFilterField) => {
-    return (field as IMultiselect).options ?? []
-}
+    return (field as IMultiselect).options ?? [];
+};
 
 const tabs = ref({
     initialValue: router.currentRoute.value.query.filtersTab ? String(router.currentRoute.value.query.filtersTab) : props.filterTabs === 'Candidates' ? 'candidates' : 'positions',
@@ -180,28 +185,31 @@ const tabs = ref({
             label: 'Vaše doporučení',
         },
     ],
-})
+});
 
 const showTabs = computed(() => {
-    if (props.filterTabs === 'All') {
-        return authStatus.value === 'authenticated'
-    } else {
-        return false
+    if (!props.showTabs) {
+        return false;
     }
-})
+    if (props.filterTabs === 'All') {
+        return authStatus.value === 'authenticated';
+    } else {
+        return false;
+    }
+});
 const tabValue = computed(() => {
-    return router.currentRoute.value.query.filtersTab ? String(router.currentRoute.value.query.filtersTab) : props.filterTabs === 'Candidates' ? 'candidates' : 'positions'
-})
+    return router.currentRoute.value.query.filtersTab ? String(router.currentRoute.value.query.filtersTab) : props.filterTabs === 'Candidates' ? 'candidates' : 'positions';
+});
 
 const setTab = async (value: string) => {
-    isLoading.value = true
+    isLoading.value = true;
     const query: Record<string, LocationQueryValue | LocationQueryValue[]>
-        = { ...router.currentRoute.value.query }
-    query.filtersTab = value
-    await router.push({ query })
-    await clearFormState()
-}
-setActiveFiltersFromQuery()
+    = { ...router.currentRoute.value.query };
+    query.filtersTab = value;
+    await router.push({ query });
+    await clearFormState();
+};
+setActiveFiltersFromQuery();
 </script>
 
 <template>

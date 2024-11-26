@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { NNotificationProvider } from 'naive-ui'
+import { NNotificationProvider } from 'naive-ui';
 
-const config = useRuntimeConfig()
+const config = useRuntimeConfig();
 const notificationThemeOverrides
-= config.public.NUXT_PROJECT_CONFIG.notificationThemeOverrides || {}
+= config.public.NUXT_PROJECT_CONFIG.notificationThemeOverrides || {};
 
 useHead({
     title: 'Nuxt starter',
-})
+});
 </script>
 
 <template>

@@ -1,15 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-let tailwindConfigUrl = 'sites/default/tailwind.config.js'
+let tailwindConfigUrl = 'sites/default/tailwind.config.js';
 if (process.env.NUXT_PROJECT_NAME) {
-    tailwindConfigUrl = 'sites/' + process.env.NUXT_PROJECT_NAME + '/tailwind.config.js'
+    tailwindConfigUrl = 'sites/' + process.env.NUXT_PROJECT_NAME + '/tailwind.config.js';
 }
-let projectConfig
+let projectConfig;
 if (process.env.NUXT_PROJECT_NAME) {
     // eslint-disable-next-line @typescript-eslint/no-require-imports -- it is ok
-    projectConfig = require(`./sites/${process.env.NUXT_PROJECT_NAME}/config`)
+    projectConfig = require(`./sites/${process.env.NUXT_PROJECT_NAME}/config`);
 } else {
     // eslint-disable-next-line @typescript-eslint/no-require-imports -- it is ok
-    projectConfig = require('./sites/default/config')
+    projectConfig = require('./sites/default/config');
 }
 
 export default defineNuxtConfig({
@@ -43,17 +43,13 @@ export default defineNuxtConfig({
         theme: 'core',
     },
     eslint: {
-        config: {
-            stylistic: {
-                indent: 4,
-                braceStyle: '1tbs',
-                arrowParens: true,
-            },
+        checker: {
+            configType: 'eslintrc',
         },
     },
     devtools: { enabled: false },
     ssr: true,
-    css: ['~/assets/css/tailwind.css'],
+    css: ['~/assets/css/tailwind.css', 'vue-final-modal/style.css'],
     postcss: {
         plugins: {
             'postcss-import': {},
@@ -98,7 +94,6 @@ export default defineNuxtConfig({
         cookie: {},
         cookieName: 'strapi_jwt',
     },
-
     typescript: {
         typeCheck: false,
         strict: false,
@@ -120,15 +115,15 @@ export default defineNuxtConfig({
         transpile:
             process.env.NODE_ENV === 'production'
                 ? [
-                        '@vueform/multiselect',
-                        'naive-ui',
-                        'vueuc',
-                        '@css-render/vue3-ssr',
-                        '@juggle/resize-observer',
-                    ]
+                    '@vueform/multiselect',
+                    'naive-ui',
+                    'vueuc',
+                    '@css-render/vue3-ssr',
+                    '@juggle/resize-observer',
+                ]
                 : [
-                        '@vueform/multiselect',
-                        '@juggle/resize-observer',
-                    ],
+                    '@vueform/multiselect',
+                    '@juggle/resize-observer',
+                ],
     },
-})
+});

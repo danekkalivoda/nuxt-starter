@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { tv } from 'tailwind-variants'
-import type { IImage } from '~/sites/default/types/pages'
+import { tv } from 'tailwind-variants';
+import type { IImage } from '~/sites/default/types/pages';
 
 const props = withDefaults(
     defineProps<{
         images: IImage[]
         gridSize?: 'Small' | 'Medium' | 'Large' | 'Full'
     }>(),
-    {},
-)
+    {
+        gridSize: 'Medium',
+    },
+);
 
 const gridClasses = tv({
     base: 'grid grid-cols-1 gap-6',
@@ -20,7 +22,7 @@ const gridClasses = tv({
             Full: 'grid-cols-[repeat(auto-fit,minmax(120px,1fr))]',
         },
     },
-})
+});
 </script>
 
 <template>

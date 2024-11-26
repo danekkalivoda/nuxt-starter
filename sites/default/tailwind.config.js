@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
-import colors from 'tailwindcss/colors.js'
-import typography from '@tailwindcss/typography'
-import { sharedConfig } from './shared.tailwind.config.js'
+import colors from 'tailwindcss/colors.js';
+import typography from '@tailwindcss/typography';
+import { sharedConfig } from './shared.tailwind.config.js';
 
 export const config = {
     content: [
@@ -54,10 +54,30 @@ export const config = {
                         '--tw-prose-body': theme('colors.gray[700]'),
                         '--tw-prose-headings': theme('colors.gray[800]'),
                         'color': theme('colors.gray[800]'),
-                        'fontSize': 'clamp(0.8rem,1vw,1rem)',
+                        'fontSize': 'clamp(0.875rem,1vw,1rem)',
                         'h2': {
-                            fontWeight: '600',
+                            fontWeight: '700',
                         },
+                    },
+                },
+                white: {
+                    css: {
+                        '--tw-prose-body': theme('colors.white'),
+                        '--tw-prose-headings': theme('colors.white'),
+                        '--tw-prose-lead': theme('colors.white'),
+                        '--tw-prose-links': theme('colors.white'),
+                        '--tw-prose-bold': theme('colors.white'),
+                        '--tw-prose-counters': theme('colors.white'),
+                        '--tw-prose-bullets': theme('colors.white'),
+                        '--tw-prose-hr': theme('colors.white'),
+                        '--tw-prose-quotes': theme('colors.white'),
+                        '--tw-prose-quote-borders': theme('colors.white'),
+                        '--tw-prose-captions': theme('colors.white'),
+                        '--tw-prose-code': theme('colors.white'),
+                        '--tw-prose-pre-code': theme('colors.white'),
+                        '--tw-prose-pre-bg': theme('colors.white'),
+                        '--tw-prose-th-borders': theme('colors.white'),
+                        '--tw-prose-td-borders': theme('colors.white'),
                     },
                 },
             }),
@@ -66,5 +86,5 @@ export const config = {
     variants: sharedConfig.variants,
     safelist: sharedConfig.safelist,
     plugins: sharedConfig.plugins,
-}
-export default config
+};
+export default config;

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { scrollToAnchor } from '~/sites/default/components/blocks/jobsList/lib/helpers'
-import type { IJob, IJobCandidate } from '~/sites/default/types/jobs'
-import type { IJobsListBlock } from '~/sites/default/types/pages'
+import { scrollToAnchor } from '~/sites/default/components/blocks/jobsList/lib/helpers';
+import type { IJob, IJobCandidate } from '~/sites/default/types/jobs';
+import type { IJobsListBlock } from '~/sites/default/types/pages';
 
-const { $router: router, _route: route } = useNuxtApp()
-const headers = useRequestHeaders(['cookie']) as HeadersInit
-const props = defineProps<IJobsListBlock>()
+const { $router: router, _route: route } = useNuxtApp();
+const headers = useRequestHeaders(['cookie']) as HeadersInit;
+const props = defineProps<IJobsListBlock>();
 
 const { data: jobs, refresh, status: loading } = await useAsyncData<{
     data: IJob[] | IJobCandidate[] | null | undefined
@@ -13,9 +13,9 @@ const { data: jobs, refresh, status: loading } = await useAsyncData<{
 }>(
     'jobs-data',
     () => {
-        const params = { ...router.currentRoute.value.query }
+        const params = { ...router.currentRoute.value.query };
         if (props.filterTabs === 'Candidates' || props.filterTabs === 'Positions') {
-            params.filtersTab = props.filterTabs.toLowerCase()
+            params.filtersTab = props.filterTabs.toLowerCase();
         }
         return $fetch(
             '/api/job/list',
@@ -23,35 +23,35 @@ const { data: jobs, refresh, status: loading } = await useAsyncData<{
                 params,
                 headers,
             },
-        )
+        );
     },
-)
+);
 const hasMoreItems = computed(() => {
-    return jobs.value?.data?.length < jobs.value?.meta.entries_total
-})
+    return jobs.value?.data?.length < jobs.value?.meta.entries_total;
+});
 const isJobsArray = (data: IJob[] | IJobCandidate[] | null | undefined): data is IJob[] => {
     return (
         !!data && (data.length === 0 || 'title' in data[0])
-    )
-}
+    );
+};
 const loadMoreItems = async (limit: number = 25) => {
-    const currentLimit = parseInt(route.query.limit as string) || 25
-    const newLimit = currentLimit + limit
+    const currentLimit = parseInt(route.query.limit as string) || 25;
+    const newLimit = currentLimit + limit;
     router.push({ query: { ...route.query,
         limit: newLimit.toString() } }).then(async () => {
-        await refresh()
-        scrollToAnchor(String(currentLimit))
-    })
-}
+        await refresh();
+        scrollToAnchor(String(currentLimit));
+    });
+};
 onMounted(() => {
-    const limit = route.query.limit as string
+    const limit = route.query.limit as string;
     if (limit) {
         scrollToAnchor(
             limit,
             false,
-        )
+        );
     }
-})
+});
 </script>
 
 <template>
@@ -87,8 +87,7 @@ onMounted(() => {
                     :has-more-items="hasMoreItems"
                     @load-more-items="() => loadMoreItems()"
                     @refresh="() => refresh()"
-                >
-                </BlocksJobsListJobs>
+                ></BlocksJobsListJobs>
 
                 <BlocksJobsListCandidates
                     v-else
@@ -97,8 +96,7 @@ onMounted(() => {
                     :has-more-items="hasMoreItems"
                     @load-more-items="() => loadMoreItems()"
                     @refresh="() => refresh()"
-                >
-                </BlocksJobsListCandidates>
+                ></BlocksJobsListCandidates>
             </div>
         </slot>
     </div>

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { Popover, PopoverButton, PopoverGroup, PopoverPanel, provideUseId } from '@headlessui/vue'
-import { getUrl } from '~/utils/client'
+import { Popover, PopoverButton, PopoverGroup, PopoverPanel, provideUseId } from '@headlessui/vue';
+import { getUrl } from '~/utils/client';
 
-const { locale } = useI18n()
-provideUseId(() => useId())
+const { locale } = useI18n();
+provideUseId(() => useId());
 export interface MenulinkInterface {
     title: string
     url: string
@@ -22,11 +22,11 @@ export interface MenuInterface {
 withDefaults(
     defineProps<MenuInterface>(),
     {},
-)
+);
 </script>
 
 <template>
-    <PopoverGroup class="hidden lg:flex lg:gap-x-12">
+    <div class="hidden lg:flex lg:gap-x-12">
         <template
             v-for="item in menu"
             :key="item.title"
@@ -78,5 +78,5 @@ withDefaults(
                 {{ item.title }}
             </NuxtLink>
         </template>
-    </PopoverGroup>
+    </div>
 </template>

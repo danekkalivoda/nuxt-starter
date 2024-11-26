@@ -1,26 +1,26 @@
 <script lang="ts" setup>
-const { locale, locales, setLocale } = useI18n()
+const { locale, locales, setLocale } = useI18n();
 
 /* const switchLocalePath = useSwitchLocalePath(); */
 interface Locale {
     code: string
     name: string
 }
-const { $router: router } = useNuxtApp()
+const { $router: router } = useNuxtApp();
 const handleLocaleChange = (newLocale: string) => {
-    setLocale(newLocale)
-    const localeUrl = newLocale === 'cs-CZ' ? '' : newLocale
-    router.push({ path: '/' + localeUrl })
-}
-const initialValue = ref()
-const availableLocales = computed(() => locales.value as Locale[])
+    setLocale(newLocale);
+    const localeUrl = newLocale === 'cs-CZ' ? '' : newLocale;
+    router.push({ path: '/' + localeUrl });
+};
+const initialValue = ref();
+const availableLocales = computed(() => locales.value as Locale[]);
 const options = computed(() => availableLocales.value.map((l: Locale) => ({
     label: l.name,
     value: l.code,
-})))
+})));
 onMounted(() => {
-    initialValue.value = locale.value
-})
+    initialValue.value = locale.value;
+});
 </script>
 
 <template>

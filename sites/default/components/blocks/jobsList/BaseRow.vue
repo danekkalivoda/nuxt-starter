@@ -3,17 +3,17 @@ const props = defineProps<{
     getCellLabel: (cell: any) => any
     row: any
     href: string
-}>()
+}>();
 const hasRerferral = computed(() => {
-    const referral = props.row.original?.referral
-    return !!referral?.candidates?.length || !!referral?.active
-})
+    const referral = props.row.original?.referral;
+    return !!referral?.candidates?.length || !!referral?.active;
+});
 </script>
 
 <template>
     <div
         :id="props.row.original.anchor"
-        class="group/jobRow transi col-span-full mt-8 grid grid-cols-subgrid items-stretch rounded-md bg-white  ring-1 ring-black/5 first:mt-4"
+        class="group/jobRow transi col-span-full mt-4 grid grid-cols-subgrid items-stretch rounded-md bg-white  ring-1 ring-black/5 first:mt-0 lg:mt-8 lg:first:mt-4"
         :class="hasRerferral ? '' : ''"
     >
         <nuxt-link
@@ -48,6 +48,8 @@ const hasRerferral = computed(() => {
         </nuxt-link>
         <BlocksJobsListCellsReferral
             v-if="hasRerferral"
+            :id="props.row.original.id"
+            :detail-href="props.href"
             :data="props.row.original?.referral"
             class="col-span-full"
         >

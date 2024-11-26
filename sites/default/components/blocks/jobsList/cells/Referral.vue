@@ -1,9 +1,21 @@
 <script setup lang="ts">
-import type { IJobReferral } from '~/sites/default/types/jobs'
+import type { IJobReferral } from '~/sites/default/types/jobs';
 
+const showModal = ref(false);
 const props = defineProps<{
     data: IJobReferral
-}>()
+    id: string
+    detailHref: string
+}>();
+
+const { $router: router } = useNuxtApp();
+const openModal = (event: Event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    showModal.value = true;
+
+    /* router.push(`${props.detailHref}/referralForm/`); */
+};
 </script>
 
 <template>
@@ -16,14 +28,25 @@ const props = defineProps<{
                 v-if="props.data.candidates || props.data.active"
                 class="order-2 flex flex-wrap items-center gap-x-4 lg:order-1"
             >
-                <Button
-                    v-if="props.data.active"
-                    type="button"
-                    size="small"
-                    theme="primary"
+                <a
+                    :href="`${props.detailHref}/referralForm/`"
+                    @click.prevent.stop="openModal"
+                    @touchstart.prevent.stop="openModal"
                 >
-                    Doporučit
-                </Button>
+                    <Button
+                        v-if="props.data.active"
+                        type="button"
+                        size="small"
+                        theme="primary"
+                    >
+                        Doporučit
+                    </Button>
+                </a>
+                <Modal v-model:show="showModal">
+                    <template #content>
+                        <BlocksJobsListRecommendDialog></BlocksJobsListRecommendDialog>
+                    </template>
+                </Modal>
                 <div
                     v-if="props.data.candidates"
                     class="order-2 flex grow items-center gap-2 text-sm font-medium"

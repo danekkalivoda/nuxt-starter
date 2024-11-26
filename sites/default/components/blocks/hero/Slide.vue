@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { tv } from 'tailwind-variants'
-import { proseClasses } from '../text/styles'
-import type { IHeroSlide } from '~/sites/default/types/pages'
-import { NuxtLink } from '#components'
+import { tv } from 'tailwind-variants';
+import { proseClasses } from '../text/styles';
+import type { IHeroSlide } from '~/sites/default/types/pages';
+import { NuxtLink } from '#components';
 
-const props = defineProps<IHeroSlide>()
+const props = defineProps<IHeroSlide>();
 const isButtonLinkRelative = computed(() => {
-    return props.buttonLink?.startsWith('/') ?? false
-})
+    return props.buttonLink?.startsWith('/') ?? false;
+});
 const textBlockWrapperClasses = tv({
     base: 'col-start-1 row-span-1 row-start-1 grid  lg:items-stretch lg:p-8',
     variants: {
@@ -22,7 +22,7 @@ const textBlockWrapperClasses = tv({
             Bottom: 'lg:self-end',
         },
     },
-})
+});
 const textBlockClasses = tv({
     base: 'xl:max-w-128 relative inline-flex flex-col items-start justify-center space-y-4 p-6 text-black lg:max-w-96  lg:space-y-6 lg:rounded lg:p-8 xl:p-10',
     variants: {
@@ -36,12 +36,12 @@ const textBlockClasses = tv({
             Black: 'lg:text-black',
         },
     },
-})
+});
 const combinedContent = computed(() => {
-    const header = props.header ? `<h2>${props.header}</h2>` : ''
-    const text = props.description ? `<p>${props.description}</p>` : ''
-    return `${header}${text}`
-})
+    const header = props.header ? `<h2>${props.header}</h2>` : '';
+    const text = props.description ? `<p>${props.description}</p>` : '';
+    return `${header}${text}`;
+});
 </script>
 
 <template>

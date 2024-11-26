@@ -6,7 +6,7 @@
     "build": "npx nuxi build",
     "build:groupon": "nuxt build --dotenv .env.groupon",
     "build:abb": "nuxt build --dotenv .env.abb",
-    "dev": "npx nuxi dev",
+    "dev": "npx nuxi dev --host",
     "dev:groupon": "nuxt dev --dotenv .env.groupon",
     "dev:abb": "nuxt dev --dotenv .env.abb",
     "generate": "nuxt generate",
@@ -63,6 +63,7 @@
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.2.0",
     "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-eslint2": "^4.4.2",
     "vue-tsc": "2.0.29"
   },
   "dependencies": {
@@ -92,6 +93,7 @@
     "tailwind-merge": "^2.5.2",
     "vue": "3.4.38",
     "vue-dompurify-html": "5.1.0",
+    "vue-final-modal": "^4.5.5",
     "vue3-apexcharts": "1.5.3",
     "zod": "^3.23.8"
   },

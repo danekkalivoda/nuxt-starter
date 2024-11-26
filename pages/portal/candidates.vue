@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import type { IStrapiBlockName, IStrapiBlockFilterTabs, IStrapiBlockSettings } from '~/sites/default/types/pages'
+import type { IStrapiBlockName, IStrapiBlockFilterTabs, IStrapiBlockSettings } from '~/sites/default/types/pages';
 
 definePageMeta({
     middleware: 'auth',
-})
+});
 const data = {
     id: 4,
     __component: 'blocks.jobs-list' as IStrapiBlockName,
@@ -22,13 +22,11 @@ const data = {
         topBorder: 'None',
         bottomBorder: 'None',
     } as IStrapiBlockSettings,
-}
+};
 </script>
 
 <template>
     <BlocksBase v-bind="data?.baseSettings">
-        <BlocksJobsList
-            v-bind="data"
-        ></BlocksJobsList>
+        <BlocksJobsList v-bind="data"></BlocksJobsList>
     </BlocksBase>
 </template>
