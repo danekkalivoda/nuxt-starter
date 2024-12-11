@@ -1,24 +1,24 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
-import { useNotification } from 'naive-ui'
-import Input from '~/recruitis-shared/components/forms/input.vue'
-import Button from '~/sites/default/components/Button.vue'
+import { useNotification } from 'naive-ui';
+import Input from '~/recruitis-shared/components/forms/input.vue';
+import Button from '~/sites/default/components/Button.vue';
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const { $router: router } = useNuxtApp()
-const { signIn, signOut, data, status, getCsrfToken } = await useAuth()
-const crsf = await getCsrfToken()
-const notification = useNotification()
-const errorMessage = ref('')
-const loading = ref(false)
+const { $router: router } = useNuxtApp();
+const { signIn, signOut, data, status, getCsrfToken } = await useAuth();
+const crsf = await getCsrfToken();
+const notification = useNotification();
+const errorMessage = ref('');
+const loading = ref(false);
 const credentials = reactive({
     username: '',
     password: '',
-})
+});
 
 const logIn = async () => {
-    loading.value = true
+    loading.value = true;
     const res = await signIn(
         'credentials',
         {
@@ -27,19 +27,19 @@ const logIn = async () => {
             username: credentials.username,
             password: credentials.password,
         },
-    )
+    );
     if (res && !res.error) {
-        loading.value = false
-        router.push('/')
+        loading.value = false;
+        router.push('/');
     } else if (res && res.error) {
         notification.error({
             title: 'Chyba',
             content: t(`strapiErrors.${res.error}`),
             duration: 5000,
-        })
-        loading.value = false
+        });
+        loading.value = false;
     }
-}
+};
 </script>
 
 <template>

@@ -13,9 +13,9 @@ const data = {
     hideHeader: true,
     baseSettings: {
         id: 4,
-        background: 'Light',
-        topGap: 'Small',
-        bottomGap: 'Medium',
+        background: 'Transparent',
+        topGap: 'None',
+        bottomGap: 'None',
         backgroundPosition: null,
         backgroundRepeat: null,
         backgroundSize: null,
@@ -26,7 +26,14 @@ const data = {
 </script>
 
 <template>
-    <BlocksBase v-bind="data?.baseSettings">
-        <BlocksJobsList v-bind="data"></BlocksJobsList>
-    </BlocksBase>
+    <div class="space-y-4 py-4 lg:space-y-8 lg:py-8">
+        <h1 class="font-display container text-2xl font-semibold lg:text-4xl">
+            Moje doporučení
+        </h1>
+        <div class="border-t bg-gray-50 py-4 lg:py-8">
+            <BlocksBase v-bind="data?.baseSettings">
+                <BlocksList v-bind="data"></BlocksList>
+            </BlocksBase>
+        </div>
+    </div>
 </template>

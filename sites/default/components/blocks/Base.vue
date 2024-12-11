@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IStrapiBlockSettings } from '~/sites/default/types/pages'
+import type { IStrapiBlockSettings } from '~/sites/default/types/pages';
 
 const props = withDefaults(
     defineProps<IStrapiBlockSettings>(),
@@ -10,7 +10,7 @@ const props = withDefaults(
         bottomBorder: 'None',
         topBorder: 'None',
     },
-)
+);
 
 const classMappings: Record<string, Record<string, string>> = {
     bottomGap: {
@@ -66,7 +66,7 @@ const classMappings: Record<string, Record<string, string>> = {
         background: 'relative before:absolute before:z-[-1] before:inset-0 before:w-full',
         backgroundImage: 'before:[background-image:var(--bg-image)]',
     },
-}
+};
 
 const computedClasses = computed(() => {
     const classes = [
@@ -80,14 +80,14 @@ const computedClasses = computed(() => {
         props.backgroundImage?.url ? classMappings.backgroundSize[props.backgroundSize || 'Auto'] : '',
         (props.backgroundImage?.url || props.background) ? classMappings.additional.background : '',
         props.backgroundImage?.url ? classMappings.additional.backgroundImage : '',
-    ]
+    ];
 
-    return classes.join(' ')
-})
+    return classes.join(' ');
+});
 
 const backgroundImageStyle = computed(() => {
-    return props.backgroundImage?.url ? props.backgroundImage.url : ''
-})
+    return props.backgroundImage?.url ? props.backgroundImage.url : '';
+});
 </script>
 
 <template>

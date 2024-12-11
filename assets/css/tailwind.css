@@ -59,6 +59,8 @@ body,
 html {
   font-size: 16px;
   @apply text-gray-700;
+  -webkit-overflow-scrolling : touch !important;
+  height: calc(var(--vh, 1vh) * 100);
 }
 html.iosModalOpened {
   @apply !overflow-visible lg:!overflow-y-hidden;
@@ -340,19 +342,33 @@ html.iosModalOpened body div[id^="popper_"] {
 }
 
 .n-modal {
-  transition: none !important;
+  transition: all 150ms ease !important;
   transform: none !important;
 }
 
 .n-modal-mask {
-  transition: none !important;
+  transition: all 150ms ease !important;
+  @apply bg-black/70 backdrop-blur-sm;
 }
 
 .n-modal-container {
-  transition: none !important;
+  transition: all 150ms ease !important;
   transform: none !important;
   & > * {
-    transition: none !important;
     transform: none !important;
   }
+}
+.n-drawer-container{
+  @apply bg-white/10 backdrop-blur opacity-100 transition-all empty:opacity-0;
+  & .n-drawer {
+    @apply !h-full !w-full overflow-clip !rounded-none !shadow-none !bg-transparent lg:!w-auto;
+    & .n-drawer-content .n-drawer-body-content-wrapper {
+      @apply p-0 min-h-full flex items-stretch;
+    }
+  }
+}
+
+input, textarea, select, button {
+  -webkit-user-select: auto;
+  -webkit-touch-callout: auto;
 }

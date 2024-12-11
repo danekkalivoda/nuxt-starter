@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { ICheckboxes } from '~/sites/default/components/blocks/jobsList/types'
+import type { ICheckboxes } from '~/sites/default/components/blocks/list/types';
 
-const props = defineProps<ICheckboxes>()
+const props = defineProps<ICheckboxes>();
 
 const emit = defineEmits<{
     (e: 'update:initialValue', value: string[]): void
-}>()
+}>();
 
 const selectedValues = computed({
     get: () => (Array.isArray(props.initialValue) ? props.initialValue : []),
@@ -13,9 +13,9 @@ const selectedValues = computed({
         emit(
             'update:initialValue',
             value,
-        )
+        );
     },
-})
+});
 </script>
 
 <template>

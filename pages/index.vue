@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const { locale } = useI18n()
+const { locale } = useI18n();
 const { data: pageData } = await useAsyncData(() => $fetch(
     '/api/page',
     {
@@ -7,12 +7,12 @@ const { data: pageData } = await useAsyncData(() => $fetch(
             slug: '',
             homepage: true },
     },
-))
-const page = pageData.value
+));
+const page = pageData.value;
 
 useHead({
     title: page?.title,
-})
+});
 </script>
 
 <template>

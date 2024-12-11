@@ -34,12 +34,12 @@ withDefaults(
         :open="isOpen"
         @close="emit('on-menu-toggle', false)"
     >
-        <div class="fixed inset-0 z-10"></div>
+        <div class="fixed inset-0 z-10"/>
         <DialogPanel
             class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
         >
             <div class="flex items-center justify-between">
-                <HeaderLogo></HeaderLogo>
+                <HeaderLogo/>
                 <button
                     type="button"
                     class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
@@ -48,7 +48,7 @@ withDefaults(
                     <Icon
                         name="ion:close"
                         class="size-4 text-gray-400 transition-transform"
-                    ></Icon>
+                    />
                 </button>
             </div>
             <div class="mt-6 flow-root">
@@ -72,7 +72,7 @@ withDefaults(
                                         name="ion:chevron-down"
                                         class="size-4 text-gray-400"
                                         :class="open ? 'rotate-180' : ''"
-                                    ></Icon>
+                                    />
                                 </DisclosureButton>
                                 <DisclosurePanel class="mt-2 space-y-2">
                                     <NuxtLink
@@ -99,7 +99,7 @@ withDefaults(
                         v-if="locales.length !== 1"
                         class="py-6"
                     >
-                        <HeaderLanguageSwitch></HeaderLanguageSwitch>
+                        <HeaderLanguageSwitch/>
                     </div>
                 </div>
             </div>

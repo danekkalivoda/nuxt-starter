@@ -2,8 +2,6 @@ import {
     type IPage,
     type IStrapiPage,
     type IStrapiBlockUnion,
-    type IHeroBlock,
-    type IHeroSlide,
     IStrapiBlockName,
 } from '~/sites/default/types/pages';
 import type { IMenuItem } from '~/sites/default/types/menus';
@@ -205,7 +203,7 @@ const processBlocks = (blocks: IStrapiBlockUnion[], strapiUrl: string) => {
 export const usePages = async ({
     url = '',
     slug,
-    locale,
+    locale = 'cs-CZ',
     homepage = false,
 }: {
     url: string
@@ -218,7 +216,8 @@ export const usePages = async ({
     const l = locale === 'cs-CZ' ? 'cs' : locale;
     const filter = homepage ? 'homepage' : 'url';
     const filterValue = homepage ? 'true' : slug;
-    const urlToFetch = strapiUrl + '/api/' + `${url}&filters[${filter}][$eq]=${filterValue}`;
+    const urlToFetch = strapiUrl + '/api/' + `${url}&filters[${filter}][$eq]=${filterValue}&locale=${l}`;
+
     const response = await fetch(
         urlToFetch,
         {
@@ -232,13 +231,13 @@ export const usePages = async ({
     const data = jsonData.data;
 
     const findPageData = (pageData: IStrapiPage[]): IStrapiPage | undefined => {
-        if (l === 'cs') {
-            return pageData.find((item: IStrapiPage) => item.attributes.locale === l);
+        return pageData.find((item: IStrapiPage) => item.attributes.locale === l);
+        /*         if (l === 'cs') {
         } else {
             return pageData
                 .flatMap((item: IStrapiPage) => item.attributes.localizations.data)
                 .find((loc: IStrapiPage) => loc.attributes.locale === l);
-        }
+        } */
     };
 
     const pageRawData: IStrapiPage | undefined = findPageData(data);
@@ -261,4 +260,60 @@ export const usePages = async ({
         description: description ?? undefined,
         blocks,
     };
+};
+
+export const useJobs = async ({
+    url = '',
+    locale = 'cs-CZ',
+    id,
+}: {
+    url: string
+    locale: string
+    id: string
+}): Promise<{
+    blocksBefore: IStrapiBlockUnion[]
+    blocksAfter: IStrapiBlockUnion[]
+}> => {
+    const runtimeConfig = useRuntimeConfig();
+    const strapiUrl = runtimeConfig.public.strapi.url;
+    const l = locale === 'cs-CZ' ? 'cs' : locale;
+    const urlToFetch = strapiUrl + '/api/' + `${url}&locale=${l}`;
+    const response = await fetch(
+        urlToFetch,
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        },
+    );
+    const jsonData = await response.json();
+    const data = jsonData.data;
+    const foundJob = data.find((item) => item.attributes.jobId === id);
+
+    if (foundJob) {
+        return {
+            blocksBefore: processBlocks(foundJob.attributes.blocksBefore, strapiUrl),
+            blocksAfter: processBlocks(foundJob.attributes.blocksAfter, strapiUrl),
+        };
+    }
+
+    if (data.length > 0) {
+        return {
+            blocksBefore: processBlocks(data[0].attributes.blocksBefore, strapiUrl),
+            blocksAfter: processBlocks(data[0].attributes.blocksAfter, strapiUrl),
+        };
+    }
+
+    return {
+        blocksBefore: [],
+        blocksAfter: [],
+    };
+};
+
+export const isBlockOfType = <T extends IStrapiBlockUnion>(
+    block: IStrapiBlockUnion,
+    type: IStrapiBlockName,
+): block is T => {
+    return block.__component === type;
 };

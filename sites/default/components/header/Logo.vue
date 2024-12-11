@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
-import Logo from '~/recruitis-shared/components/logo.vue'
-import { cn } from '~/utils/client'
+import type { HTMLAttributes } from 'vue';
+import Logo from '~/recruitis-shared/components/logo.vue';
+import { cn } from '~/utils/client';
 
-const localePath = useLocalePath()
+const localePath = useLocalePath();
 const props = withDefaults(
     defineProps<{ theme?: 'dark' | 'light'
         class?: HTMLAttributes['class'] }>(),
@@ -11,7 +11,7 @@ const props = withDefaults(
         theme: 'light',
         class: '',
     },
-)
+);
 </script>
 
 <template>

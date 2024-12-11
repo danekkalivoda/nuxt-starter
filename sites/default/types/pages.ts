@@ -1,18 +1,24 @@
+import type { IButtonsListButton } from '~/sites/default/components/buttonsList/types';
+
 interface IStrapiPageLocalizations {
     data: IStrapiPage[]
 }
 
 export enum IStrapiBlockName {
+    jobHeader = 'blocks.job-header',
+    header = 'blocks.header',
     jobsList = 'blocks.jobs-list',
     hero = 'blocks.hero-image',
     text = 'blocks.text',
     tiles = 'blocks.tiles',
 }
 export type IStrapiBlockNameUnion =
+    IStrapiBlockName.header |
+    IStrapiBlockName.jobHeader |
     IStrapiBlockName.jobsList |
     IStrapiBlockName.hero |
     IStrapiBlockName.text |
-    IStrapiBlockName.tiles
+    IStrapiBlockName.tiles;
 
 export enum IStrapiBlockBackground {
     Transparent = 'Transparent',
@@ -57,8 +63,25 @@ export interface IStrapiBlock {
     __component?: IStrapiBlockName
     baseSettings?: IStrapiBlockSettings
 }
-
-export interface IJobsListBlock extends IStrapiBlock {
+export interface IHeaderBlock extends IStrapiBlock {
+    text: string
+    centered?: boolean
+    tags?: {
+        id: number
+        title: string
+        showTitle?: boolean
+        value?: string
+        values: {
+            id: string | number
+            value: string | number
+        }[]
+        icon?: string
+        iconExact?: string
+    }[]
+    buttons?: IButtonsListButton[]
+}
+export type IJobHeaderBlock = IHeaderBlock;
+export interface IListBlock extends IStrapiBlock {
     showFilter?: boolean
     showSubmitButton?: boolean
     filterTabs?: IStrapiBlockFilterTabs
@@ -121,13 +144,13 @@ export interface ITile {
     linkUrl?: string
     linkText?: string
 }
-export type ITileTheme = 'Theme 1' | 'Theme 2' | 'Theme 3'
+export type ITileTheme = 'Theme 1' | 'Theme 2' | 'Theme 3';
 export interface ITilesBlock extends IStrapiBlock {
     tiles: ITile[]
     theme: ITileTheme
 }
 
-export type IStrapiBlockUnion = IJobsListBlock | IHeroBlock | ITextBlock | ITilesBlock
+export type IStrapiBlockUnion = IListBlock | IHeroBlock | ITextBlock | ITilesBlock;
 
 export interface IStrapiPage {
     attributes: {
@@ -145,7 +168,7 @@ export interface IStrapiPage {
 }
 
 export interface IPage {
-    title: string
+    title?: string | null
     description?: string | null
     blocks?: IStrapiBlockUnion[]
 }

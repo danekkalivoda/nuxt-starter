@@ -6,17 +6,17 @@ import { useVisibilityObserver } from '~/recruitis-shared/composables/useVisibil
 const { $router: router } = useNuxtApp();
 const headers = useRequestHeaders(['cookie']) as HeadersInit;
 const currentRoute = computed(() => router.currentRoute.value);
-
+const emits = defineEmits(['close']);
 const { signOut, data } = useAuth();
 const { data: filters } = await useAsyncData(
     'jobs-list',
     () => {
         const params = { ...router.currentRoute.value.query };
 
-        params.filtersTab = 'candidates';
+        params.listFiltersTab = 'candidates';
 
         return $fetch(
-            '/api/job/list',
+            '/api/jobs',
             {
                 params,
                 headers,
@@ -40,6 +40,7 @@ const baseMenu = computed(() => [
         command: () => {
             isOpen.value = false;
             router.push('/portal/dashboard');
+            emits('close');
         },
     },
     {
@@ -50,6 +51,7 @@ const baseMenu = computed(() => [
         command: () => {
             isOpen.value = false;
             router.push('/portal/candidates');
+            emits('close');
         },
     },
     {
@@ -59,6 +61,7 @@ const baseMenu = computed(() => [
         command: () => {
             isOpen.value = false;
             router.push('/portal/referral');
+            emits('close');
         },
     },
 ]);
@@ -71,6 +74,7 @@ const myAccountMenu = computed(() => [
         command: () => {
             isOpen.value = false;
             router.push('/portal/referral/account');
+            emits('close');
         },
     },
 ]);
@@ -81,14 +85,24 @@ const logout = computed(() => [
         icon: 'tabler:logout',
         command: () => {
             isOpen.value = false;
+            emits('close');
             signOut();
         },
     },
 ]);
+const onMenuToggle = () => {
+    nextTick(() => {
+        isOpen.value = !isOpen.value;
+    });
+};
 </script>
 
 <template>
-    <div class="bg-gray-900">
+    <div class="relative bg-gray-900">
+        <div
+            aria-hidden="true"
+            class="absolute left-0 top-full block size-2 bg-gray-900 [mask:radial-gradient(circle_at_bottom_right,_transparent_8px,_var(--tw-gray-900)_9px)]"
+        ></div>
         <div
             class="@container/userMenu flex"
         >
@@ -99,19 +113,29 @@ const logout = computed(() => [
 
             <component
                 :is="isSmall ? NDrawer : 'div'"
-                v-model:show="isOpen"
-                placement="right"
+                :show="isOpen"
+                placement="left"
                 width="auto"
                 :show-mask="false"
-                class="@5xl/userMenu:w-auto @5xl/userMenu:inline-flex !w-[calc(100vw-4rem)] max-w-96 !rounded-l-lg bg-gray-900 ring-1 ring-white/10 lg:ring-0"
+                class="@5xl/userMenu:w-auto @5xl/userMenu:inline-flex"
             >
-                <div
-                    class="min-w-64 p-4 shadow-lg lg:p-0 lg:shadow-none"
+                <component
+                    :is="isSmall ? NDrawerContent : 'div'"
+                    :native-scrollbar="false"
+                    :scrollbar-props="{
+                        trigger: 'hover'
+                    }"
                 >
+                    <div
+                        class="fixed inset-0 z-0 transition-all lg:hidden"
+                        @click="isOpen = false"
+                    >
+                    </div>
                     <Menubar
+                        :unstyled="true"
                         :pt="{
                             root: {
-                                class: 'text-gray-400 p-0 flex',
+                                class: 'p-4 lg:p-0 grow shrink-0 w-full max-w-72 text-gray-400 p-0 flex relative z-10 bg-gray-900',
                             },
                             button: {
                                 class: 'hidden',
@@ -165,13 +189,13 @@ const logout = computed(() => [
                             </div>
                         </template>
                     </Menubar>
-                </div>
+                </component>
             </component>
             <div class="@5xl/userMenu:w-auto @5xl/userMenu:inline-flex ml-auto flex w-full">
                 <Button
                     class="@5xl/userMenu:hidden ml-3 block size-10 self-center rounded-md p-0 text-white hover:bg-gray-800 focus:outline-none focus:ring-0"
                     theme="custom"
-                    @click.stop.prevent="() => isOpen = !isOpen"
+                    @click="onMenuToggle()"
                 >
                     <Icon
                         :name="isOpen ? 'tabler:x' : 'tabler:menu-2'"
@@ -179,6 +203,7 @@ const logout = computed(() => [
                     ></Icon>
                 </Button>
                 <Menubar
+                    :unstyled="true"
                     :pt="{
                         root: {
                             class: 'text-gray-400 p-0 flex shrik-0 grow-0 ml-auto',
@@ -220,5 +245,9 @@ const logout = computed(() => [
                 </Menubar>
             </div>
         </div>
+        <div
+            aria-hidden="true"
+            class="absolute right-0 top-full block size-2 bg-gray-900 [mask:radial-gradient(circle_at_bottom_left,_transparent_8px,_var(--tw-gray-900)_9px)]"
+        ></div>
     </div>
 </template>

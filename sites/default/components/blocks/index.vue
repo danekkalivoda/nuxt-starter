@@ -1,22 +1,17 @@
 <script setup lang="ts">
 import {
+    type IPage,
+    type IHeaderBlock,
+    type IJobHeaderBlock,
     type IHeroBlock,
-    type IJobsListBlock,
+    type IListBlock,
     type ITextBlock,
     type IStrapiBlockUnion,
     type ITilesBlock,
     IStrapiBlockName,
-} from '~/sites/default/types/pages'
+} from '~/sites/default/types/pages';
 
-const props = defineProps<{ blocks: IStrapiBlockUnion[] }>()
-
-function isBlockOfType<T extends IStrapiBlockUnion>(
-    block: IStrapiBlockUnion,
-    type: IStrapiBlockName,
-):
-  block is T {
-    return block.__component === type
-}
+const props = defineProps<IPage>();
 </script>
 
 <template>
@@ -27,11 +22,19 @@ function isBlockOfType<T extends IStrapiBlockUnion>(
         :key="block.id"
         :type="block.__component"
     >
-        <!-- Tento blok může být i LazyBlocksJosList, ale z pohledu SSR to takto funguje lépe -->
-        <BlocksJobsList
-            v-if="isBlockOfType<IJobsListBlock>(block, IStrapiBlockName.jobsList)"
+        <BlocksHeader
+            v-if="isBlockOfType<IJobHeaderBlock>(block, IStrapiBlockName.jobHeader)"
             v-bind="block"
-        ></BlocksJobsList>
+        ></BlocksHeader>
+        <BlocksHeader
+            v-if="isBlockOfType<IHeaderBlock>(block, IStrapiBlockName.header)"
+            v-bind="block"
+        ></BlocksHeader>
+        <!-- Tento blok může být i LazyBlocksJosList, ale z pohledu SSR to takto funguje lépe -->
+        <BlocksList
+            v-if="isBlockOfType<IListBlock>(block, IStrapiBlockName.jobsList)"
+            v-bind="block"
+        ></BlocksList>
         <LazyBlocksHeroImage
             v-if="isBlockOfType<IHeroBlock>(block, IStrapiBlockName.hero)"
             v-bind="block"
@@ -39,12 +42,10 @@ function isBlockOfType<T extends IStrapiBlockUnion>(
         <LazyBlocksTextProse
             v-if="isBlockOfType<ITextBlock>(block, IStrapiBlockName.text)"
             v-bind="block"
-        >
-        </LazyBlocksTextProse>
+        ></LazyBlocksTextProse>
         <LazyBlocksTilesList
             v-if="isBlockOfType<ITilesBlock>(block, IStrapiBlockName.tiles)"
             v-bind="block"
-        >
-        </LazyBlocksTilesList>
+        ></LazyBlocksTilesList>
     </BlocksBase>
 </template>

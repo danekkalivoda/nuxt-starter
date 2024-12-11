@@ -28,6 +28,7 @@ onMounted(() => {
         <Select
             :options="options"
             :initial-value="initialValue"
+            @click.stop
             @update:initial-value="(value) => handleLocaleChange(value)"
         ></Select>
     </div>

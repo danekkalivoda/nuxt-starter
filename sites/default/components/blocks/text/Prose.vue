@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { tv } from 'tailwind-variants'
-import { textBlockClasses, proseClasses } from './styles'
-import type { ITextBlock } from '~/sites/default/types/pages'
+import {
+    type ITextBlock,
+} from '~/sites/default/types/pages';
+import { tv } from 'tailwind-variants';
+import { textBlockClasses, proseClasses } from './styles';
 
-const props = defineProps<ITextBlock>()
+const props = defineProps<ITextBlock>();
 const containerClasses = tv({
     base: 'container grid items-center gap-6',
     variants: {
@@ -60,7 +62,7 @@ const containerClasses = tv({
             class: 'lg:grid-cols-[2fr,1fr]',
         },
     ],
-})
+});
 const imagePositionClasses = tv({
     variants: {
         topGap: {
@@ -122,7 +124,7 @@ const imagePositionClasses = tv({
             class: '-mb-16 lg:-mb-32',
         },
     ],
-})
+});
 </script>
 
 <template>
@@ -148,15 +150,13 @@ const imagePositionClasses = tv({
                 <div
                     :class="proseClasses({ dark: (props.baseSettings?.background === 'Dark' || props.baseSettings?.background === 'Brand') && !props.boxed })"
                     v-html="props?.text"
-                >
-                </div>
+                ></div>
             </Box>
             <div
                 v-else
                 :class="proseClasses({ dark: (props.baseSettings?.background === 'Dark' || props.baseSettings?.background === 'Brand') && !props.boxed })"
                 v-html="props?.text"
-            >
-            </div>
+            ></div>
         </div>
 
         <div

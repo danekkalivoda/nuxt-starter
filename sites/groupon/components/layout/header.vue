@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue'
+import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue';
 
-const { locales } = useI18n()
+const { locales } = useI18n();
 interface HeaderInterface {
     menu: MenulinkInterface[]
 }
 const props = withDefaults(
     defineProps<HeaderInterface>(),
     {},
-)
-const mobileMenuOpen = ref(false)
+);
+const mobileMenuOpen = ref(false);
 </script>
 
 <template>
@@ -33,7 +33,10 @@ const mobileMenuOpen = ref(false)
                     /></svg>
                 </HeaderLogo>
             </div>
-            <HeaderMenuToggler @on-menu-toggle="(value) => (mobileMenuOpen = value)"></HeaderMenuToggler>
+            <HeaderMenuToggler
+                :is-open="mobileMenuOpen"
+                @on-menu-toggle="(value) => (mobileMenuOpen = value)"
+            ></HeaderMenuToggler>
             <HeaderDesktopMenu :menu="props.menu"></HeaderDesktopMenu>
             <div
                 v-if="locales.length !== 1"

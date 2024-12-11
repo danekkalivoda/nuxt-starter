@@ -42,8 +42,7 @@ const boxClasses = tv({
                     class="@lg/tiles:p-8 p-6"
                     :theme="props.theme"
                     :base-settings="props.baseSettings"
-                >
-                </BlocksTilesTile>
+                />
             </div>
         </Box>
     </div>

@@ -17,5 +17,5 @@ const emit = defineEmits(['update:initialValue'])
         @update:initial-value="(value) => {
             emit('update:initialValue', value)
         }"
-    ></Input>
+    />
 </template>

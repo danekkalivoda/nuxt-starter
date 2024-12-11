@@ -1,7 +1,6 @@
 import type { FormFieldsInterface } from '~/recruitis-shared/components/forms/formFields.vue';
 import type { FlowbarInterface } from '~/recruitis-shared/components/flowBar/flowBar.vue';
 import type { ITheme } from '~/recruitis-shared/components/badge.vue';
-
 export interface IReward {
     value: string
     title: string
@@ -41,6 +40,14 @@ export interface IJob {
     description?: string
     anchor?: string | null
     referral?: IJobReferral
+    params?: {
+        id: string
+        title: string
+        value: {
+            id: string
+            value: string
+        }[]
+    }[]
 }
 export interface IJobDetail extends IJob {
     form?: FormFieldsInterface

@@ -1,9 +1,9 @@
-import { type ClassValue, clsx } from 'clsx'
-import { twMerge } from 'tailwind-merge'
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export const cn = (...inputs: ClassValue[]) => {
-    return twMerge(clsx(inputs))
-}
+    return twMerge(clsx(inputs));
+};
 
 export const iconSetMapping = {
     Tb: 'tabler',
@@ -11,30 +11,30 @@ export const iconSetMapping = {
     Md: 'mdi',
     Ri: 'remix',
     Ti: 'typicons',
-}
+};
 
 export const formatIconName = (iconString) => {
     if (!iconString || typeof iconString !== 'string') {
-        console.warn(`Neplatný název ikony: ${iconString}`)
-        return null
+        console.warn(`Neplatný název ikony: ${iconString}`);
+        return null;
     }
 
     const prefix = iconString.substring(
         0,
         2,
-    )
-    const iconSet = iconSetMapping[prefix]
+    );
+    const iconSet = iconSetMapping[prefix];
 
     if (!iconSet) {
-        console.warn(`Neznámý prefix: ${prefix}`)
-        return null
+        console.warn(`Neznámý prefix: ${prefix}`);
+        return null;
     }
 
-    const iconNameCamel = iconString.substring(2)
-    const iconNameKebab = camelCaseToKebabCase(iconNameCamel)
+    const iconNameCamel = iconString.substring(2);
+    const iconNameKebab = camelCaseToKebabCase(iconNameCamel);
 
-    return `${iconSet}:${iconNameKebab}`
-}
+    return `${iconSet}:${iconNameKebab}`;
+};
 
 const camelCaseToKebabCase = (str) => {
     return str
@@ -46,18 +46,18 @@ const camelCaseToKebabCase = (str) => {
             /([A-Z])([A-Z][a-z])/g,
             '$1-$2',
         )
-        .toLowerCase()
-}
+        .toLowerCase();
+};
 
 export const isAbsoluteUrl = (url: string): boolean => {
-    return (/^https?:\/\//i).test(url)
-}
+    return (/^https?:\/\//i).test(url);
+};
 
 export const getUrl = (url: string, locale: string) => {
     if (isAbsoluteUrl(url)) {
-        return url
+        return url;
     } else if (url !== null) {
-        return locale === 'cs-CZ' ? '/' + url : '/' + locale + '/' + url
+        return locale === 'cs-CZ' ? '/' + url : '/' + locale + '/' + url;
     }
-    return undefined
-}
+    return undefined;
+};

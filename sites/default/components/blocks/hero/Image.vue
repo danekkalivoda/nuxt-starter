@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { IHeroBlock } from '~/sites/default/types/pages'
+import type { IHeroBlock } from '~/sites/default/types/pages';
 
-const props = defineProps<IHeroBlock>()
+const props = defineProps<IHeroBlock>();
 const hasContentInSlides = computed(() => {
-    return props.slides.some((slide) => slide.header || slide.description || slide.buttonName)
-})
+    return props.slides.some((slide) => slide.header || slide.description || slide.buttonName);
+});
 </script>
 
 <template>
@@ -35,7 +35,7 @@ const hasContentInSlides = computed(() => {
                     </SplideSlide>
                 </SplideTrack>
                 <div
-                    class="splide__arrows pointer-events-none absolute bottom-6 flex items-center justify-center lg:relative lg:bottom-5 lg:-mb-10"
+                    class="splide__arrows pointer-events-none absolute bottom-6 flex items-center justify-center lg:relative lg:bottom-5 lg:right-0 lg:-mb-10"
                     :class="hasContentInSlides ? 'right-6' : 'right-12'"
                 >
                     <div class="pointer-events-auto z-10 inline-flex items-center justify-center rounded-md bg-white shadow-lg ring-1 ring-black/10 lg:mt-0">
@@ -44,8 +44,7 @@ const hasContentInSlides = computed(() => {
                         </button>
                         <div
                             class="splide__pagination [&_button:hover]:after:bg-brand-500 !hidden lg:!flex [&_button.is-active:hover]:after:bg-white [&_button.is-active]:after:scale-150 [&_button.is-active]:after:bg-white [&_button.is-active]:after:shadow [&_button.is-active]:after:ring-1 [&_button.is-active]:after:ring-black/5 [&_button]:flex [&_button]:size-6 [&_button]:items-center [&_button]:justify-center [&_button]:after:block [&_button]:after:size-2 [&_button]:after:rounded-full [&_button]:after:bg-gray-200 [&_button]:after:transition-all"
-                        >
-                        </div>
+                        ></div>
                         <button class="splide__arrow splide__arrow--next  flex size-10 items-center justify-center rounded text-gray-300 hover:text-gray-800">
                             <Icon name="ion:chevron-forward-outline"></Icon>
                         </button>

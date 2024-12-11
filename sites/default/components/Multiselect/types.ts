@@ -1,4 +1,4 @@
-import type { MultiSelectProps } from 'primevue/multiselect'
+import type { MultiSelectProps } from 'primevue/multiselect';
 
 export interface IOption {
     label: string

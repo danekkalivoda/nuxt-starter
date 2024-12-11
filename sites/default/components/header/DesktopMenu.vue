@@ -44,7 +44,7 @@ withDefaults(
                         name="ion:chevron-down"
                         class="size-4 text-gray-400 transition-transform"
                         :class="open ? '-rotate-180' : ''"
-                    ></Icon>
+                    />
                 </PopoverButton>
 
                 <transition

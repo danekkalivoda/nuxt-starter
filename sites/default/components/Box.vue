@@ -9,6 +9,6 @@ const props = defineProps<{ class?: HTMLAttributes['class'] }>()
     <div
         :class="cn('rounded-md bg-white p-6 shadow-lg ring-1 ring-black/5 lg:p-8', props.class)"
     >
-        <slot></slot>
+        <slot/>
     </div>
 </template>

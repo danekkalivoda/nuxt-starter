@@ -43,7 +43,7 @@ const onDelete = (file: FileInteface) => {
                     <Icon
                         name="tabler:file"
                         class="shrink-0"
-                    ></Icon>
+                    />
                     <div class="min-w-0 grow truncate text-left">
                         {{ file.name }}
                     </div>
@@ -56,7 +56,7 @@ const onDelete = (file: FileInteface) => {
                     <Icon
                         name="tabler:x"
                         class="shrink-0"
-                    ></Icon>
+                    />
                 </button>
             </div>
         </div>

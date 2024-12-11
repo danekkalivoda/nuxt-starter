@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-import colors from 'tailwindcss/colors'
-import { sharedConfig } from '../default/shared.tailwind.config'
+import colors from 'tailwindcss/colors';
+import { sharedConfig } from '../default/shared.tailwind.config';
 
 export const config = {
     content: [
@@ -34,5 +34,5 @@ export const config = {
     variants: sharedConfig.variants,
     safelist: sharedConfig.safelist,
     plugins: sharedConfig.plugins,
-}
-export default config
+};
+export default config;

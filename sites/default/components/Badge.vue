@@ -14,6 +14,6 @@ const props = withDefaults(
     <Badge
         v-bind="props"
     >
-        <slot></slot>
+        <slot/>
     </Badge>
 </template>

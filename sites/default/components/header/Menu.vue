@@ -18,10 +18,11 @@ export interface MenulinkInterface {
 export interface MenuInterface {
     menu: MenulinkInterface[]
     isMobile?: boolean
+    isOpen?: boolean
 }
 const { $router: router } = useNuxtApp();
 const emits = defineEmits(['close']);
-withDefaults(
+const props = withDefaults(
     defineProps<MenuInterface>(),
     {
         isMobile: false,
@@ -47,7 +48,14 @@ const isActive = (itemUrl: string | null | undefined) => {
 </script>
 <template>
     <div>
-        <div class="flex flex-col gap-x-2 gap-y-2 lg:flex-row lg:items-center xl:gap-x-4">
+        <div class="flex items-center justify-between px-6 pt-4 lg:hidden lg:px-0">
+            <HeaderLogo></HeaderLogo>
+            <HeaderMenuToggler
+                :is-open="props.isOpen"
+                @on-menu-toggle="emits('close')"
+            ></HeaderMenuToggler>
+        </div>
+        <div class="flex flex-col gap-x-2 gap-y-2 px-6 py-4 lg:flex-row lg:items-center lg:px-0 xl:gap-x-4">
             <template
                 v-for="(item, index) in menu"
                 :key="item.title"
@@ -83,8 +91,7 @@ const isActive = (itemUrl: string | null | undefined) => {
                             <NuxtLink
                                 v-for="child in item.children"
                                 :key="child.title"
-                                :to="child.url"
-                                :custom="item.url !== null"
+                                :to="getUrl(child.url, locale)"
                                 class="block rounded-lg px-3 py-2 text-sm leading-6 text-gray-900 hover:bg-gray-50"
                                 @click="emits('close')"
                             >
@@ -95,7 +102,7 @@ const isActive = (itemUrl: string | null | undefined) => {
                 </ClientOnly>
                 <div
                     v-if="item.children"
-                    class="grid grid-rows-[max-content_0fr] ring-1 ring-transparent transition-all data-[open=true]:grid-rows-[max-content_1fr]  lg:hidden"
+                    class="grid grid-rows-[max-content_0fr] ring-1 ring-transparent transition-all data-[open=true]:grid-rows-[max-content_1fr] lg:hidden"
                     :data-open="popoverOpenStates[index]"
                 >
                     <button
@@ -119,8 +126,7 @@ const isActive = (itemUrl: string | null | undefined) => {
                             <NuxtLink
                                 v-for="child in item.children"
                                 :key="child.title"
-                                :to="child.url"
-                                :custom="item.url !== null"
+                                :to="getUrl(child.url, locale)"
                                 :data-active="isActive(item.url)"
                                 class="mx-2 block rounded px-3 py-2 text-sm font-medium leading-6 ring-1 ring-transparent data-[active=false]:text-gray-500 data-[active=true]:shadow data-[active=true]:ring-black/5 data-[active=false]:hover:bg-gray-50 data-[active=false]:hover:text-gray-900 data-[active=false]:hover:ring-black/5"
                                 @click="emits('close')"
@@ -143,7 +149,7 @@ const isActive = (itemUrl: string | null | undefined) => {
         </div>
         <div
             v-if="locales.length !== 1"
-            class="mt-4 border-t pt-4 lg:mt-0 lg:border-0 lg:pt-0"
+            class="px-6 pb-6 lg:px-0 lg:pb-0"
         >
             <HeaderLanguageSwitch></HeaderLanguageSwitch>
         </div>

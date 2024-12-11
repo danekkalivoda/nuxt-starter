@@ -4,5 +4,5 @@
             footer groupon
         </div>
     </div>
-    <AuthenticationStatus></AuthenticationStatus>
+    <AuthenticationStatus/>
 </template>

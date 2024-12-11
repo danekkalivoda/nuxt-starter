@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { tv } from 'tailwind-variants'
-import { proseClasses } from '../text/styles'
-import type { ITile, ITileTheme, IStrapiBlockSettings } from '~/sites/default/types/pages'
-import { formatIconName } from '~/utils/client'
+import { computed } from 'vue';
+import { tv } from 'tailwind-variants';
+import { proseClasses } from '../text/styles';
+import type { ITile, ITileTheme, IStrapiBlockSettings } from '~/sites/default/types/pages';
+import { formatIconName } from '~/utils/client';
 
 const props = defineProps<{
     tile: ITile
     baseSettings: IStrapiBlockSettings
     theme: ITileTheme
-}>()
+}>();
 
 const combinedContent = computed(() => {
-    const header = props.tile.header ? `<h2>${props.tile.header}</h2>` : ''
-    const text = props.tile.text ? props.tile.text : ''
-    return `${header}${text}`
-})
+    const header = props.tile.header ? `<h2>${props.tile.header}</h2>` : '';
+    const text = props.tile.text ? props.tile.text : '';
+    return `${header}${text}`;
+});
 
 const iconName = computed(() => {
-    return props.tile?.icon ? formatIconName(props.tile.icon) : null
-})
+    return props.tile?.icon ? formatIconName(props.tile.icon) : null;
+});
 const linkTarget = computed(() => {
-    return props.tile.linkUrl.startsWith('/') ? '' : '_blank'
-})
+    return props.tile.linkUrl.startsWith('/') ? '' : '_blank';
+});
 const tileWrapper = tv({
     base: '',
     variants: {
@@ -32,7 +32,7 @@ const tileWrapper = tv({
             'Theme 3': '',
         },
     },
-})
+});
 </script>
 
 <template>
@@ -47,8 +47,7 @@ const tileWrapper = tv({
         <div
             :class="proseClasses({ dark: (props.baseSettings.background === 'Dark' || props.baseSettings.background === 'Brand') })"
             v-html="combinedContent"
-        >
-        </div>
+        ></div>
         <NuxtLink
             v-if="props.tile.linkUrl"
             :to="props.tile.linkUrl"

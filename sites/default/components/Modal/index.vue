@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { NModal } from 'naive-ui';
-import { ref, watch } from 'vue';
+import type { HTMLAttributes } from 'vue';
 
+const props = withDefaults(
+    defineProps<{
+        class: HTMLAttributes['class']
+    }>(), {
+        class: '',
+    },
+);
 const showModal = defineModel<boolean>('show', { default: false });
-const showContent = ref(false);
 
-watch(showModal, (newValue) => {
-    if (newValue) {
-        // Počkáme na další tick před zobrazením obsahu
-        nextTick(() => {
-            showContent.value = true;
-        });
-    } else {
-        showContent.value = false;
-    }
-});
+const closeModal = () => {
+    showModal.value = false;
+};
+
 </script>
 
 <template>
@@ -23,9 +23,19 @@ watch(showModal, (newValue) => {
             v-model:show="showModal"
             :block-scroll="true"
         >
-            <slot>
-                <slot name="content"></slot>
-            </slot>
+            <div
+                class="w-full p-4 shadow-none"
+                @click="closeModal"
+            >
+                <div
+                    :class="cn('mx-auto max-w-2xl rounded-lg bg-white p-6 ring-1 ring-black/5 lg:p-8', props.class)"
+                    @click.stop
+                >
+                    <slot>
+                        <slot name="content"></slot>
+                    </slot>
+                </div>
+            </div>
         </n-modal>
     </ClientOnly>
 </template>

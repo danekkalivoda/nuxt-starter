@@ -16,6 +16,11 @@ export default defineNuxtConfig({
     app: {
         pageTransition: false,
         layoutTransition: false,
+        head: {
+            meta: [
+                { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
+            ],
+        },
     },
     runtimeConfig: {
         private: {
@@ -49,7 +54,7 @@ export default defineNuxtConfig({
     },
     devtools: { enabled: false },
     ssr: true,
-    css: ['~/assets/css/tailwind.css', 'vue-final-modal/style.css'],
+    css: ['~/assets/css/tailwind.css'],
     postcss: {
         plugins: {
             'postcss-import': {},
@@ -88,7 +93,7 @@ export default defineNuxtConfig({
         },
     },
     strapi: {
-        url: 'http://127.0.0.1:1337',
+        url: process.env.STRAPI_BASE_URL,
         prefix: '/api',
         version: 'v4',
         cookie: {},

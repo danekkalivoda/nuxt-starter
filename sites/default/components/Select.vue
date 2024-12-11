@@ -13,5 +13,5 @@ const props = withDefaults(
     <Select
         v-bind="props"
         @update:initial-value="(value) => emit('update:initialValue', value)"
-    ></Select>
+    />
 </template>

@@ -25,6 +25,6 @@ const customStyles = computed(() => {
         :class="customStyles"
         :show-default-slot="true"
     >
-        <slot name="default"></slot>
+        <slot name="default"/>
     </Button>
 </template>

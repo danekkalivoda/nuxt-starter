@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import Multiselect, { type MultiSelectMethods } from 'primevue/multiselect'
-import { MultiselectStyles } from '~/sites/default/components/Multiselect'
-import type { IMultiselectProps, IOption } from '~/sites/default/components/Multiselect/types'
-import { getWordingByCount } from '~/recruitis-shared/utils/common'
+import Multiselect, {  type MultiSelectMethods } from 'primevue/multiselect';
+import { MultiselectStyles } from '~/sites/default/components/Multiselect';
+import type { IMultiselectProps, IOption } from '~/sites/default/components/Multiselect/types';
+import { getWordingByCount } from '~/recruitis-shared/utils/common';
 
 const props = withDefaults(
     defineProps<IMultiselectProps>(),
@@ -15,21 +15,21 @@ const props = withDefaults(
         closeOnSelect: false,
         options: () => [],
         lang: () => {
-            return {}
+            return {};
         },
     },
-)
-const multiselect = ref<MultiSelectMethods>()
+);
+const multiselect = ref<MultiSelectMethods>();
 const t = computed(() => {
     return {
         placeholder: 'Vyberte',
         ...props.lang,
-    }
-})
+    };
+});
 
-const value = defineModel<IOption[]>('initialValue')
+const value = defineModel<IOption[]>('initialValue');
 
-const close = () => props.closeOnSelect && multiselect.value?.hide()
+const close = () => props.closeOnSelect && multiselect.value?.hide();
 </script>
 
 <template>

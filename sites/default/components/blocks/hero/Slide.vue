@@ -65,8 +65,7 @@ const combinedContent = computed(() => {
                     v-if="props.header || props.description"
                     :class="proseClasses({ dark: props.textColor === 'White' })"
                     v-html="combinedContent"
-                >
-                </div>
+                ></div>
                 <component
                     :is="isButtonLinkRelative ? NuxtLink : 'a'"
                     v-if="props.buttonName"

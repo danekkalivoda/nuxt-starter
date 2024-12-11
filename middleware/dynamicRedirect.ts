@@ -11,31 +11,14 @@
  *    - Načte data pozice z API
  *    - Vytvoří správný slug z názvu pozice
  *    - Přesměruje na plnou URL (např. /pozice/123-nazev-pozice)
- * 3. Při chybě přesměruje na 404
  */
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const slug = Array.isArray(to.params.slug) ? to.params.slug[0] : to.params.slug || 'index';
-
-    const splitSlug = (slug: string): { number: number | null
-        rest: string } => {
-        const match = slug.match(/^(\d+)(?:-(.+))?/);
-        return match
-            ? {
-                number: parseInt(
-                    match[1],
-                    10,
-                ),
-                rest: match[2] || '',
-            }
-            : { number: null,
-                rest: slug };
-    };
-
     const { number, rest } = splitSlug(slug);
 
     if (number && rest === '') {
         try {
-            const response = await useFetch(`/api/job/list?id=${number}`);
+            const response = await useFetch(`/api/jobs?id=${number}`);
             const data = await response.data.value.data;
 
             if (data && data.title) {

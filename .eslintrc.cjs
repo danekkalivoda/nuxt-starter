@@ -1,5 +1,6 @@
 module.exports = {
   root: true,
+  ignorePatterns: ['.eslintrc.cjs'],
   env: {
       browser: true,
       es2017: true,

@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue';
-import { NModalProvider } from 'naive-ui';
+import { ModalsContainer } from 'vue-final-modal';
 
 const { locale } = useI18n();
 const menu = ref<MenulinkInterface[]>([]);
+const { _route : route } = useNuxtApp();
 
 const fetchMenuSSR = async () => {
     menu.value = await useMenu({
@@ -31,8 +32,10 @@ watch(
 </script>
 
 <template>
-    <LayoutHeader :menu="menu"></LayoutHeader>
+    <LayoutHeader
+        :menu="menu"
+    ></LayoutHeader>
     <NuxtPage></NuxtPage>
     <LayoutFooter></LayoutFooter>
-    <NModalProvider></NModalProvider>
+    <ModalsContainer></ModalsContainer>
 </template>

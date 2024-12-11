@@ -32,8 +32,8 @@ watch(
 </script>
 
 <template>
-    <LayoutHeader :menu="menu"></LayoutHeader>
-    <NuxtPage></NuxtPage>
-    <LayoutFooter></LayoutFooter>
-    <NModalProvider></NModalProvider>
+    <LayoutHeader :menu="menu"/>
+    <NuxtPage/>
+    <LayoutFooter/>
+    <NModalProvider/>
 </template>

@@ -12,6 +12,11 @@ export default defineI18nConfig(() => ({
                 'Invalid identifier or password': 'Neplatné přihlašovací údaje',
                 '2 errors occurred': 'Vyplňte prosím e-mail a heslo',
             },
+            referral: {
+                modal: {
+                    confirmation: 'Opravdu chcete uplatnit <strong>{credits} {currency}</strong> za položku <strong>{title}</strong>?',
+                },
+            },
         },
         'en': {
             welcome: 'Welcome',
@@ -21,6 +26,11 @@ export default defineI18nConfig(() => ({
                 'Invalid identifier or password': 'Invalid user name or password',
                 '2_errors_occurred': 'Please enter email and password',
             },
+            referral: {
+                modal: {
+                    confirmation: 'Opravdu chcete uplatnit <strong>{credits} {currency}</strong> za položku <strong>{title}</strong>?',
+                },
+            },
         },
     },
-}))
+}));
