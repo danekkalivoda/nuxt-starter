@@ -9,11 +9,12 @@ const currentRoute = computed(() => router.currentRoute.value);
 const emits = defineEmits(['close']);
 const { signOut, data } = useAuth();
 const { data: filters } = await useAsyncData(
-    'jobs-list',
+    'jobs-my-referrals',
     () => {
-        const params = { ...router.currentRoute.value.query };
-
-        params.listFiltersTab = 'candidates';
+        const params = {
+            ...router.currentRoute.value.query,
+            listFiltersTab: 'candidates',
+        };
 
         return $fetch(
             '/api/jobs',
@@ -24,6 +25,28 @@ const { data: filters } = await useAsyncData(
         );
     },
 );
+
+
+const { data: jobs } = await useAsyncData(
+    'jobs-count',
+    () => {
+        const params = {
+            ...router.currentRoute.value.query,
+            listFiltersTab: 'positions',
+            customParams: {
+                referralJobsOnly: 1,
+            },
+        };
+        return $fetch(
+            '/api/jobs',
+            {
+                params,
+                headers,
+            },
+        );
+    },
+);
+
 const isOpen = ref(false);
 const sizeChecker = ref(null);
 const { isVisible: isSmall } = useVisibilityObserver({
@@ -40,6 +63,17 @@ const baseMenu = computed(() => [
         command: () => {
             isOpen.value = false;
             router.push('/portal/dashboard');
+            emits('close');
+        },
+    },
+    {
+        label: 'Pozice s doporučením',
+        badge: jobs.value.meta.entries_total,
+        icon: 'tabler:certificate',
+        active: currentRoute.value.path === '/portal/positions',
+        command: () => {
+            isOpen.value = false;
+            router.push('/portal/positions');
             emits('close');
         },
     },
@@ -98,7 +132,7 @@ const onMenuToggle = () => {
 </script>
 
 <template>
-    <div class="relative bg-gray-900">
+    <div class="relative bg-gray-900 px-1">
         <div
             aria-hidden="true"
             class="absolute left-0 top-full block size-2 bg-gray-900 [mask:radial-gradient(circle_at_bottom_right,_transparent_8px,_var(--tw-gray-900)_9px)]"
@@ -154,7 +188,7 @@ const onMenuToggle = () => {
                     >
                         <template #item="{ item }">
                             <div
-                                class="@5xl/userMenu:m-1 @5xl/userMenu:py-1 @5xl/userMenu:w-auto grid min-h-12 w-full  grid-cols-[max-content_1fr] items-center gap-2 rounded py-2 pl-4 pr-5 text-sm font-medium"
+                                class="@5xl/userMenu:my-1 @5xl/userMenu:mr-px @5xl/userMenu:py-1 @5xl/userMenu:w-auto grid min-h-11 w-full grid-cols-[max-content_1fr] items-center gap-2 rounded py-2 pl-3 pr-4 text-sm font-medium tracking-tight xl:tracking-normal"
                                 :class="[item.active ? 'text-white bg-gray-700 group-hover:bg-gray-700' : 'group-hover:bg-gray-800 group-hover:text-white'].join(' ')"
                             >
                                 <Icon
@@ -225,7 +259,7 @@ const onMenuToggle = () => {
                 >
                     <template #item="{ item }">
                         <div
-                            class="m-1 grid min-h-12 grid-cols-[max-content_1fr] items-center gap-2 rounded py-1 pl-3 pr-4 text-sm font-medium group-hover:bg-gray-800 group-hover:text-white"
+                            class="@5xl/userMenu:ml-px my-1 grid min-h-11 grid-cols-[max-content_1fr] items-center gap-2 rounded py-1 pl-3 pr-4 text-sm font-medium tracking-tight group-hover:bg-gray-800 group-hover:text-white xl:tracking-normal"
                             :class="[item.active ? 'text-white bg-gray-700 group-hover:bg-gray-700' : ''].join(' ')"
                         >
                             <Icon

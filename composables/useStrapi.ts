@@ -7,90 +7,67 @@ import {
 import type { IMenuItem } from '~/sites/default/types/menus';
 import type { MenulinkInterface } from '~/sites/default/components/header/DesktopMenu.vue';
 
-const getMenuLinkUrl = (item: IMenuItem) => {
-    if (item.attributes.url !== '') {
-        return item.attributes.url;
-    } else if (item.attributes.page_relation.data) {
-        return item.attributes.page_relation.data.attributes.url;
+const getMenuLinkUrl = (item: IMenuItemBase) => {
+    if (item.url !== '' && item.url !== null) {
+        return item.url;
+    } else if (item.page.data) {
+        return item.page.data.attributes.url;
     } else {
         return null;
     }
 };
 
-const getMenuLinkBase = (item: IMenuItem) => {
+const getMenuLinkBase = (item: IMenuItemBase) => {
     return {
-        title: item.attributes.title,
+        title: item.title,
         url: getMenuLinkUrl(item),
-        target: item.attributes.target,
+        target: item.target,
     };
 };
 
-const getMenuLinkChildren = (item: IMenuItem) => {
-    if (item.attributes.children && item.attributes.children.data.length > 0) {
-        const finalChildren = item.attributes.children?.data
-            .filter((child: IMenuItem) => !child.attributes.link_hidden)
-            .map((child: IMenuItem) => ({
-                ...getMenuLinkBase(child),
-            }));
-        return finalChildren;
-    } else {
-        return null;
-    }
-};
-
-const getMenus = (data: any) => {
-    const visibleItemsList: any[] = [];
-    for (const item of data) {
-        const visibleItems = item.attributes.items.data
-            .filter((IMenuItem: IMenuItem) => !IMenuItem.attributes?.link_hidden)
-            .map((IMenuItem: IMenuItem) => ({
-                ...getMenuLinkBase(IMenuItem),
-                children: getMenuLinkChildren(IMenuItem),
-            }));
-        visibleItemsList.push(...visibleItems);
-    }
-    return visibleItemsList;
-};
-
-export const useMenu = async ({
+export const useNavigation = async ({
     url = '',
     locale = 'cs-CZ',
-    useFetchMode = false,
+    name = 'header',
 }: {
     url?: string
     locale?: string
+    name?: string
     useFetchMode?: boolean
 }): Promise<MenulinkInterface[]> => {
     const runtimeConfig = useRuntimeConfig();
     const strapiUrl = runtimeConfig.public.strapi.url;
-    const apiUrl = `${strapiUrl}/api/${url}&filters[title][$eq]=${locale}`;
-    const fetchOptions = {
-        method: 'GET' as const,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    };
-    const fetchData = async (): Promise<any> => {
-        if (useFetchMode) {
-            const response = await useFetch(
-                apiUrl,
-                fetchOptions,
-            );
-            if (response && typeof response.data === 'object' && response.data !== null) {
-                return (response.data as any).value.data;
-            }
-            throw new Error('Špatný formát.');
-        } else {
-            const response = await fetch(
-                apiUrl,
-                fetchOptions,
-            );
-            const jsonData = await response.json();
-            return jsonData.data;
-        }
-    };
+    const l = locale === 'cs-CZ' ? 'cs' : locale;
+    const apiUrl = `${strapiUrl}/api/${url}&filters[name][$eq]=${name}&locale=${l}`;
 
-    return getMenus(await fetchData());
+    const response = await fetch(
+        apiUrl,
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        },
+    );
+    const jsonData = await response.json();
+    const data = jsonData.data;
+
+    if (!data || !data.length || !data[0]?.attributes?.items) {
+        return [];
+    }
+
+    const items = data[0].attributes.items.filter((item: { attributes: IMenuItem }) =>
+        !item.attributes?.hidden)
+        .map((item: IMenuItem) => {
+            return {
+                ...getMenuLinkBase(item),
+                items: item?.items?.length > 0 ? item.items.map((i: IMenuItemBase) => ({
+                    ...getMenuLinkBase(i),
+                }))
+                    : null,
+            };
+        });
+    return items;
 };
 
 const updateBackgroundImage = (blk: any, strapiUrl: string) => {

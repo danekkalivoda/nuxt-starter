@@ -1,4 +1,5 @@
 import type { IButtonsListButton } from '~/sites/default/components/buttonsList/types';
+import type { LocationQueryValue } from 'vue-router';
 
 interface IStrapiPageLocalizations {
     data: IStrapiPage[]
@@ -63,22 +64,29 @@ export interface IStrapiBlock {
     __component?: IStrapiBlockName
     baseSettings?: IStrapiBlockSettings
 }
+
+export interface IIcon {
+    iconPackage?: 'tabler'
+    iconName?: string
+}
+
+export interface IFilterItem extends IIcon {
+    id: number | string
+    title: string
+    showTitle?: boolean
+    value?: number | string
+    values?: {
+        id: string | number
+        value: string | number
+    }[]
+}
+
 export interface IHeaderBlock extends IStrapiBlock {
     text: string
     centered?: boolean
-    tags?: {
-        id: number
-        title: string
-        showTitle?: boolean
-        value?: string
-        values: {
-            id: string | number
-            value: string | number
-        }[]
-        icon?: string
-        iconExact?: string
-    }[]
+    filterItems?: IFilterItem[]
     buttons?: IButtonsListButton[]
+    stickySubHeader?: boolean
 }
 export type IJobHeaderBlock = IHeaderBlock;
 export interface IListBlock extends IStrapiBlock {
@@ -86,7 +94,9 @@ export interface IListBlock extends IStrapiBlock {
     showSubmitButton?: boolean
     filterTabs?: IStrapiBlockFilterTabs
     hideHeader?: boolean
+    customParams?: Record<string, any>
 }
+
 export interface IImage {
     id: number
     alt: string
@@ -99,6 +109,7 @@ export interface IImage {
         small?: IImage
     }
 }
+
 export interface IHeroSlide {
     id: number
     header?: string
@@ -111,11 +122,13 @@ export interface IHeroSlide {
     buttonName?: string
     buttonLink?: string
 }
+
 export interface IHeroBlock extends IStrapiBlock {
     autoplay: boolean
     showProgress: boolean
     slides: IHeroSlide[]
 }
+
 export interface ITextBlock extends IStrapiBlock {
     text?: string
     boxed?: boolean
@@ -136,15 +149,16 @@ export interface ITextBlock extends IStrapiBlock {
     }
 }
 
-export interface ITile {
+export interface ITile extends IIcon {
     id: number
     header?: string
-    icon?: string
     text?: string
     linkUrl?: string
     linkText?: string
 }
+
 export type ITileTheme = 'Theme 1' | 'Theme 2' | 'Theme 3';
+
 export interface ITilesBlock extends IStrapiBlock {
     tiles: ITile[]
     theme: ITileTheme

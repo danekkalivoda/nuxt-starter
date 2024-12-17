@@ -10,8 +10,11 @@ const data = {
     __component: 'blocks.jobs-list' as IStrapiBlockName,
     showFilter: true,
     showSubmitButton: false,
-    filterTabs: 'Candidates' as IStrapiBlockFilterTabs,
+    filterTabs: 'Positions' as IStrapiBlockFilterTabs,
     hideHeader: true,
+    customParams: {
+        referralJobsOnly: 1,
+    },
     baseSettings: {
         id: 4,
         background: 'Transparent',
@@ -29,7 +32,7 @@ const data = {
 <template>
     <div class="space-y-4 py-4 lg:space-y-8 lg:py-8">
         <h1 class="font-display container text-2xl font-semibold lg:text-4xl">
-            Moje doporučení
+            Pozice s doporučením
         </h1>
         <div class="border-t bg-gray-50 py-4 lg:py-8">
             <BlocksBase v-bind="data?.baseSettings">

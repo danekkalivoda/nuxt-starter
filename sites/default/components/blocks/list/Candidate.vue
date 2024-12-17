@@ -4,7 +4,9 @@ import Badge from '~/recruitis-shared/components/badge.vue';
 import FlowBar from '~/recruitis-shared/components/flowBar/flowBar.vue';
 import type { IJobCandidate } from '~/sites/default/types/jobs';
 
-const props = defineProps<IJobCandidate>();
+const props = withDefaults(defineProps<{ showTooltips?: boolean } & IJobCandidate>(), {
+    showTooltips: false,
+});
 </script>
 
 <template>
@@ -114,7 +116,7 @@ const props = defineProps<IJobCandidate>();
             <FlowBar
                 v-bind="props.flow"
                 :rejected="props?.rejected"
-                :show-step-tooltips="true"
+                :show-step-tooltips="props.showTooltips"
                 :class="props?.rejected ? 'opacity-70' : ''"
             >
                 <template #lastActiveIcon="slotProps">

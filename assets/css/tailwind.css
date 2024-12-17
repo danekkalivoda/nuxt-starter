@@ -367,6 +367,9 @@ html.iosModalOpened body div[id^="popper_"] {
     }
   }
 }
+.n-popover {
+  @apply shadow-none
+}
 
 input, textarea, select, button {
   -webkit-user-select: auto;

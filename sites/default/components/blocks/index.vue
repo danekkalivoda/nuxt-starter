@@ -6,7 +6,6 @@ import {
     type IHeroBlock,
     type IListBlock,
     type ITextBlock,
-    type IStrapiBlockUnion,
     type ITilesBlock,
     IStrapiBlockName,
 } from '~/sites/default/types/pages';

@@ -13,7 +13,7 @@ const hasRerferral = computed(() => {
 <template>
     <div
         :id="props.row.original.anchor"
-        class="group/jobRow col-span-full mt-4 grid scroll-mt-[calc(var(--header-height)+var(--subheader-height))] grid-cols-subgrid items-stretch rounded-md bg-white ring-1  ring-black/5 transition-all first:mt-0 lg:mt-8 lg:first:mt-4"
+        class="group/jobRow col-span-full mt-4 grid scroll-mt-[calc(var(--header-height)+var(--subheader-height))] grid-cols-subgrid items-stretch rounded-md bg-white ring-1  ring-black/10 transition-all first:mt-0 lg:mt-8 lg:first:mt-4"
         :class="hasRerferral ? '' : ''"
     >
         <nuxt-link
@@ -40,9 +40,13 @@ const hasRerferral = computed(() => {
                 ></BlocksListCellsEmploymentType>
                 <div
                     v-else
-                    class="text-brand-500 decoration-brand-500 flex items-center gap-2 self-center text-sm underline decoration-1 underline-offset-4 group-hover/jobRow:no-underline"
+                    class="text-brand-500 decoration-brand-500 flex items-center gap-2 self-center text-sm font-medium underline decoration-1 underline-offset-4 group-hover/jobRow:no-underline"
                 >
-                    Detail pozice <Icon name="tabler:arrow-right"></Icon>
+                    Detail pozice
+                    <Icon
+                        class="size-4"
+                        name="tabler:arrow-right"
+                    ></Icon>
                 </div>
             </template>
         </nuxt-link>

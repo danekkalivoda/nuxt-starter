@@ -1,16 +1,16 @@
-import { IStrapiBlockName, type IHeaderBlock, type IStrapiBlock } from '~/sites/default/types/pages';
+import { IStrapiBlockName, type IHeaderBlock, type IStrapiBlock, type IFilterItem } from '~/sites/default/types/pages';
 import { isBlockOfType } from '~/composables/useStrapi';
 
-const tagConfigurations: Record<string, { title: string; iconExact: string }> = {
-    locality: { title: 'Lokalita', iconExact: 'tabler:map' },
-    employmentType: { title: 'Typ zaměstnání', iconExact: 'tabler:briefcase' },
+const defaultFilterItemsConfig: Record<string, { id: number; title: string; iconPackage: 'tabler'; iconName: string }> = {
+    locality: { id: 0, title: 'Lokalita', iconPackage: 'tabler', iconName: 'map' },
+    employmentType: { id: 1, title: 'Typ zaměstnání', iconPackage: 'tabler', iconName: 'briefcase' },
 };
 
 export const ensureJobDetailHeaderBlock = (
     blocks: IStrapiBlock[],
     title: string,
     blockType: IStrapiBlockName,
-    params: { id: string; title: string; value: any; showTitle?: boolean }[],
+    params: IFilterItem[],
 ): IStrapiBlock[] => {
     const hasHeader = blocks.some((block) => isBlockOfType<IHeaderBlock>(block, blockType));
 
@@ -18,33 +18,32 @@ export const ensureJobDetailHeaderBlock = (
         return blocks;
     }
 
-
-    // Vytvoření tagů na základě konfigurace a parametrů
-    const tags = Object.entries(tagConfigurations).map(([paramId, config]) => {
+    const filterItems: IFilterItem[] = Object.entries(defaultFilterItemsConfig).map(([paramId, config]) => {
         const param = params.find((p) => p.id === paramId);
         if (param) {
             return {
-                id: param.id,
+                id: config.id,
+                value: param.id,
                 title: config.title,
-                iconExact: config.iconExact,
-                values: param.value,
-                showTitle: param.showTitle ?? true, // Nastavte dle vašich požadavků
+                iconPackage: config.iconPackage,
+                iconName: config.iconName,
+                showTitle: param.showTitle ?? true,
             };
         }
         return null;
-    }).filter((tag) => tag !== null) as any[];
+    }).filter((filterItem) => filterItem !== null);
 
     const defaultHeaderBlock: IHeaderBlock = {
         __component: blockType,
         id: 0,
         text: title,
-        tags,
+        filterItems,
+        stickySubHeader: true,
         baseSettings: {
             topGap: 'Small',
-            bottomGap: 'Small',
+            bottomGap: 'None',
         },
     };
-
     return [defaultHeaderBlock, ...blocks];
 };
 export const processJobDetailBlocksBefore = (
@@ -52,6 +51,7 @@ export const processJobDetailBlocksBefore = (
     data: any,
 ) => {
     if (strapiData && strapiData.blocksBefore) {
+
         strapiData.blocksBefore = ensureJobDetailHeaderBlock(
             strapiData.blocksBefore,
             data.data.title,
@@ -62,31 +62,31 @@ export const processJobDetailBlocksBefore = (
         strapiData.blocksBefore.forEach((block: IStrapiBlock) => {
             if (isBlockOfType<IHeaderBlock>(block, IStrapiBlockName.jobHeader)) {
                 const headerBlock = block as IHeaderBlock;
-
                 if (headerBlock && (!headerBlock.text || headerBlock.text.trim() === '')) {
                     headerBlock.text = data.data.title;
                 }
-                if (block.tags) {
-                    block.tags = block.tags
-                        .map((tag) => {
-                            const param = data.data.params.find((p: { id: string }) => p.id === tag.value);
+                headerBlock.stickySubHeader = true;
+                if (block.filterItems) {
+                    block.filterItems = block.filterItems
+                        .map((filterItem) => {
+                            const param = data.data.params.find((p: { id: string }) => p.id === filterItem.value);
                             if (param) {
-                                if (tag.showTitle) {
+                                if (filterItem.showTitle) {
                                     return {
-                                        ...tag,
+                                        ...filterItem,
                                         title: param.title,
                                         values: param.value,
                                     };
                                 } else {
                                     return {
-                                        ...tag,
+                                        ...filterItem,
                                         values: param.value,
                                     };
                                 }
                             }
                             return undefined;
                         })
-                        .filter((tag): tag is NonNullable<typeof tag> => Boolean(tag));
+                        .filter((filterItem): filterItem is NonNullable<typeof filterItem> => Boolean(filterItem));
                 }
             }
         });

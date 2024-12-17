@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { tv } from 'tailwind-variants'
-import type { ITilesBlock } from '~/sites/default/types/pages'
-import Box from '~/sites/default/components/Box.vue'
+import {
+    type ITilesBlock,
+} from '~/sites/default/types/pages';
+import { tv } from 'tailwind-variants';
+import Box from '~/sites/default/components/Box.vue';
 
-const props = defineProps<ITilesBlock>()
+const props = defineProps<ITilesBlock>();
 
 const wrapperClasses = tv({
     base: ' grid',
@@ -14,7 +16,7 @@ const wrapperClasses = tv({
             'Theme 3': '@lg/tiles:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6',
         },
     },
-})
+});
 const boxClasses = tv({
     base: 'overflow-hidden p-0 lg:p-0',
     variants: {
@@ -24,7 +26,7 @@ const boxClasses = tv({
             'Theme 3': 'rounded-none bg-transparent shadow-none ring-0',
         },
     },
-})
+});
 </script>
 
 <template>
@@ -42,7 +44,7 @@ const boxClasses = tv({
                     class="@lg/tiles:p-8 p-6"
                     :theme="props.theme"
                     :base-settings="props.baseSettings"
-                />
+                ></BlocksTilesTile>
             </div>
         </Box>
     </div>

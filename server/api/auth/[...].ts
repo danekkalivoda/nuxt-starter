@@ -1,4 +1,4 @@
- 
+
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NuxtAuthHandler } from '#auth';
 
@@ -59,6 +59,7 @@ export default NuxtAuthHandler({
                 token.name = user.name;
                 token.surname = user.surname;
                 token.username = user.username;
+                token.email = user.email;
                 token.credits = user.credits;
             }
             return token;

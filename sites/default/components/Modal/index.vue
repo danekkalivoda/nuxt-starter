@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue';
 
 const props = withDefaults(
     defineProps<{
-        class: HTMLAttributes['class']
+        class?: HTMLAttributes['class']
     }>(), {
         class: '',
     },

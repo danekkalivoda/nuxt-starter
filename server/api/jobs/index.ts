@@ -12,6 +12,11 @@ const modifyQuery = (query: Record<string, any>, session: any) => {
     if (session?.user) {
         query.getReferral = 1;
     }
+    if (query.customParams !== undefined) {
+        query.customParams = JSON.parse(query.customParams);
+        query.referralJobsOnly = query.customParams.referralJobsOnly;
+        delete query.customParams;
+    }
 };
 
 const getData = async (url: string): Promise<any> => {

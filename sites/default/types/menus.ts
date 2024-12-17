@@ -8,25 +8,15 @@ interface IMenuItemPageRelation {
         }
     }
 }
-export interface IMenuItem {
-    attributes: {
-        title: string
-        url: string
-        target: string
-        link_hidden: boolean
-        children?: {
-            data: [
-                {
-                    attributes: {
-                        title: string
-                        url: string
-                        target: string
-                        link_hidden: boolean
-                        page_relation: IMenuItemPageRelation
-                    }
-                },
-            ]
-        }
-        page_relation: IMenuItemPageRelation
-    }
+
+export interface IMenuItemBase {
+    title: string
+    url: string
+    target: string
+    hidden?: boolean
+    page: IMenuItemPageRelation
+}
+
+export interface IMenuItem extends IMenuItemBase {
+    items?: IMenuItemBase[]
 }

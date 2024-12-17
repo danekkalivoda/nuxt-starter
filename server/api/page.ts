@@ -8,12 +8,16 @@ import {
 } from '~/sites/default/types/pages';
 export default defineEventHandler(async (event) => {
     const { locale, homepage, slug } = getQuery(event);
-    const page: IPage = await usePages({
+    const page: IPage | undefined = await usePages({
         url: 'pages?populate=deep,5',
         locale: locale as string,
         slug: slug as string,
         homepage: homepage === 'true' ? true : false,
     });
+
+    if (!page) {
+        throw createError({ statusCode: 404, statusMessage: 'Page not found' });
+    }
 
     const blocks = page.blocks ?? [];
     const hasHeader = blocks.some((block) =>
@@ -25,7 +29,7 @@ export default defineEventHandler(async (event) => {
         const defaultHeaderBlock: IHeaderBlock = {
             __component: IStrapiBlockName.header,
             id: 0,
-            text: page.title, // Můžete nahradit podle potřeby
+            text: page.title || '',
             baseSettings: {
                 topGap: 'Small',
                 bottomGap: 'Small',

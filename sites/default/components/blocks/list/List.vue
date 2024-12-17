@@ -17,6 +17,9 @@ const { data: jobs, refresh, status: loading } = await useAsyncData<{
         if (props.filterTabs === 'Candidates' || props.filterTabs === 'Positions') {
             params.listFiltersTab = props.filterTabs.toLowerCase();
         }
+        if (props.customParams) {
+            params.customParams = JSON.stringify(props.customParams);
+        }
         return $fetch(
             '/api/jobs',
             {

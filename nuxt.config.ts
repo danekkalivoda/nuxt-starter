@@ -50,6 +50,7 @@ export default defineNuxtConfig({
     eslint: {
         checker: {
             configType: 'eslintrc',
+            lintOnStart: false,
         },
     },
     devtools: { enabled: false },
@@ -68,6 +69,9 @@ export default defineNuxtConfig({
         options: {
             unstyled: true,
         },
+    },
+    imports: {
+        dirs: ['types'],
     },
     components: {
         dirs: projectConfig.componentsPaths,
@@ -102,6 +106,11 @@ export default defineNuxtConfig({
     typescript: {
         typeCheck: false,
         strict: false,
+        tsConfig: {
+            compilerOptions: {
+                types: ['@types/node', './types'],
+            },
+        },
     },
     vite: {
         esbuild: {
